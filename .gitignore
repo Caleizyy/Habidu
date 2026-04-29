@@ -24,3 +24,22 @@ Thumbs.db
 *.tsbuildinfo
 
 .vite/
+
+# Log files
+*.log
+
+# Package files
+*.jar
+
+# Applications
+*.app
+*.exe
+*.war
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
