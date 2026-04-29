@@ -1,9 +1,7 @@
-import styles from './App.module.css';
-
 function App() {
 
   return (
-    <div className={styles.App}>
+    <div className="App">
       <h1>Habit Tracker</h1>
     </div>
   )
