@@ -1,10 +1,12 @@
 import express from "express";
+import dotenv from "dotenv";
+dotenv.config();
 
 const app = express();
-const PORT = 5000;
+const PORT = process.env.PORT || 5000;
 
 app.get("/", (req, res) => {
-  res.send("Backend is alive 😎");
+  res.send("Backend is alive");
 });
 
 app.listen(PORT, () => {

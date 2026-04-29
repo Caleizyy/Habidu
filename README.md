@@ -4,14 +4,14 @@ A full-stack habit tracking application with a React frontend and Node.js backen
 
 ## Requirements
 
-- Node.js 20.19.0 (see `.nvmrc`)
+- Node.js 24.15.0 (see `.nvmrc`)
 - npm
 - Git
 
 Recommended setup:
 
-nvm install 20.19.0
-nvm use 20.19.0
+nvm install 24.15.0
+nvm use 24.15.0
 
 ## Installation
 
@@ -62,4 +62,4 @@ This uses concurrently to run both services.
 
 - Run npm install after pulling changes
 - Ensure Node version matches .nvmrc
-- If issues occur, delete node_modules and package-lock.json and reinstall
+- If issues occur, run npm ci
