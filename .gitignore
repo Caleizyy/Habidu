@@ -1,1 +1,45 @@
-node_modules
+node_modules/
+
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+dist/
+build/
+out/
+coverage/
+
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+*.log
+
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+*.tsbuildinfo
+
+.vite/
+
+# Log files
+*.log
+
+# Package files
+*.jar
+
+# Applications
+*.app
+*.exe
+*.war
+
+# Large media files
+*.mp4
+*.tiff
+*.avi
+*.flv
+*.mov
+*.wmv
