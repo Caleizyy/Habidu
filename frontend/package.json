@@ -4,18 +4,18 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-  "dev": "vite",
-  "build": "tsc -b && vite build",
-  "lint": "eslint .",
-  "preview": "vite preview",
-  "test": "jest --coverage --passWithNoTests",
-  "test:watch": "jest --watch"
-},
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "test": "jest --coverage --passWithNoTests",
+    "test:watch": "jest --watch"
+  },
   "dependencies": {
     "@fontsource-variable/geist": "^5.2.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.11.0",
+    "lucide-react": "^1.14.0",
     "radix-ui": "^1.4.3",
     "react": "^19.2.5",
     "react-dom": "^19.2.5",
