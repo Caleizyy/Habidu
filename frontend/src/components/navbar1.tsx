@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Book, Menu, Sunset, Trees, Zap, LogOut } from "lucide-react";
+import { Book, Menu, Sunset, Trees, Zap, UserIcon, LogOutIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import kittenImage from "../assets/kitten.jpg";
 
@@ -12,6 +12,14 @@ import {
   AccordionTrigger,
 } from "@/components/ui/accordion";
 import { Button } from "@/components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuGroup,
+  DropdownMenuItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -153,6 +161,7 @@ const Navbar1 = ({
   const navigate = useNavigate();
 
   const handleAvatarClick = () => {
+    // TODO: Fetch user profile data when auth is implemented
     navigate("/profile");
   };
 
@@ -169,6 +178,7 @@ const Navbar1 = ({
   };
 
   const handleLogout = () => {
+    // TODO: Call logout API endpoint to clear auth tokens/session when auth is implemented
     setIsAuthenticated(false);
     navigate("/");
   };
@@ -199,14 +209,28 @@ const Navbar1 = ({
           </div>
           <div className="flex gap-2">
             {isAuthenticated ? (
-              <div className="flex items-center gap-2">
-                <button onClick={handleAvatarClick} className="cursor-pointer">
-                  <Avatar size="sm">
-                    <AvatarImage src={kittenImage} alt="Avatar" />
-                    <AvatarFallback>CN</AvatarFallback>
-                  </Avatar>
-                </button>
-              </div>
+              <DropdownMenu>
+                <DropdownMenuTrigger asChild>
+                  <Button variant="ghost" size="icon" className="rounded-full">
+                    <Avatar>
+                      <AvatarImage src={kittenImage} alt="Avatar" />
+                      <AvatarFallback>CN</AvatarFallback>
+                    </Avatar>
+                  </Button>
+                </DropdownMenuTrigger>
+                <DropdownMenuContent align="end">
+                  <DropdownMenuGroup>
+                    <DropdownMenuItem onClick={handleAvatarClick}>
+                      <UserIcon />
+                      Profile
+                    </DropdownMenuItem>
+                  </DropdownMenuGroup>
+                  <DropdownMenuItem onClick={handleLogout} variant="destructive">
+                    <LogOutIcon />
+                    Log out
+                  </DropdownMenuItem>
+                </DropdownMenuContent>
+              </DropdownMenu>
             ) : (
               <>
                 <Button variant="outline" size="sm" onClick={handleLogin}>
@@ -307,11 +331,13 @@ const renderMenuItem = (item: MenuItem) => {
 
   return (
     <NavigationMenuItem key={item.title}>
-      <NavigationMenuLink
-        href={item.url}
-        className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
-      >
-        {item.title}
+      <NavigationMenuLink asChild>
+        <Link
+          to={item.url}
+          className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+        >
+          {item.title}
+        </Link>
       </NavigationMenuLink>
     </NavigationMenuItem>
   );
