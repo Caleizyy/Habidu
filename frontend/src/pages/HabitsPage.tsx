@@ -1,4 +1,4 @@
-export default function HabitsPage() {
+export function HabitsPage() {
   return (
     <div>
       <h1>Habits</h1>
