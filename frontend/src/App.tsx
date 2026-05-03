@@ -1,8 +1,10 @@
+import HabitsPage from "./pages/HabitsPage"
+
 function App() {
 
   return (
-    <div className="App">
-      <h1>Habit Tracker</h1>
+    <div className="bg-blue-100 flex flex-col flex-1">
+      <HabitsPage></HabitsPage>
     </div>
   )
 }
