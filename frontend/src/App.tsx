@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import { Navbar1 } from './components/navbar1';
 import './App.css';
 import { CalendarDays, Trophy, Medal, SquareCheckBig, CirclePile, Users, Handshake } from "lucide-react";
-import { HomePage, HabitsPage, ProfilePage, FriendsPage, AchievementsPage, LogInPage, SignUpPage, CalendarPage, RequestsPage, GroupsPage, AboutPage } from './pages';
+import { HomePage, HabitsPage, ProfilePage, FriendsPage, AchievementsPage, LogInPage, SignUpPage, CalendarPage, RequestsPage, GroupsPage, AboutPage, LeaderboardsPage } from './pages';
 import logo from './assets/logoipsum-411.png';
 
 function App() {
@@ -34,7 +34,7 @@ function App() {
         {
           title: 'Leaderboards',
           description: 'Compete with friends on the leaderboard',
-          url: '/friends',
+          url: '/leaderboards',
           icon: <Medal className="size-5" />
         },
         {
@@ -93,6 +93,7 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/habits" element={<HabitsPage />} />
         <Route path="/calender" element={<CalendarPage />} />
+        <Route path="/leaderboards" element={<LeaderboardsPage />} />
         <Route path="/achievements" element={<AchievementsPage />} />
         <Route path="/about" element={<AboutPage />} />
         <Route path="/profile" element={<ProfilePage />} />

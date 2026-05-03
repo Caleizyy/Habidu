@@ -4,6 +4,7 @@ export * from './ProfilePage';
 export * from './FriendsPage';
 export * from './RequestsPage';
 export * from './GroupsPage';
+export * from './LeaderboardsPage';
 export * from './AchievementsPage';
 export * from './CalendarPage';
 export * from './LogInPage';
