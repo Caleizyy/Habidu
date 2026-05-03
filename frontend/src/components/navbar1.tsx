@@ -1,7 +1,9 @@
 "use client";
 
-import { Book, Menu, Sunset, Trees, Zap } from "lucide-react";
-import { Link } from "react-router-dom";
+import { useState } from "react";
+import { Book, Menu, Sunset, Trees, Zap, LogOut } from "lucide-react";
+import { Link, useNavigate } from "react-router-dom";
+import kittenImage from "../assets/kitten.jpg";
 
 import {
   Accordion,
@@ -25,6 +27,11 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import {
+  Avatar,
+  AvatarImage,
+  AvatarFallback,
+} from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
 interface MenuItem {
@@ -142,6 +149,29 @@ const Navbar1 = ({
   },
   className,
 }: Navbar1Props) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const navigate = useNavigate();
+
+  const handleAvatarClick = () => {
+    navigate("/profile");
+  };
+
+  const handleLogin = () => {
+    // TODO: Replace with actual authentication logic
+    setIsAuthenticated(true);
+    // navigate(auth.login.url);
+  };
+
+  const handleSignup = () => {
+    // TODO: Replace with actual authentication logic
+    setIsAuthenticated(true);
+    // navigate(auth.signup.url);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    navigate("/");
+  };
   return (
     <section className={cn("py-4", className)}>
       <div className="container">
@@ -168,12 +198,25 @@ const Navbar1 = ({
             </div>
           </div>
           <div className="flex gap-2">
-            <Button asChild variant="outline" size="sm">
-              <Link to={auth.login.url}>{auth.login.title}</Link>
-            </Button>
-            <Button asChild size="sm">
-              <Link to={auth.signup.url}>{auth.signup.title}</Link>
-            </Button>
+            {isAuthenticated ? (
+              <div className="flex items-center gap-2">
+                <button onClick={handleAvatarClick} className="cursor-pointer">
+                  <Avatar size="sm">
+                    <AvatarImage src={kittenImage} alt="Avatar" />
+                    <AvatarFallback>CN</AvatarFallback>
+                  </Avatar>
+                </button>
+              </div>
+            ) : (
+              <>
+                <Button variant="outline" size="sm" onClick={handleLogin}>
+                  {auth.login.title}
+                </Button>
+                <Button size="sm" onClick={handleSignup}>
+                  {auth.signup.title}
+                </Button>
+              </>
+            )}
           </div>
         </nav>
 
@@ -216,12 +259,25 @@ const Navbar1 = ({
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    <Button asChild variant="outline">
-                      <Link to={auth.login.url}>{auth.login.title}</Link>
-                    </Button>
-                    <Button asChild>
-                      <Link to={auth.signup.url}>{auth.signup.title}</Link>
-                    </Button>
+                    {isAuthenticated ? (
+                      <>
+                        <Button asChild>
+                          <Link to="/profile">Profile</Link>
+                        </Button>
+                        <Button variant="outline" onClick={handleLogout}>
+                          Logout
+                        </Button>
+                      </>
+                    ) : (
+                      <>
+                        <Button variant="outline" onClick={handleLogin}>
+                          {auth.login.title}
+                        </Button>
+                        <Button onClick={handleSignup}>
+                          {auth.signup.title}
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               </SheetContent>

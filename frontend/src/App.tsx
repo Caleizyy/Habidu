@@ -83,6 +83,7 @@ function App() {
   const navLogo = {
     url: '/',
     src: logo,
+    alt: 'Habit Tracker',
     title: 'Habit Tracker',
   };
 
