@@ -1,7 +1,7 @@
 import { Menu, UserIcon, LogOutIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import kittenImage from "../assets/kitten.jpg";
-import { DEFAULT_LOGO, DEFAULT_MENU, DEFAULT_AUTH } from "./Navbar.constants";
+import { DEFAULT_LOGO, DEFAULT_MENU, DEFAULT_AUTH } from "./NavBar.constants";
 import { useAuth } from "@/context/AuthContext";
 
 import {
@@ -9,15 +9,15 @@ import {
   AccordionContent,
   AccordionItem,
   AccordionTrigger,
-} from "@/components/ui/accordion";
-import { Button } from "@/components/ui/button";
+} from "@/components/ui/Accordion";
+import { Button } from "@/components/ui/Button";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
+} from "@/components/ui/DropdownMenu";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -25,15 +25,15 @@ import {
   NavigationMenuLink,
   NavigationMenuList,
   NavigationMenuTrigger,
-} from "@/components/ui/navigation-menu";
+} from "@/components/ui/NavigationMenu";
 import {
   Sheet,
   SheetContent,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-} from "@/components/ui/sheet";
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+} from "@/components/ui/Sheet";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/Avatar";
 import { cn } from "@/lib/utils";
 
 export interface MenuItem {
@@ -44,7 +44,7 @@ export interface MenuItem {
   items?: MenuItem[];
 }
 
-interface Navbar1Props {
+interface NavbarProps {
   className?: string;
   logo?: {
     url: string;
@@ -66,12 +66,12 @@ interface Navbar1Props {
   };
 }
 
-const Navbar = ({
+const NavBar = ({
   logo = DEFAULT_LOGO,
   menu = DEFAULT_MENU,
   auth = DEFAULT_AUTH,
   className,
-}: Navbar1Props) => {
+}: NavbarProps) => {
   const navigate = useNavigate();
   const { isAuthenticated, login, signup, logout } = useAuth();
 
@@ -292,4 +292,4 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
   );
 };
 
-export { Navbar };
+export { NavBar };
