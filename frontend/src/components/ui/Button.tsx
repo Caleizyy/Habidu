@@ -1,8 +1,16 @@
+<<<<<<< HEAD:frontend/src/components/ui/button.tsx
 import * as React from 'react';
 import { cva, type VariantProps } from 'class-variance-authority';
 import { Slot } from 'radix-ui';
 
 import { cn } from '@/lib/utils';
+=======
+import * as React from "react";
+import { cva, type VariantProps } from "class-variance-authority";
+import { Slot } from "radix-ui";
+
+import { cn } from "@/lib/utils";
+>>>>>>> 9b0dce8 (followed “Name” pattern across all files | Ran prettier):frontend/src/components/ui/Button.tsx
 
 const buttonVariants = cva(
   "group/button inline-flex shrink-0 items-center justify-center rounded-lg border border-transparent bg-clip-padding text-sm font-medium whitespace-nowrap transition-all outline-none select-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50 active:not-aria-[haspopup]:translate-y-px disabled:pointer-events-none disabled:opacity-50 aria-invalid:border-destructive aria-invalid:ring-3 aria-invalid:ring-destructive/20 dark:aria-invalid:border-destructive/50 dark:aria-invalid:ring-destructive/40 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
@@ -36,7 +44,11 @@ const buttonVariants = cva(
       variant: 'default',
       size: 'default',
     },
+<<<<<<< HEAD:frontend/src/components/ui/button.tsx
   }
+=======
+  },
+>>>>>>> 9b0dce8 (followed “Name” pattern across all files | Ran prettier):frontend/src/components/ui/Button.tsx
 );
 
 function Button({
@@ -49,7 +61,11 @@ function Button({
   VariantProps<typeof buttonVariants> & {
     asChild?: boolean;
   }) {
+<<<<<<< HEAD:frontend/src/components/ui/button.tsx
   const Comp = asChild ? Slot.Root : 'button';
+=======
+  const Comp = asChild ? Slot.Root : "button";
+>>>>>>> 9b0dce8 (followed “Name” pattern across all files | Ran prettier):frontend/src/components/ui/Button.tsx
 
   return (
     <Comp

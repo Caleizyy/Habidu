@@ -11,7 +11,7 @@ import {
   Users,
   Handshake,
 } from "lucide-react";
-import { MenuItem } from "./Navbar";
+import { MenuItem } from "./NavBar";
 import logo from "../assets/logoipsum-411.png";
 import { ROUTES } from "../constants/routes.constants";
 

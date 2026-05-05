@@ -1,6 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { Navbar } from "./components/Navbar";
-import { APP_LOGO, APP_MENU, APP_AUTH } from "./components/Navbar.constants";
+import { NavBar } from "./components/NavBar";
+import { APP_LOGO, APP_MENU, APP_AUTH } from "./components/NavBar.constants";
 import { AuthProvider } from "./context/AuthContext";
 import { ROUTES } from "./constants/routes.constants";
 import "./App.css";
@@ -23,7 +23,7 @@ function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
-        <Navbar logo={APP_LOGO} menu={APP_MENU} auth={APP_AUTH} />
+        <NavBar logo={APP_LOGO} menu={APP_MENU} auth={APP_AUTH} />
         <Routes>
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.HABITS} element={<HabitsPage />} />
