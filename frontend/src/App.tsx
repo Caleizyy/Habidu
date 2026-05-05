@@ -1,12 +1,11 @@
-import HabitsPage from "./pages/HabitsPage"
+import HabitsPage from './pages/HabitsPage';
 
 function App() {
-
   return (
-    <div className="bg-blue-100 flex flex-col flex-1">
-      <HabitsPage></HabitsPage>
+    <div className="flex flex-1 flex-col bg-blue-100">
+      <HabitsPage />
     </div>
-  )
+  );
 }
 
-export default App
+export default App;
