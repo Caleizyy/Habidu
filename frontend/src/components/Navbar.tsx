@@ -1,9 +1,8 @@
-"use client";
-
-import { useState } from "react";
-import { Book, Menu, Sunset, Trees, Zap, UserIcon, LogOutIcon } from "lucide-react";
+import { Menu, UserIcon, LogOutIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import kittenImage from "../assets/kitten.jpg";
+import { DEFAULT_LOGO, DEFAULT_MENU, DEFAULT_AUTH } from "./Navbar.constants";
+import { useAuth } from "@/context/AuthContext";
 
 import {
   Accordion,
@@ -17,7 +16,6 @@ import {
   DropdownMenuContent,
   DropdownMenuGroup,
   DropdownMenuItem,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import {
@@ -35,14 +33,10 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import {
-  Avatar,
-  AvatarImage,
-  AvatarFallback,
-} from "@/components/ui/avatar";
+import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { cn } from "@/lib/utils";
 
-interface MenuItem {
+export interface MenuItem {
   title: string;
   url: string;
   description?: string;
@@ -72,114 +66,22 @@ interface Navbar1Props {
   };
 }
 
-const Navbar1 = ({
-  logo = {
-    url: "https://www.shadcnblocks.com",
-    src: "https://deifkwefumgah.cloudfront.net/shadcnblocks/block/logos/shadcnblockscom-icon.svg",
-    alt: "logo",
-    title: "Shadcnblocks.com",
-  },
-  menu = [
-    { title: "Home", url: "#" },
-    {
-      title: "Products",
-      url: "#",
-      items: [
-        {
-          title: "Blog",
-          description: "The latest industry news, updates, and info",
-          icon: <Book className="size-5 shrink-0" />,
-          url: "#",
-        },
-        {
-          title: "Company",
-          description: "Our mission is to innovate and empower the world",
-          icon: <Trees className="size-5 shrink-0" />,
-          url: "#",
-        },
-        {
-          title: "Careers",
-          description: "Browse job listing and discover our workspace",
-          icon: <Sunset className="size-5 shrink-0" />,
-          url: "#",
-        },
-        {
-          title: "Support",
-          description:
-            "Get in touch with our support team or visit our community forums",
-          icon: <Zap className="size-5 shrink-0" />,
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Resources",
-      url: "#",
-      items: [
-        {
-          title: "Help Center",
-          description: "Get all the answers you need right here",
-          icon: <Zap className="size-5 shrink-0" />,
-          url: "#",
-        },
-        {
-          title: "Contact Us",
-          description: "We are here to help you with any questions you have",
-          icon: <Sunset className="size-5 shrink-0" />,
-          url: "#",
-        },
-        {
-          title: "Status",
-          description: "Check the current status of our services and APIs",
-          icon: <Trees className="size-5 shrink-0" />,
-          url: "#",
-        },
-        {
-          title: "Terms of Service",
-          description: "Our terms and conditions for using our services",
-          icon: <Book className="size-5 shrink-0" />,
-          url: "#",
-        },
-      ],
-    },
-    {
-      title: "Pricing",
-      url: "#",
-    },
-    {
-      title: "Blog",
-      url: "#",
-    },
-  ],
-  auth = {
-    login: { title: "Login", url: "#" },
-    signup: { title: "Sign up", url: "#" },
-  },
+const Navbar = ({
+  logo = DEFAULT_LOGO,
+  menu = DEFAULT_MENU,
+  auth = DEFAULT_AUTH,
   className,
 }: Navbar1Props) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
+  const { isAuthenticated, login, signup, logout } = useAuth();
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
     navigate("/profile");
   };
 
-  const handleLogin = () => {
-    // TODO: Replace with actual authentication logic
-    setIsAuthenticated(true);
-    // navigate(auth.login.url);
-  };
-
-  const handleSignup = () => {
-    // TODO: Replace with actual authentication logic
-    setIsAuthenticated(true);
-    // navigate(auth.signup.url);
-  };
-
   const handleLogout = () => {
-    // TODO: Call logout API endpoint to clear auth tokens/session when auth is implemented
-    setIsAuthenticated(false);
+    logout();
     navigate("/");
   };
   return (
@@ -202,7 +104,9 @@ const Navbar1 = ({
             <div className="flex items-center">
               <NavigationMenu>
                 <NavigationMenuList>
-                  {menu.map((item) => renderMenuItem(item))}
+                  {menu.map((item) => (
+                    <MenuItemDesktop key={item.title} item={item} />
+                  ))}
                 </NavigationMenuList>
               </NavigationMenu>
             </div>
@@ -225,7 +129,10 @@ const Navbar1 = ({
                       Profile
                     </DropdownMenuItem>
                   </DropdownMenuGroup>
-                  <DropdownMenuItem onClick={handleLogout} variant="destructive">
+                  <DropdownMenuItem
+                    onClick={handleLogout}
+                    variant="destructive"
+                  >
                     <LogOutIcon />
                     Log out
                   </DropdownMenuItem>
@@ -233,10 +140,10 @@ const Navbar1 = ({
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="outline" size="sm" onClick={handleLogin}>
+                <Button variant="outline" size="sm" onClick={login}>
                   {auth.login.title}
                 </Button>
-                <Button size="sm" onClick={handleSignup}>
+                <Button size="sm" onClick={signup}>
                   {auth.signup.title}
                 </Button>
               </>
@@ -279,7 +186,9 @@ const Navbar1 = ({
                     collapsible
                     className="flex w-full flex-col gap-4"
                   >
-                    {menu.map((item) => renderMobileMenuItem(item))}
+                    {menu.map((item) => (
+                      <MenuItemMobile key={item.title} item={item} />
+                    ))}
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
@@ -294,12 +203,10 @@ const Navbar1 = ({
                       </>
                     ) : (
                       <>
-                        <Button variant="outline" onClick={handleLogin}>
+                        <Button variant="outline" onClick={login}>
                           {auth.login.title}
                         </Button>
-                        <Button onClick={handleSignup}>
-                          {auth.signup.title}
-                        </Button>
+                        <Button onClick={signup}>{auth.signup.title}</Button>
                       </>
                     )}
                   </div>
@@ -313,10 +220,10 @@ const Navbar1 = ({
   );
 };
 
-const renderMenuItem = (item: MenuItem) => {
+const MenuItemDesktop = ({ item }: { item: MenuItem }) => {
   if (item.items) {
     return (
-      <NavigationMenuItem key={item.title}>
+      <NavigationMenuItem>
         <NavigationMenuTrigger>{item.title}</NavigationMenuTrigger>
         <NavigationMenuContent className="bg-popover text-popover-foreground">
           {item.items.map((subItem) => (
@@ -330,11 +237,11 @@ const renderMenuItem = (item: MenuItem) => {
   }
 
   return (
-    <NavigationMenuItem key={item.title}>
+    <NavigationMenuItem>
       <NavigationMenuLink asChild>
         <Link
           to={item.url}
-          className="group inline-flex h-10 w-max items-center justify-center rounded-md bg-background px-4 py-2 text-sm font-medium transition-colors hover:bg-muted hover:text-accent-foreground"
+          className="group bg-background hover:bg-muted hover:text-accent-foreground inline-flex h-10 w-max items-center justify-center rounded-md px-4 py-2 text-sm font-medium transition-colors"
         >
           {item.title}
         </Link>
@@ -343,10 +250,10 @@ const renderMenuItem = (item: MenuItem) => {
   );
 };
 
-const renderMobileMenuItem = (item: MenuItem) => {
+const MenuItemMobile = ({ item }: { item: MenuItem }) => {
   if (item.items) {
     return (
-      <AccordionItem key={item.title} value={item.title} className="border-b-0">
+      <AccordionItem value={item.title} className="border-b-0">
         <AccordionTrigger className="text-md py-0 font-semibold hover:no-underline">
           {item.title}
         </AccordionTrigger>
@@ -360,7 +267,7 @@ const renderMobileMenuItem = (item: MenuItem) => {
   }
 
   return (
-    <Link key={item.title} to={item.url} className="text-md font-semibold">
+    <Link to={item.url} className="text-md font-semibold">
       {item.title}
     </Link>
   );
@@ -369,14 +276,14 @@ const renderMobileMenuItem = (item: MenuItem) => {
 const SubMenuLink = ({ item }: { item: MenuItem }) => {
   return (
     <Link
-      className="flex min-w-80 flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none hover:bg-muted hover:text-accent-foreground"
+      className="hover:bg-muted hover:text-accent-foreground flex min-w-80 flex-row gap-4 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none"
       to={item.url}
     >
       <div className="text-foreground">{item.icon}</div>
       <div>
         <div className="text-sm font-semibold">{item.title}</div>
         {item.description && (
-          <p className="text-sm leading-snug text-muted-foreground">
+          <p className="text-muted-foreground text-sm leading-snug">
             {item.description}
           </p>
         )}
@@ -385,4 +292,4 @@ const SubMenuLink = ({ item }: { item: MenuItem }) => {
   );
 };
 
-export { Navbar1 };
+export { Navbar };
