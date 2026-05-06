@@ -165,7 +165,7 @@ const NavBar = ({
                           <Link to="/profile">Profile</Link>
                         </Button>
                         <Button variant="outline" onClick={handleLogout}>
-                          Logout
+                          Log out
                         </Button>
                       </>
                     ) : (
