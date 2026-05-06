@@ -12,7 +12,7 @@ import {
   Handshake,
   NotebookTabs,
 } from "lucide-react";
-import { MenuItem } from "../components/NavBar";
+import { MenuItem } from "../components/navbar";
 import logo from "../assets/logoipsum-411.png";
 import { ROUTES } from "./Routes.constants";
 

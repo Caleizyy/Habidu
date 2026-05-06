@@ -1,5 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { NavBar } from "./components/NavBar";
+import { NavBar } from "./components/navbar";
 import { APP_LOGO, APP_MENU, APP_AUTH } from "./constants/NavBar.constants";
 import { AuthProvider } from "./context/AuthContext";
 import { ROUTES } from "./constants/Routes.constants";
