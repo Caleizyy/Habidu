@@ -9,9 +9,7 @@ export default [
 
   ...tseslint.configs.recommended,
 
-  // -------------------------
   // React + TypeScript (frontend)
-  // -------------------------
   {
     files: ['**/*.{ts,tsx}'],
     plugins: {
@@ -31,9 +29,7 @@ export default [
     },
   },
 
-  // -------------------------
   // Jest / Node / CommonJS files
-  // -------------------------
   {
     files: ['**/*.cjs', '**/jest.config.*', '**/backend/**'],
     languageOptions: {

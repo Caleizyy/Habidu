@@ -37,6 +37,10 @@ cd ../backend
 npm install
 cd ..
 
+## Linting and formatting set up
+
+npm run prepare
+
 ## Running the project
 
 Start both frontend and backend:
