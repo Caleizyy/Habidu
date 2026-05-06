@@ -1,7 +1,7 @@
 import { Menu, UserIcon, LogOutIcon } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";
 import kittenImage from "../assets/kitten.jpg";
-import { DEFAULT_LOGO, DEFAULT_MENU, DEFAULT_AUTH } from "./NavBar.constants";
+import { DEFAULT_LOGO, DEFAULT_MENU, DEFAULT_AUTH } from "../constants/NavBar.constants";
 import { useAuth } from "@/context/AuthContext";
 
 import {
