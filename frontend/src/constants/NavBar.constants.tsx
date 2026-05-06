@@ -10,10 +10,11 @@ import {
   CirclePile,
   Users,
   Handshake,
+  NotebookTabs,
 } from "lucide-react";
-import { MenuItem } from "./NavBar";
+import { MenuItem } from "../components/NavBar";
 import logo from "../assets/logoipsum-411.png";
-import { ROUTES } from "../constants/routes.constants";
+import { ROUTES } from "./Routes.constants";
 
 export const DEFAULT_LOGO = {
   url: "https://www.shadcnblocks.com",
@@ -120,8 +121,14 @@ export const APP_MENU: MenuItem[] = [
         icon: <SquareCheckBig className="size-5" />,
       },
       {
+        title: "Tracking Habits",
+        description: "Track your habits",
+        url: ROUTES.TRACKING,
+        icon: <NotebookTabs  className="size-5" />,
+      },
+      {
         title: "Calendar",
-        description: "Track habit completion over time",
+        description: "Plan your habit completion schedule",
         url: ROUTES.CALENDAR,
         icon: <CalendarDays className="size-5" />,
       },
