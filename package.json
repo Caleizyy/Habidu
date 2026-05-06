@@ -34,8 +34,5 @@
       "eslint --fix",
       "prettier --write"
     ]
-  },
-  "dependencies": {
-    "mongoose": "^9.6.1"
   }
 }
