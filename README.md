@@ -49,10 +49,17 @@ npm run dev
 
 This uses concurrently to run both services.
 
+Start the MongoDB docker container:
+
+docker compose up
+
+Note: docker needs to be installed and docker service running
+
 ## URLs
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:5000
+- MongoDB: mongodb://localhost:27017/habit_db
 
 ## Tech Stack
 
@@ -61,9 +68,15 @@ This uses concurrently to run both services.
 - TypeScript
 - MUI (Material UI)
 - Concurrently
+- MongoDB 7
 
 ## Notes
 
 - Run npm install after pulling changes
 - Ensure Node version matches .nvmrc
 - If issues occur, run npm ci
+- To access MongoDB using shell, use command
+  docker exec -it $(docker ps -aqf "name=mongodb-1") mongosh
+- To seed DB with dummy data, run
+  npm run seed
+  from /backend directory
