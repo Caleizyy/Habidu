@@ -1,1 +1,1 @@
-export { TrackingHabitsPage } from "./TrackingHabitsPage";
+export { TrackingHabitsPage } from './TrackingHabitsPage';

@@ -1,1 +1,1 @@
-export { AchievementsPage } from "./AchievementsPage";
+export { AchievementsPage } from './AchievementsPage';

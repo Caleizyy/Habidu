@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
+import { Link } from 'react-router-dom';
 import {
   NavigationMenuItem,
   NavigationMenuTrigger,
   NavigationMenuContent,
   NavigationMenuLink,
-} from "@/components/ui/NavigationMenu";
-import { MenuItem } from "../types";
-import { SubMenuLink } from "./SubMenuLink";
+} from '@/components/ui/NavigationMenu';
+import { MenuItem } from '../types';
+import { SubMenuLink } from './SubMenuLink';
 
 const MenuItemDesktop = ({ item }: { item: MenuItem }) => {
   if (item.items) {

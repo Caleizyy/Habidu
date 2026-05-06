@@ -1,1 +1,1 @@
-export { GroupsPage } from "./GroupsPage";
+export { GroupsPage } from './GroupsPage';

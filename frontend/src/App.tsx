@@ -1,9 +1,9 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { NavBar } from "./components/navbar";
-import { APP_LOGO, APP_MENU, APP_AUTH } from "./constants/NavBar.constants";
-import { AuthProvider } from "./context/AuthContext";
-import { ROUTES } from "./constants/Routes.constants";
-import "./App.css";
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { NavBar } from './components/navbar';
+import { APP_LOGO, APP_MENU, APP_AUTH } from './constants/NavBar.constants';
+import { AuthProvider } from './context/AuthContext';
+import { ROUTES } from './constants/Routes.constants';
+import './App.css';
 import {
   HomePage,
   HabitsPage,
@@ -18,8 +18,7 @@ import {
   GroupsPage,
   AboutPage,
   LeaderboardsPage,
-
-} from "./pages";
+} from './pages';
 
 function App() {
   return (
@@ -29,7 +28,7 @@ function App() {
         <Routes>
           <Route path={ROUTES.HOME} element={<HomePage />} />
           <Route path={ROUTES.HABITS} element={<HabitsPage />} />
-          <Route path={ROUTES.TRACKING} element={<TrackingHabitsPage/>}/>
+          <Route path={ROUTES.TRACKING} element={<TrackingHabitsPage />} />
           <Route path={ROUTES.CALENDAR} element={<CalendarPage />} />
           <Route path={ROUTES.LEADERBOARDS} element={<LeaderboardsPage />} />
           <Route path={ROUTES.ACHIEVEMENTS} element={<AchievementsPage />} />
