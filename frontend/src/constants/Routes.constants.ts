@@ -1,6 +1,7 @@
 export const ROUTES = {
   HOME: "/",
   HABITS: "/habits",
+  TRACKING: "/tracking",
   CALENDAR: "/calendar",
   LEADERBOARDS: "/leaderboards",
   ACHIEVEMENTS: "/achievements",
@@ -10,5 +11,5 @@ export const ROUTES = {
   REQUESTS: "/requests",
   GROUPS: "/groups",
   LOGIN: "/login",
-  SIGNUP: "/signup",
+  SIGNUP: "/signup"
 } as const;
