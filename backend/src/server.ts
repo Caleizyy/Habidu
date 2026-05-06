@@ -4,15 +4,16 @@ import mongoose from 'mongoose';
 
 dotenv.config();
 
-const app = express();
 const PORT = process.env.PORT || 5000;
 const MONGO_URI = process.env.MONGO_URI;
+
+if (!MONGO_URI) throw new Error('MONGO_URI is not defined in the environment variables');
+
+const app = express();
 
 app.get('/', (req, res) => {
   res.send('Backend is alive');
 });
-
-if (!MONGO_URI) throw new Error('MONGO_URI is not defined in the environment variables');
 
 mongoose
   .connect(MONGO_URI)
