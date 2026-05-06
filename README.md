@@ -77,6 +77,4 @@ This uses concurrently to run both services. Important that you have the Mongo c
 - If issues occur, run npm ci
 - To access MongoDB using shell, use command
   docker exec -it $(docker ps -aqf "name=mongodb-1") mongosh
-- To seed DB with dummy data, run
-  npm run seed
-  from /backend directory
+- Otherwise use MongoDB for VS Code extension and connect with connection string
