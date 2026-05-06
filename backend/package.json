@@ -8,8 +8,7 @@
     "build": "tsc",
     "start": "node dist/server.js",
     "test": "jest --coverage --passWithNoTests",
-    "test:watch": "jest --watch",
-    "seed": "ts-node src/seed.ts"
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "",
