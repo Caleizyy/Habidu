@@ -43,17 +43,17 @@ npm run prepare
 
 ## Running the project
 
-Start both frontend and backend:
-
-npm run dev
-
-This uses concurrently to run both services.
-
 Start the MongoDB docker container:
 
 docker compose up
 
 Note: docker needs to be installed and docker service running
+
+Start both frontend and backend:
+
+npm run dev
+
+This uses concurrently to run both services. Important that you have the Mongo container up and running, otherwise the backend will not start.
 
 ## URLs
 
