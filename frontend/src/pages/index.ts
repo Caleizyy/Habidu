@@ -1,5 +1,6 @@
 export * from "./HomePage";
 export * from "./HabitsPage";
+export * from "./TrackingHabitsPage";
 export * from "./ProfilePage";
 export * from "./FriendsPage";
 export * from "./RequestsPage";
