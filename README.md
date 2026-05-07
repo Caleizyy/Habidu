@@ -43,16 +43,23 @@ npm run prepare
 
 ## Running the project
 
+Start the MongoDB docker container:
+
+docker compose up
+
+Note: docker needs to be installed and docker service running
+
 Start both frontend and backend:
 
 npm run dev
 
-This uses concurrently to run both services.
+This uses concurrently to run both services. Important that you have the Mongo container up and running, otherwise the backend will not start.
 
 ## URLs
 
 - Frontend: http://localhost:5173
 - Backend: http://localhost:5000
+- MongoDB: mongodb://localhost:27017/habit_db
 
 ## Tech Stack
 
@@ -61,9 +68,13 @@ This uses concurrently to run both services.
 - TypeScript
 - MUI (Material UI)
 - Concurrently
+- MongoDB 7
 
 ## Notes
 
 - Run npm install after pulling changes
 - Ensure Node version matches .nvmrc
 - If issues occur, run npm ci
+- To access MongoDB using shell, use command
+  docker exec -it $(docker ps -aqf "name=mongodb-1") mongosh
+- Otherwise use MongoDB for VS Code extension and connect with connection string
