@@ -1,6 +1,6 @@
 import HabitCard from '@/components/habits/HabitCard';
 
-export default function HabitsPage() {
+export function HabitsPage() {
   return (
     <div className="flex flex-1 flex-col">
       <h1 className="mt-12 ml-12 flex justify-start text-6xl text-black">Goals</h1>
