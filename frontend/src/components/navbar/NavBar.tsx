@@ -7,7 +7,7 @@ import { MenuItemDesktop } from './components/MenuItemDesktop';
 import { MenuItemMobile } from './components/MenuItemMobile';
 import { NavbarProps } from './types';
 
-import { Accordion } from '@/components/ui/Accordion';
+import { Accordion } from '@/components/ui/accordion';
 import { Button } from '@/components/ui/button';
 import {
   DropdownMenu,
@@ -15,10 +15,10 @@ import {
   DropdownMenuGroup,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/DropdownMenu';
-import { NavigationMenu, NavigationMenuList } from '@/components/ui/NavigationMenu';
-import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/Sheet';
-import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
+} from '@/components/ui/dropdownmenu';
+import { NavigationMenu, NavigationMenuList } from '@/components/ui/navigationmenu';
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/sheet';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import { cn } from '@/lib/utils';
 
 const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH, className }: NavbarProps) => {
