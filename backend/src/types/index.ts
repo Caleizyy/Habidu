@@ -26,3 +26,8 @@ export interface CreateHabitBody {
   difficulty: HabitDifficulty;
   notes?: string;
 }
+
+export interface HabitQueryFilter {
+  category?: HabitCategory;
+  frequency?: HabitFrequency;
+}

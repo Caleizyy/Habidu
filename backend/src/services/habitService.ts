@@ -1,14 +1,10 @@
-import { CreateHabitBody, HabitCategory, HabitFrequency } from '../types';
+import { CreateHabitBody, HabitQueryFilter } from '../types';
 import * as habitRepository from '../repositories/habitRepository';
 
-export function getByCategory(category: HabitCategory) {
-  return habitRepository.getHabitsByCategory(category);
-}
-
-export function getByFrequency(frequency: HabitFrequency) {
-  return habitRepository.getHabitsByFrequency(frequency);
-}
-
 export function create(data: CreateHabitBody) {
-  return habitRepository.createHabit(data);
+  return habitRepository.create(data);
+}
+
+export function find(filter: HabitQueryFilter) {
+  return habitRepository.find(filter);
 }

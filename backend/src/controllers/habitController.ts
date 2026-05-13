@@ -1,38 +1,25 @@
 import { Request, Response } from 'express';
 import * as habitService from '../services/habitService';
-import { CreateHabitBody, HabitCategory, HabitFrequency } from '../types';
+import { CreateHabitBody, HabitQueryFilter } from '../types';
 
-export async function getByCategory(req: Request<{ category: string }>, res: Response) {
-  const { category } = req.params;
-
-  if (!Object.values(HabitCategory).includes(category as HabitCategory)) {
-    return res.status(400).json({ error: 'Invalid category' });
-  }
-
+export const find = async (req: Request<object, object, object, HabitQueryFilter>, res: Response) => {
   try {
-    const habits = await habitService.getByCategory(category as HabitCategory);
-    return res.json(habits);
+    const { category, frequency } = req.query;
+
+    const options: Record<string, string> = {};
+
+    if (category) options.category = category;
+
+    if (frequency) options.frequency = frequency;
+
+    const habits = await habitService.find(options);
+
+    res.status(200).json(habits);
   } catch (error) {
-    console.error('Error fetching habits by category:', error);
-    return res.status(500).json({ error: 'Failed to fetch habits by category' });
+    console.error('Error fetching habits:', error);
+    res.status(500).json({ error: 'Failed to fetch habits' });
   }
-}
-
-export async function getByFrequency(req: Request<{ frequency: string }>, res: Response) {
-  const { frequency } = req.params;
-
-  if (!Object.values(HabitFrequency).includes(frequency as HabitFrequency)) {
-    return res.status(400).json({ error: 'Invalid frequency' });
-  }
-
-  try {
-    const habits = await habitService.getByFrequency(frequency as HabitFrequency);
-    return res.json(habits);
-  } catch (error) {
-    console.error('Error fetching habits by frequency:', error);
-    return res.status(500).json({ error: 'Failed to fetch habits by frequency' });
-  }
-}
+};
 
 export async function create(req: Request<object, object, CreateHabitBody>, res: Response) {
   const { name, category, frequency, difficulty, notes } = req.body;
