@@ -1,4 +1,4 @@
-import { Button } from '@/components/ui/button';
+import { Button } from '@/components/ui/Button';
 import { PlusIcon } from 'lucide-react';
 import {
   Dialog,
@@ -8,10 +8,10 @@ import {
   DialogTitle,
   DialogFooter,
   DialogClose,
-} from '@/components/ui/dialog';
-import { Textarea } from '@/components/ui/textarea';
-import { Field, FieldDescription, FieldLabel } from '@/components/ui/field';
-import { Input } from '@/components/ui/input';
+} from '@/components/ui/Dialog';
+import { Textarea } from '@/components/ui/Textarea';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/Field';
+import { Input } from '@/components/ui/Input';
 import { HabitSelect } from './HabitSelect';
 import { habitSelectOptions } from './selectChoices.constants';
 

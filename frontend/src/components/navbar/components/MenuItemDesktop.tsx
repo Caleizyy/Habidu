@@ -4,7 +4,7 @@ import {
   NavigationMenuTrigger,
   NavigationMenuContent,
   NavigationMenuLink,
-} from '@/components/ui/navigationmenu';
+} from '@/components/ui/NavigationMenu';
 import { MenuItem } from '../types';
 import { SubMenuLink } from './SubMenuLink';
 
