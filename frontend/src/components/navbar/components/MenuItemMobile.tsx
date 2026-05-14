@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/accordion';
+import { AccordionItem, AccordionTrigger, AccordionContent } from '@/components/ui/Accordion';
 import { MenuItem } from '../types';
 import { SubMenuLink } from './SubMenuLink';
 
