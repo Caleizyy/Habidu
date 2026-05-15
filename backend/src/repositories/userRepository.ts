@@ -1,10 +1,10 @@
-import * as userRepo from '../repositories/userRepository';
+import { User } from '../models/user';
 import { CreateUserBody } from '../types';
 
 export function getBySub(sub: string) {
-  return userRepo.getBySub(sub);
+  return User.findOne({ sub: sub });
 }
 
 export function create(data: CreateUserBody) {
-  return userRepo.create(data);
+  return User.create(data);
 }
