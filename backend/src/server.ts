@@ -1,6 +1,7 @@
 import express, { ErrorRequestHandler } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import morgan from 'morgan';
 
 import habitRoutes from './routes/habitRoutes';
 
@@ -15,10 +16,7 @@ const app = express();
 
 app.use(express.json());
 
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.get('/', (req, res) => {
   res.send('Backend is alive');

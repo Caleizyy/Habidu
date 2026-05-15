@@ -4,15 +4,7 @@ import { CreateHabitBody, HabitQueryFilter } from '../types';
 
 export const find = async (req: Request<object, object, object, HabitQueryFilter>, res: Response) => {
   try {
-    const { category, frequency } = req.query;
-
-    const options: Record<string, string> = {};
-
-    if (category) options.category = category;
-
-    if (frequency) options.frequency = frequency;
-
-    const habits = await habitService.find(options);
+    const habits = await habitService.find(req.query);
 
     res.status(200).json(habits);
   } catch (error) {
@@ -21,7 +13,7 @@ export const find = async (req: Request<object, object, object, HabitQueryFilter
   }
 };
 
-export async function create(req: Request<object, object, CreateHabitBody>, res: Response) {
+export const create = async (req: Request<object, object, CreateHabitBody>, res: Response) => {
   const { name, category, frequency, difficulty, notes } = req.body;
 
   if (!name || !category || !frequency || !difficulty) {
@@ -29,10 +21,10 @@ export async function create(req: Request<object, object, CreateHabitBody>, res:
   }
 
   try {
-    const newHabit = await habitService.create({ name, category, frequency, difficulty, notes });
+    const newHabit = await habitService.create(req.body);
     return res.status(201).json(newHabit);
   } catch (error) {
     console.error('Error creating habit:', error);
     return res.status(500).json({ error: 'Failed to create habit' });
   }
-}
+};
