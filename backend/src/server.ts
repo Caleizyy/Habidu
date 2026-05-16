@@ -1,6 +1,9 @@
-import express from 'express';
+import express, { ErrorRequestHandler } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import morgan from 'morgan';
+
+import habitRoutes from './routes/habitRoutes';
 
 dotenv.config();
 
@@ -11,9 +14,21 @@ if (!MONGO_URI) throw new Error('MONGO_URI is not defined in the environment var
 
 const app = express();
 
+app.use(express.json());
+
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
+
 app.get('/', (req, res) => {
   res.send('Backend is alive');
 });
+
+app.use('/habits', habitRoutes);
+
+const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
+  console.error(err);
+  res.status(500).json({ error: 'Internal server error' });
+};
+app.use(errorHandler);
 
 mongoose
   .connect(MONGO_URI)
