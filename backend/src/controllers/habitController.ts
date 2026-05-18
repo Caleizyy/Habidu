@@ -14,9 +14,9 @@ export const find = async (req: Request<object, object, object, HabitQueryFilter
 };
 
 export const create = async (req: Request<object, object, CreateHabitBody>, res: Response) => {
-  const { name, category, frequency, difficulty, notes } = req.body;
+  const { name, category, frequency, difficulty, targetValue, targetUnit, notes } = req.body;
 
-  if (!name || !category || !frequency || !difficulty) {
+  if (!name || !category || !frequency || !difficulty || targetValue === undefined || !targetUnit) {
     return res.status(400).json({ error: 'Missing required fields' });
   }
 

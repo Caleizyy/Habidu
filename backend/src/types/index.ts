@@ -42,11 +42,25 @@ export enum HabitFrequency {
   Monthly = 'Monthly',
 }
 
+export enum HabitUnit {
+  Minutes = 'min',
+  Hours = 'hours',
+  Milliliters = 'ml',
+  Liters = 'liters',
+  Times = 'times',
+  Pages = 'pages',
+  Books = 'books',
+  Kilometers = 'km',
+}
+
 export interface CreateHabitBody {
   name: string;
   category: HabitCategory;
   frequency: HabitFrequency;
   difficulty: HabitDifficulty;
+  /** Target value for the habit (e.g., 30 minutes, 5 km, 2 times) */
+  targetValue: number;
+  targetUnit: HabitUnit;
   notes?: string;
 }
 
@@ -54,3 +68,14 @@ export interface HabitQueryFilter {
   category?: HabitCategory;
   frequency?: HabitFrequency;
 }
+
+export interface CreateHabitLogBody {
+  habitId: string;
+  date: string;
+  value: number;
+}
+
+/**
+ * TODO: Add GET /habits/:id/logs?from=...&to=... endpoint
+ * to fetch logs and habit details together in one request
+ */
