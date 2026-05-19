@@ -2,7 +2,8 @@ import { Request, Response } from 'express';
 import { UserRole } from '../types/index';
 import * as authService from '../services/authService';
 import * as sessionService from '../services/sessionService';
-import type { CreateUserBody } from '../types/index';
+import * as refreshService from '../services/refreshService';
+import type { CreateRefreshTokenBody, CreateUserBody } from '../types/index';
 import crypto from 'crypto';
 import { CreateSessionBody } from '../types';
 import { google } from 'googleapis';
@@ -61,11 +62,17 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
       sessionId: sessionId,
       sub: payload.sub,
       accessToken: accessToken,
-      refreshToken: tokens.refresh_token,
       tokenExpiresAt: expirationDate,
     };
 
     await sessionService.create(sessionBody);
+
+    const refreshTokenBody: CreateRefreshTokenBody = {
+      sub: payload.sub,
+      refreshToken: tokens.refresh_token,
+    };
+
+    await refreshService.create(refreshTokenBody);
 
     res.cookie('session', sessionId, {
       httpOnly: true,

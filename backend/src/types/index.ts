@@ -14,9 +14,13 @@ export interface CreateSessionBody {
   sessionId: string;
   sub: string;
   accessToken: string;
-  refreshToken: string;
   tokenExpiresAt: Date;
 }
+export interface CreateRefreshTokenBody {
+  sub: string;
+  refreshToken: string;
+}
+
 export enum HabitCategory {
   Sports = 'sports',
   Health = 'health',

@@ -9,6 +9,6 @@ export function getSessionById(id: string) {
   return sessionRepo.getSessionById(id);
 }
 
-export function updateSession(id: string, expiryDate: Date, accessToken: string) {
-  return sessionRepo.updateSession(id, expiryDate, accessToken);
+export function updateSession(id: string, expiryDate: Date) {
+  return sessionRepo.updateSession(id, expiryDate);
 }

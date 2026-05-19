@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
 import * as sessionService from '../services/sessionService';
 import * as authService from '../services/authService';
+import * as refreshService from '../services/refreshService';
 
 export const sessionCheck = async (req: Request, res: Response) => {
   try {
@@ -21,15 +22,19 @@ export const sessionCheck = async (req: Request, res: Response) => {
     }
 
     if (session.tokenExpiresAt < new Date()) {
-      console.log('Token expired, refreshing');
-      const newTokens = await authService.refreshAccessToken(session.refreshToken);
+      const refreshToken = await refreshService.getBySub(session.sub);
+      if (!refreshToken) {
+        return res.status(401).json({ error: 'No refresh token found' });
+      }
+
+      const newTokens = await authService.refreshAccessToken(refreshToken.refreshToken);
 
       if (!newTokens.access_token || !newTokens.expiry_date) {
         return res.status(500).json({ error: 'Error updating tokens.' });
       }
 
       try {
-        await sessionService.updateSession(sessionId, new Date(newTokens.expiry_date), newTokens.access_token);
+        await sessionService.updateSession(sessionId, new Date(newTokens.expiry_date));
       } catch (error) {
         return res.status(500).json({ error: 'Error updating session:', details: error });
       }
