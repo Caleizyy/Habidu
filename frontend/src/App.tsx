@@ -18,6 +18,7 @@ import {
   GroupsPage,
   AboutPage,
   LeaderboardsPage,
+  NotFoundPage,
 } from './pages';
 
 function App() {
@@ -39,6 +40,7 @@ function App() {
           <Route path={ROUTES.GROUPS} element={<GroupsPage />} />
           <Route path={ROUTES.LOGIN} element={<LogInPage />} />
           <Route path={ROUTES.SIGNUP} element={<SignUpPage />} />
+          <Route path={ROUTES.NOTFOUND} element={<NotFoundPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

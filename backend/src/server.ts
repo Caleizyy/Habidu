@@ -1,7 +1,8 @@
-import express, { ErrorRequestHandler } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
 import morgan from 'morgan';
+import { notFoundHandler, errorHandler } from './middleware';
 
 import habitRoutes from './routes/habitRoutes';
 
@@ -22,12 +23,13 @@ app.get('/', (req, res) => {
   res.send('Backend is alive');
 });
 
-app.use('/habits', habitRoutes);
+const apiRouter = express.Router();
 
-const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: 'Internal server error' });
-};
+app.use('/api', apiRouter);
+apiRouter.use('/habits', habitRoutes);
+
+app.use(notFoundHandler);
+
 app.use(errorHandler);
 
 mongoose
