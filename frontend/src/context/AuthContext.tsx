@@ -9,11 +9,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
-  const login = () => {
-    // TODO: Replace with actual authentication logic
-    setIsAuthenticated(true);
-  };
-
   const signup = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       await authApi.loginWithGoogle(tokenResponse.code);
@@ -24,12 +19,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.log('Login Failed');
     },
     flow: 'auth-code',
-    redirect_uri: 'http://localhost:5173',
+    redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT_URI,
   });
 
-  const logout = () => {
+  const logout = async () => {
     // TODO: Call logout API endpoint to clear auth tokens/session when auth is implemented
-    setIsAuthenticated(false);
+    // await refreshUser();
+    // setIsAuthenticated(false);
   };
 
   const refreshUser = async () => {
@@ -43,7 +39,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, refreshUser, login, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, refreshUser, signup, logout }}>
       {children}
     </AuthContext.Provider>
   );

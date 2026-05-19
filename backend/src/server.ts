@@ -14,7 +14,7 @@ if (!MONGO_URI) throw new Error('MONGO_URI is not defined in the environment var
 
 const app = express();
 
-const allowedOrigins = ['http://localhost:5173'];
+const allowedOrigins = ['' + process.env.GOOGLE_REDIRECT_URI];
 
 app.use(cookieParser());
 app.use(express.json());

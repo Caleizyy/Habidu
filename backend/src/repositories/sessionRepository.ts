@@ -10,11 +10,11 @@ export function getSessionById(id: string) {
 }
 
 export async function updateSession(id: string, expiryDate: Date, accessToken: string) {
-  return await Session.findByIdAndUpdate(
-    id,
+  return await Session.findOneAndUpdate(
+    { sessionId: id },
     {
       accessToken: accessToken,
-      expiresAt: new Date(expiryDate),
+      tokenExpiresAt: new Date(expiryDate),
     },
     { new: true }
   );

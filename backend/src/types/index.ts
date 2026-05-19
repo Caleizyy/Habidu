@@ -1,24 +1,3 @@
-export interface GoogleJwtPayload {
-  sub: string;
-  name: string;
-  given_name: string;
-  family_name: string;
-  picture: string;
-  email: string;
-  email_verified: boolean;
-  locale: string;
-}
-export interface Oauth2Token {
-  access_token: string;
-  authuser?: string;
-  expires_in: number;
-  gis_params?: string;
-  iss?: string;
-  oauth_metadata?: string;
-  prompt: string;
-  scope: string;
-  token_type: string;
-}
 export enum UserRole {
   Admin = 'admin',
   Regular = 'regular',

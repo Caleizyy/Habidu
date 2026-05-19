@@ -24,7 +24,7 @@ import { ROUTES } from '../../constants/Routes.constants';
 
 const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH, className }: NavbarProps) => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, refreshUser, login, signup, logout } = useAuth();
+  const { user, isAuthenticated, refreshUser, signup, logout } = useAuth();
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
@@ -33,14 +33,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
 
   const handleLogout = () => {
     logout();
-    refreshUser();
     navigate('/');
-  };
-
-  const handleLogin = () => {
-    login();
-    refreshUser();
-    navigate(ROUTES.LOGIN);
   };
 
   const handleSignup = async () => {
@@ -95,9 +88,6 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="outline" size="sm" onClick={login}>
-                  {auth.login.title}
-                </Button>
                 <Button size="sm" onClick={signup}>
                   {auth.signup.title}
                 </Button>
@@ -146,9 +136,6 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
                       </>
                     ) : (
                       <>
-                        <Button variant="outline" onClick={handleLogin}>
-                          {auth.login.title}
-                        </Button>
                         <Button onClick={handleSignup}>{auth.signup.title}</Button>
                       </>
                     )}

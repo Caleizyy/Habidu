@@ -3,7 +3,6 @@ import { UserRole } from '../types/index';
 import * as authService from '../services/authService';
 import * as sessionService from '../services/sessionService';
 import type { CreateUserBody } from '../types/index';
-import axios from 'axios';
 import crypto from 'crypto';
 import { CreateSessionBody } from '../types';
 import { google } from 'googleapis';
@@ -19,26 +18,35 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
 
   try {
     const { tokens } = await oauth2Client.getToken({ code });
-    const response = await axios.get('https://www.googleapis.com/oauth2/v3/userinfo', {
-      headers: {
-        Authorization: `Bearer ${tokens.access_token}`,
-      },
+
+    const ticket = await oauth2Client.verifyIdToken({
+      idToken: tokens.id_token!,
+      audience: process.env.GOOGLE_CLIENT_ID,
     });
-    const user = await authService.getBySub(response.data.sub);
+
+    const payload = ticket.getPayload();
+
+    if (!payload) {
+      return res.status(401).json({ message: 'Invalid token payload' });
+    }
+
+    const user = await authService.getBySub(payload.sub);
+
+    if (!payload.email || !payload.given_name || !payload.family_name) {
+      return res.status(400).json({ message: 'Missing required user information' });
+    }
+
     if (!user) {
       const createUser: CreateUserBody = {
-        sub: response.data.sub,
-        firstName: response.data.given_name,
-        lastName: response.data.family_name,
-        email: response.data.email,
-        picture: response.data.picture,
+        sub: payload.sub,
+        firstName: payload.given_name,
+        lastName: payload.family_name,
+        email: payload.email,
+        picture: payload.picture,
         role: UserRole.Regular,
       };
 
-      const user = authService.create(createUser);
-      console.log('User created: ', user);
-    } else {
-      console.log('User found: ', user);
+      await authService.create(createUser);
     }
 
     if (!tokens.access_token || !tokens.refresh_token || !tokens.expiry_date) {
@@ -51,21 +59,20 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
     const expirationDate = new Date(tokens.expiry_date!);
     const sessionBody: CreateSessionBody = {
       sessionId: sessionId,
-      sub: response.data.sub,
+      sub: payload.sub,
       accessToken: accessToken,
       refreshToken: tokens.refresh_token,
       tokenExpiresAt: expirationDate,
     };
-    const session = await sessionService.create(sessionBody);
 
-    console.log('session: ', session);
+    await sessionService.create(sessionBody);
 
     res.cookie('session', sessionId, {
       httpOnly: true,
       secure: true,
       sameSite: 'lax',
       path: '/',
-      maxAge: (tokens.expiry_date - Date.now()) / 1000,
+      maxAge: tokens.expiry_date - Date.now(),
     });
 
     return res.status(201).json({

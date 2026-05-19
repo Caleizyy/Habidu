@@ -96,7 +96,6 @@ export const DEFAULT_MENU: MenuItem[] = [
 ];
 
 export const DEFAULT_AUTH = {
-  login: { title: 'Login', url: ROUTES.LOGIN },
   signup: { title: 'Sign up', url: ROUTES.SIGNUP },
 };
 
