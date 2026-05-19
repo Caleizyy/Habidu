@@ -1,22 +1,22 @@
 export enum HabitCategory {
-  Sports = 'sports',
-  Health = 'health',
-  Study = 'study',
-  Skills = 'skills',
-  Chores = 'chores',
+  Sports = 'Sports',
+  Health = 'Health',
+  Study = 'Study',
+  Skills = 'Skills',
+  Chores = 'Chores',
 }
 
 export enum HabitDifficulty {
-  Trivial = 'trivial',
-  Easy = 'easy',
-  Medium = 'medium',
-  Hard = 'hard',
+  Trivial = 'Trivial',
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard',
 }
 
 export enum HabitFrequency {
-  Daily = 'daily',
-  Weekly = 'weekly',
-  Monthly = 'monthly',
+  Daily = 'Daily',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
 }
 
 export interface CreateHabitBody {

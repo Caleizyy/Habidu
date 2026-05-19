@@ -1,6 +1,7 @@
 import express, { ErrorRequestHandler } from 'express';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import cors from 'cors';
 
 import habitRoutes from './routes/habitRoutes';
 
@@ -12,6 +13,8 @@ const MONGO_URI = process.env.MONGO_URI;
 if (!MONGO_URI) throw new Error('MONGO_URI is not defined in the environment variables');
 
 const app = express();
+
+app.use(cors());
 
 app.use(express.json());
 
