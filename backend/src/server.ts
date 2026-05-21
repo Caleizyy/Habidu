@@ -1,4 +1,9 @@
+<<<<<<< HEAD
 import express from 'express';
+=======
+import express, { ErrorRequestHandler } from 'express';
+import cors from 'cors';
+>>>>>>> 87f7f0f (backend for Habit Logging, some changes to Habit backend, added seeding and deleting scripts, fixed ESList errors)
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import mongoose from 'mongoose';
