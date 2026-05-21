@@ -1,0 +1,4 @@
+export const HABIT_TRACKING_CONSTANTS = {
+  ITEMS_PER_PAGE: 5,
+  MIN_LOADING_TIME_MS: 500,
+} as const;
