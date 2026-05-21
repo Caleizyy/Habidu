@@ -7,10 +7,8 @@ export interface IHabit extends Document {
   frequency: HabitFrequency;
   difficulty: HabitDifficulty;
   category: HabitCategory;
-
   targetValue: number;
   targetUnit: HabitUnit;
-
   notes?: string;
 }
 
