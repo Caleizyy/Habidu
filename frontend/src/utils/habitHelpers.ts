@@ -1,6 +1,6 @@
 import { Habit, HabitLog, PeriodCell } from '@/types/habit';
 
-/** "2026-05-17" → "2026-05" */
+// "2026-05-17" → "2026-05"
 export function monthKey(dateStr: string): string {
   return dateStr.slice(0, 7);
 }
@@ -48,19 +48,19 @@ export function buildMonthlyCells(habit: Habit, logs: HabitLog[], monthKeys: str
   }));
 }
 
-/** Format date range "2026-05-11" to "May 11" */
+// Format date range "2026-05-11" to "May 11"
 export function formatDate(dateStr: string): string {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
 }
 
-/** Format a date range like "May 11 - May 17" */
+// Format a date range like "May 11 - May 17"
 export function formatDateRange(startDate: string, endDate: string): string {
   const start = formatDate(startDate);
   const end = formatDate(endDate);
   return `${start} - ${end}`;
 }
 
-/** Normalize dates from ISO format to YYYY-MM-DD */
+// Normalize dates from ISO format to YYYY-MM-DD
 export function normalizeDateString(dateStr: string): string {
   if (!dateStr) return '';
   // Handle ISO format: "2026-05-11T00:00:00.000Z" → "2026-05-11"
@@ -71,7 +71,7 @@ export function normalizeDateString(dateStr: string): string {
   return dateStr;
 }
 
-/** Get today's date in YYYY-MM-DD format */
+// Get today's date in YYYY-MM-DD format
 export function getTodayDate(): string {
   const today = new Date();
   const year = today.getFullYear();
@@ -80,7 +80,7 @@ export function getTodayDate(): string {
   return `${year}-${month}-${day}`;
 }
 
-/** Get the Monday of the week containing the given date */
+// Get the Monday of the week containing the given date
 export function getMondayOfWeek(dateStr: string): string {
   const d = new Date(dateStr + 'T00:00:00');
   const day = d.getDay(); // 0 = Sunday, 1 = Monday, ...
@@ -92,7 +92,7 @@ export function getMondayOfWeek(dateStr: string): string {
   return `${year}-${month}-${date}`;
 }
 
-/** Get the Sunday of the week containing the given date */
+// Get the Sunday of the week containing the given date
 export function getSundayOfWeek(dateStr: string): string {
   const monday = getMondayOfWeek(dateStr);
   const d = new Date(monday + 'T00:00:00');
@@ -103,7 +103,7 @@ export function getSundayOfWeek(dateStr: string): string {
   return `${year}-${month}-${date}`;
 }
 
-/** Get an array of dates for the full week (Mon-Sun) containing today */
+// Get an array of dates for the full week (Mon-Sun) containing today
 export function getFullWeek(today?: string): string[] {
   const todayDate = today || getTodayDate();
   const monday = getMondayOfWeek(todayDate);
@@ -122,7 +122,7 @@ export function getFullWeek(today?: string): string[] {
   return dates;
 }
 
-/** Get an array of dates for the last N days ending today (oldest first) */
+// Get an array of dates for the last N days ending today (oldest first)
 export function getLast7Days(today?: string): string[] {
   const todayDate = today || getTodayDate();
   const dates: string[] = [];
@@ -140,7 +140,7 @@ export function getLast7Days(today?: string): string[] {
   return dates;
 }
 
-/** Get the last 4 complete weeks (Mon-Sun) before and including today, each as {weekKey, label, sublabel?, dates} */
+// Get the last 4 complete weeks (Mon-Sun) before and including today, each as {weekKey, label, sublabel?, dates}
 export function getLast4Weeks(today?: string) {
   const todayDate = today || getTodayDate();
   const weeks: Array<{ weekKey: string; label: string; sublabel?: string; dates: string[] }> = [];
@@ -182,7 +182,7 @@ export function getLast4Weeks(today?: string) {
   return weeks;
 }
 
-/** Get the last 5 months before and including today, each as {monthKey, label, sublabel?} */
+// Get the last 5 months before and including today, each as {monthKey, label, sublabel?}
 export function getLast5Months(today?: string) {
   const todayDate = today || getTodayDate();
   const [year, month] = todayDate.split('-').map(Number);
@@ -208,7 +208,7 @@ export function getLast5Months(today?: string) {
   return months;
 }
 
-/** Get labels for the last 7 days, with today labeled as "Today" */
+// Get labels for the last 7 days, with today labeled as "Today"
 export function getDailyRowLabels(today?: string) {
   const todayDate = today || getTodayDate();
   const dates = getLast7Days(todayDate);

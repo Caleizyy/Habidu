@@ -8,11 +8,11 @@ interface LogRowProps {
   target: number;
   unit: HabitUnit;
   isCurrentPeriod?: boolean;
-  /** called when user taps "Log" — client sends quickLog:true, value:targetValue */
+  // called when user taps "Log" — client sends quickLog:true, value:targetValue
   onQuickLog: () => void;
-  /** called when user manually edits — client sends quickLog:false, value:N */
+  // called when user manually edits — client sends quickLog:false, value:N
   onEdit: (value: number) => void;
-  /** called when user clicks "Undo" to delete the log entry */
+  // called when user clicks "Undo" to delete the log entry
   onUndo: () => void;
 }
 
