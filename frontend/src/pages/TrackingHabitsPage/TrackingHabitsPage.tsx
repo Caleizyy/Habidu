@@ -98,10 +98,8 @@ export function TrackingHabitsPage(): React.ReactNode {
         <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-neutral-900">
           <div className="flex items-center justify-center py-12">
             <div className="text-center">
-              <p className="mb-4 text-red-600 dark:text-red-400">Error: {hookState.error}</p>
-              <p className="text-sm text-neutral-600 dark:text-neutral-400">
-                Make sure the backend is running at http://localhost:5000
-              </p>
+              <p className="mb-2 text-lg font-semibold text-red-600 dark:text-red-400">Something went wrong</p>
+              <p className="text-neutral-600 dark:text-neutral-400">{hookState.error}</p>
             </div>
           </div>
         </div>

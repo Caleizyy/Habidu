@@ -13,6 +13,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
   const [deletedLogIds, setDeletedLogIds] = React.useState<Record<string, string>>({});
   const [loading, setLoading] = React.useState(true);
   const [isSaving, setIsSaving] = React.useState(false);
+  const [savingLogIds, setSavingLogIds] = React.useState<Set<string>>(new Set());
   const [error, setError] = React.useState<string | null>(null);
 
   const [pastDaysOpen, setPastDaysOpen] = React.useState(false);
@@ -59,7 +60,8 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
         );
         setLogs(logsData);
       } catch (err) {
-        setError(err instanceof Error ? err.message : 'Failed to load data');
+        const errorMessage = 'Unable to load your habits. Please refresh the page.';
+        setError(errorMessage);
         console.error('Error loading data:', err);
       } finally {
         setLoading(false);
@@ -165,11 +167,14 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     Object.values(drafts).some((habitDrafts) => Object.keys(habitDrafts).length > 0) ||
     Object.keys(deletedLogIds).length > 0;
 
-  // Save function
+  // Save function with optimistic loading
   async function saveDrafts() {
     setIsSaving(true);
     const startTime = Date.now();
     const MIN_LOADING_TIME = HABIT_TRACKING_CONSTANTS.MIN_LOADING_TIME_MS;
+
+    // Backup logs for rollback on failure
+    const logsBackup = JSON.parse(JSON.stringify(logs));
 
     try {
       const updates: Array<{ habitId: string; date: string; value: number }> = [];
@@ -206,40 +211,90 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
         }
       }
 
-      await Promise.all(logsToDelete.map(({ habitId, logId }) => deleteLog(habitId, logId)));
+      // Optimistically update logs state
+      setLogs((prevLogs) => {
+        const newLogs = JSON.parse(JSON.stringify(prevLogs));
 
-      await Promise.all(
-        updates.map(({ habitId, date, value }) => {
-          return createLog(habitId, date, value);
-        })
-      );
-
-      await Promise.all(
-        Object.entries(deletedLogIds).map(([logId, habitId]) => {
-          return deleteLog(habitId, logId);
-        })
-      );
-
-      const startDate = `${new Date(TODAY + 'T00:00:00').getFullYear() - 1}-01-01`;
-      const endDate = TODAY;
-      const logsData: Record<string, HabitLog[]> = {};
-      await Promise.all(
-        habits.map(async (habit) => {
-          try {
-            logsData[habit._id] = await fetchLogsForHabit(habit._id, startDate, endDate);
-          } catch (err) {
-            console.error(`Failed to fetch logs for habit ${habit._id}:`, err);
-            logsData[habit._id] = [];
+        // Remove deleted logs
+        logsToDelete.forEach(({ habitId, logId }) => {
+          if (newLogs[habitId]) {
+            newLogs[habitId] = newLogs[habitId].filter((l: HabitLog) => l._id !== logId);
           }
-        })
-      );
-      setLogs(logsData);
+        });
 
+        return newLogs;
+      });
+
+      // Track which logs are being saved
+      const logsBeingSaved = new Set<string>();
+      logsToDelete.forEach(({ logId }) => logsBeingSaved.add(logId));
+
+      // Make API calls (don't wait to update UI, but track completion)
+      const deletionPromises = logsToDelete.map(({ habitId, logId }) => {
+        logsBeingSaved.add(logId);
+        return deleteLog(habitId, logId).catch((err) => {
+          console.error(`Failed to delete log ${logId}:`, err);
+          throw err;
+        });
+      });
+
+      const creationPromises = updates.map(({ habitId, date, value }) => {
+        const tempId = `temp-${habitId}-${date}-${Date.now()}`;
+        logsBeingSaved.add(tempId);
+        setSavingLogIds((prev) => new Set([...prev, tempId]));
+        return createLog(habitId, date, value)
+          .then((newLog) => {
+            setSavingLogIds((prev) => {
+              const updated = new Set(prev);
+              updated.delete(tempId);
+              updated.add(newLog._id);
+              return updated;
+            });
+            // Optimistically add the created log
+            setLogs((prevLogs) => ({
+              ...prevLogs,
+              [habitId]: [...(prevLogs[habitId] ?? []), newLog],
+            }));
+          })
+          .catch((err) => {
+            console.error(`Failed to create log for ${habitId} on ${date}:`, err);
+            setSavingLogIds((prev) => {
+              const updated = new Set(prev);
+              updated.delete(tempId);
+              return updated;
+            });
+            throw err;
+          });
+      });
+
+      const deleteDeletionPromises = Object.entries(deletedLogIds).map(([logId, habitId]) => {
+        logsBeingSaved.add(logId);
+        return deleteLog(habitId, logId).catch((err) => {
+          console.error(`Failed to delete log ${logId}:`, err);
+          throw err;
+        });
+      });
+
+      // Wait for all operations
+      await Promise.all([...deletionPromises, ...creationPromises, ...deleteDeletionPromises]);
+
+      // Clear drafts and deleted logs
       setDrafts({});
       setDeletedLogIds({});
+      setSavingLogIds(new Set());
       setError(null);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to save changes');
+      // Rollback on failure
+      setLogs(logsBackup);
+      setSavingLogIds(new Set());
+
+      // User-friendly error messages
+      const errorMessage =
+        err instanceof Error && err.message.includes('Failed to')
+          ? "Couldn't save your changes. Please try again."
+          : 'Unable to save your logs. Check your connection and try again.';
+
+      setError(errorMessage);
       console.error('Error saving drafts:', err);
     } finally {
       const elapsedTime = Date.now() - startTime;
@@ -258,6 +313,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     deletedLogIds,
     loading,
     isSaving,
+    savingLogIds,
     error,
     pastDaysOpen,
     setPastDaysOpen,

@@ -29,14 +29,16 @@ export function LogRow({
 }: LogRowProps) {
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState(String(value));
+  const prevValueRef = React.useRef(value);
 
   React.useEffect(() => {
-    setDraft(String(value));
-    // Exit editing mode if value changes externally (e.g., via undo)
-    if (editing && value !== parseFloat(draft)) {
+    // Only reset draft if value changed externally (e.g., via undo)
+    if (value !== prevValueRef.current) {
+      setDraft(String(value));
       setEditing(false);
+      prevValueRef.current = value;
     }
-  }, [value, editing, draft]);
+  }, [value]);
 
   const completed = value >= target && target > 0;
   const over = value > target;
