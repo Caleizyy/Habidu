@@ -1,6 +1,10 @@
 import express, { ErrorRequestHandler } from 'express';
 import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes';
+import cors from 'cors';
 import mongoose from 'mongoose';
+import sessionRoutes from './routes/sessionRoutes';
+import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 
 import habitRoutes from './routes/habitRoutes';
@@ -14,7 +18,22 @@ if (!MONGO_URI) throw new Error('MONGO_URI is not defined in the environment var
 
 const app = express();
 
+const allowedOrigins = ['' + process.env.GOOGLE_REDIRECT_URI];
+
+app.use(cookieParser());
 app.use(express.json());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
+
+// Set up API routes
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/session', sessionRoutes);
 
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 

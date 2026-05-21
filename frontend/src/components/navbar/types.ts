@@ -17,10 +17,6 @@ export interface NavbarProps {
   };
   menu?: MenuItem[];
   auth?: {
-    login: {
-      title: string;
-      url: string;
-    };
     signup: {
       title: string;
       url: string;

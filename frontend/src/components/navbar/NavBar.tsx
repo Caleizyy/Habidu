@@ -20,18 +20,24 @@ import { NavigationMenu, NavigationMenuList } from '@/components/ui/NavigationMe
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from '@/components/ui/Sheet';
 import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
 import { cn } from '@/lib/utils';
+import { ROUTES } from '../../constants/Routes.constants';
 
 const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH, className }: NavbarProps) => {
   const navigate = useNavigate();
-  const { isAuthenticated, login, signup, logout } = useAuth();
+  const { user, isAuthenticated, refreshUser, signup, logout } = useAuth();
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
-    navigate('/profile');
+    navigate(ROUTES.PROFILE);
   };
 
   const handleLogout = () => {
     logout();
+    navigate('/');
+  };
+
+  const handleSignup = async () => {
+    signup();
     navigate('/');
   };
 
@@ -62,7 +68,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="icon" className="rounded-full">
                     <Avatar>
-                      <AvatarImage src={kittenImage} alt="Avatar" />
+                      <AvatarImage src={user?.avatar || kittenImage} alt="Avatar" />
                       <AvatarFallback>CN</AvatarFallback>
                     </Avatar>
                   </Button>
@@ -82,9 +88,6 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
               </DropdownMenu>
             ) : (
               <>
-                <Button variant="outline" size="sm" onClick={login}>
-                  {auth.login.title}
-                </Button>
                 <Button size="sm" onClick={signup}>
                   {auth.signup.title}
                 </Button>
@@ -133,10 +136,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
                       </>
                     ) : (
                       <>
-                        <Button variant="outline" onClick={login}>
-                          {auth.login.title}
-                        </Button>
-                        <Button onClick={signup}>{auth.signup.title}</Button>
+                        <Button onClick={handleSignup}>{auth.signup.title}</Button>
                       </>
                     )}
                   </div>
