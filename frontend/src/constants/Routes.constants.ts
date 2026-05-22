@@ -12,5 +12,5 @@ export const ROUTES = {
   GROUPS: '/groups',
   LOGIN: '/login',
   SIGNUP: '/signup',
-  NOTFOUND: '*',
+  NOT_FOUND: '*',
 } as const;

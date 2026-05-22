@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
+import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/Card';
+import { ROUTES } from '@/constants/Routes.constants';
 import { useNavigate } from 'react-router-dom';
 
 export function NotFoundPage() {
@@ -10,16 +11,18 @@ export function NotFoundPage() {
       <Card className="w-full max-w-md text-center shadow-lg">
         <CardHeader>
           <CardTitle className="text-4xl font-bold">404</CardTitle>
-          <p className="text-muted-foreground">This page doesn’t exist or has been moved.</p>
         </CardHeader>
 
         <CardContent className="flex flex-col gap-3">
-          <Button onClick={() => navigate('/')}>Go back home</Button>
+          <p className="text-muted-foreground">This page doesn’t exist or has been moved.</p>
+        </CardContent>
 
+        <CardFooter className="flex justify-center gap-4">
+          <Button onClick={() => navigate(ROUTES.HOME)}>Return to Home</Button>
           <Button variant="outline" onClick={() => navigate(-1)}>
             Go back
           </Button>
-        </CardContent>
+        </CardFooter>
       </Card>
     </div>
   );
