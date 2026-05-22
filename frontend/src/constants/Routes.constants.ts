@@ -10,6 +10,5 @@ export const ROUTES = {
   FRIENDS: '/friends',
   REQUESTS: '/requests',
   GROUPS: '/groups',
-  LOGIN: '/login',
-  SIGNUP: '/signup',
+  SIGNIN: '/signin',
 } as const;

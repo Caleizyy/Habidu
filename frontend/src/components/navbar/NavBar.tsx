@@ -1,7 +1,7 @@
 import { Menu, UserIcon, LogOutIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import kittenImage from '../../assets/kitten.jpg';
-import { DEFAULT_LOGO, DEFAULT_MENU, DEFAULT_AUTH } from '../../constants/NavBar.constants';
+import { DEFAULT_LOGO, DEFAULT_MENU } from '../../constants/NavBar.constants';
 import { useAuth } from '@/context/AuthContext';
 import { MenuItemDesktop } from './components/MenuItemDesktop';
 import { MenuItemMobile } from './components/MenuItemMobile';
@@ -22,7 +22,7 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '../../constants/Routes.constants';
 
-const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH, className }: NavbarProps) => {
+const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarProps) => {
   const navigate = useNavigate();
   const { user, isAuthenticated, refreshUser, signup, logout } = useAuth();
 
@@ -87,11 +87,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <>
-                <Button size="sm" onClick={signup}>
-                  {auth.signup.title}
-                </Button>
-              </>
+              <></>
             )}
           </div>
         </nav>
@@ -135,9 +131,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
                         </Button>
                       </>
                     ) : (
-                      <>
-                        <Button onClick={handleSignup}>{auth.signup.title}</Button>
-                      </>
+                      <></>
                     )}
                   </div>
                 </div>

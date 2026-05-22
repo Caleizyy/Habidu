@@ -16,8 +16,17 @@ export interface NavbarProps {
     className?: string;
   };
   menu?: MenuItem[];
+}
+export interface SignInProps {
+  logo?: {
+    url: string;
+    src: string;
+    alt: string;
+    title: string;
+    className?: string;
+  };
   auth?: {
-    signup: {
+    signin: {
       title: string;
       url: string;
     };
