@@ -1,38 +1,53 @@
 import { createContext, useContext, useState, ReactNode } from 'react';
-
-interface AuthContextType {
-  isAuthenticated: boolean;
-  login: () => void;
-  signup: () => void;
-  logout: () => void;
-}
+import { useGoogleLogin } from '@react-oauth/google';
+import { authApi } from '../api/auth';
+import { User, AuthContextType } from '../types/index';
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState<User | null>(null);
 
-  const login = () => {
-    // TODO: Replace with actual authentication logic
-    setIsAuthenticated(true);
-  };
+  const signup = useGoogleLogin({
+    onSuccess: async (tokenResponse) => {
+      await authApi.loginWithGoogle(tokenResponse.code);
+      await refreshUser();
+      setIsAuthenticated(true);
+    },
+    onError: () => {
+      console.log('Login Failed');
+    },
+    flow: 'auth-code',
+    redirect_uri: import.meta.env.VITE_GOOGLE_REDIRECT_URI,
+  });
 
-  const signup = () => {
-    // TODO: Replace with actual authentication logic
-    setIsAuthenticated(true);
-  };
-
-  const logout = () => {
+  const logout = async () => {
     // TODO: Call logout API endpoint to clear auth tokens/session when auth is implemented
-    setIsAuthenticated(false);
+    // await refreshUser();
+    // setIsAuthenticated(false);
   };
 
-  return <AuthContext.Provider value={{ isAuthenticated, login, signup, logout }}>{children}</AuthContext.Provider>;
+  const refreshUser = async () => {
+    try {
+      const response = await authApi.sessionCheck();
+      setUser(response);
+    } catch (error) {
+      setUser(null);
+      console.log(error);
+    }
+  };
+
+  return (
+    <AuthContext.Provider value={{ user, isAuthenticated, refreshUser, signup, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
 };
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (context === undefined) {
+  if (!context) {
     throw new Error('useAuth must be used within an AuthProvider');
   }
   return context;
