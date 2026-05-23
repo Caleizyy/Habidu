@@ -1,7 +1,11 @@
 import express, { ErrorRequestHandler } from 'express';
 import dotenv from 'dotenv';
+import authRoutes from './routes/authRoutes';
 import mongoose from 'mongoose';
 import cors from 'cors';
+import sessionRoutes from './routes/sessionRoutes';
+import cookieParser from 'cookie-parser';
+import morgan from 'morgan';
 
 import habitRoutes from './routes/habitRoutes';
 
@@ -14,14 +18,24 @@ if (!MONGO_URI) throw new Error('MONGO_URI is not defined in the environment var
 
 const app = express();
 
-app.use(cors());
+const allowedOrigins = ['' + process.env.GOOGLE_REDIRECT_URI];
 
+app.use(cookieParser());
 app.use(express.json());
+app.use(
+  cors({
+    origin: allowedOrigins,
+    credentials: true,
+  })
+);
 
-app.use((req, res, next) => {
-  console.log(req.method, req.url);
-  next();
-});
+// Set up API routes
+const apiRouter = express.Router();
+app.use('/api', apiRouter);
+apiRouter.use('/auth', authRoutes);
+apiRouter.use('/session', sessionRoutes);
+
+app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.get('/', (req, res) => {
   res.send('Backend is alive');

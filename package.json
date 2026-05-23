@@ -16,6 +16,8 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.39.4",
+    "@types/cookie-parser": "^1.4.10",
+    "@types/morgan": "^1.9.10",
     "@typescript-eslint/eslint-plugin": "^8.59.2",
     "@typescript-eslint/parser": "^8.59.2",
     "concurrently": "^8.2.2",
@@ -34,5 +36,12 @@
       "eslint --fix",
       "prettier --write"
     ]
+  },
+  "dependencies": {
+    "@react-oauth/google": "^0.13.5",
+    "axios": "^1.16.1",
+    "cookie-parser": "^1.4.7",
+    "googleapis": "^172.0.0",
+    "morgan": "^1.10.1"
   }
 }

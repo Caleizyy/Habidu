@@ -55,8 +55,8 @@ export function AddHabitDialog() {
     >
       <DialogTrigger className="flex flex-row justify-end">
         {/* Button on the card that opens the modal */}
-        <Button className="mr-4 h-10 w-10 bg-gray-100">
-          <PlusIcon className="size-6 text-black" />
+        <Button className="mr-12 flex h-[5vh] w-[6vw] flex-row bg-gray-200">
+          <PlusIcon className="size-8 text-black" />
         </Button>
       </DialogTrigger>
       <DialogContent>

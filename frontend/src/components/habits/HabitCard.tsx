@@ -1,6 +1,5 @@
 import { Card } from '@/components/ui/Card';
-import { HabitSelect } from './HabitSelect';
-import { AddHabitDialog } from './AddHabitDialog';
+import { Input } from '@/components/ui/Input';
 
 interface Habit {
   _id: string;
@@ -11,17 +10,14 @@ interface Habit {
   notes?: string;
 }
 interface HabitCardProps {
-  label: string;
-  choices: string[];
   habits: Habit[];
 }
 
-export default function HabitCard({ label, choices, habits }: HabitCardProps) {
+export default function HabitCard({ habits }: HabitCardProps) {
   return (
-    <Card className="h-130 w-93">
+    <Card className="h-full w-full">
       <div className="flex flex-row items-center justify-between">
-        <HabitSelect label={label} choices={choices} />
-        <AddHabitDialog />
+        <Input placeholder="Enter habit name" className="mt-2 ml-6 h-[5vh] w-[25vw]" />
       </div>
       {habits.map((habit) => (
         <p key={habit._id}>{habit.name}</p>

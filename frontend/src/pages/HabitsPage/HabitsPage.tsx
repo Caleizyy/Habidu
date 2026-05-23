@@ -1,6 +1,7 @@
 import HabitCard from '@/components/habits/HabitCard';
 import { useState, useEffect } from 'react';
 import { fetchHabits } from '@/services/habitService';
+import { AddHabitDialog } from '@/components/habits/AddHabitDialog';
 
 export function HabitsPage() {
   const [habits, setHabits] = useState([]);
@@ -9,13 +10,12 @@ export function HabitsPage() {
   }, []);
 
   return (
-    <div className="flex flex-1 flex-col">
+    <div className="flex h-screen flex-1 flex-col">
       <h1 className="mt-12 ml-12 flex justify-start text-6xl text-black">Goals</h1>
-      <div className="mb-4 ml-12 flex flex-1 flex-col justify-end">
-        <div className="grid grid-cols-3 gap-16">
-          <HabitCard label={'Timeliness'} choices={['Daily', 'Weekly', 'Monthly']} habits={habits} />
-          <HabitCard label={'Category'} choices={['Sports', 'Study', 'Skills', 'Chores']} habits={habits} />
-          <HabitCard label={'Placeholder'} choices={['Undecided', 'Another Placeholder']} habits={habits} />
+      <AddHabitDialog />
+      <div className="mt-12 ml-12 h-[60vh] w-[90vw]">
+        <div className="h-full">
+          <HabitCard habits={habits} />
         </div>
       </div>
     </div>

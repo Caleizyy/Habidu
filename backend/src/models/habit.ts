@@ -2,7 +2,7 @@ import { Schema, model, Document } from 'mongoose';
 
 import { HabitCategory, HabitDifficulty, HabitFrequency } from '../types';
 
-export interface Habit extends Document {
+export interface IHabit extends Document {
   name: string;
   frequency: HabitFrequency;
   difficulty: HabitDifficulty;
@@ -10,16 +10,16 @@ export interface Habit extends Document {
   notes?: string;
 }
 
-const HabitSchema = new Schema<Habit>(
+const HabitSchema = new Schema<IHabit>(
   {
     name: { type: String, required: true },
     frequency: { type: String, enum: Object.values(HabitFrequency), required: true },
     difficulty: { type: String, enum: Object.values(HabitDifficulty), required: true },
     category: { type: String, enum: Object.values(HabitCategory), required: true },
-    notes: { type: String, default: null },
+    notes: { type: String },
   },
 
   { timestamps: true }
 );
 
-export const Habit = model<Habit>('Habit', HabitSchema);
+export const Habit = model<IHabit>('Habit', HabitSchema);
