@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import * as habitService from '../services/habitService';
-import { CreateHabitBody, HabitQueryFilter, HabitCategory, HabitFrequency, HabitDifficulty, HabitUnit } from '../types';
-import { isValidCategory, isValidDifficulty, isValidFrequency, isValidUnit } from '../utils/enumValidator';
+import { CreateHabitBody, HabitQueryFilter, HabitCategory, HabitFrequency, HabitDifficulty } from '../types';
+import { isValidCategory, isValidDifficulty, isValidFrequency } from '../utils/enumValidator';
 
 export const find = async (req: Request<object, object, object, HabitQueryFilter>, res: Response) => {
   try {
@@ -44,13 +44,6 @@ export const create = async (req: Request<object, object, CreateHabitBody>, res:
     return res.status(400).json({
       error: `Invalid difficulty. Must be one of: ${Object.values(HabitDifficulty).join(', ')}`,
       received: difficulty,
-    });
-  }
-
-  if (!isValidUnit(targetUnit)) {
-    return res.status(400).json({
-      error: `Invalid targetUnit. Must be one of: ${Object.values(HabitUnit).join(', ')}`,
-      received: targetUnit,
     });
   }
 

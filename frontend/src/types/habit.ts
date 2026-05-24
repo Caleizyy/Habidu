@@ -21,24 +21,13 @@ export enum HabitFrequency {
   Monthly = 'monthly',
 }
 
-export enum HabitUnit {
-  Minutes = 'min',
-  Hours = 'hours',
-  Milliliters = 'ml',
-  Liters = 'liters',
-  Times = 'times',
-  Pages = 'pages',
-  Books = 'books',
-  Kilometers = 'km',
-}
-
 export interface Habit {
   _id: string;
   name: string;
   category: HabitCategory;
   frequency: HabitFrequency;
   targetValue: number;
-  targetUnit: HabitUnit;
+  targetUnit: string;
 }
 
 export interface HabitLog {

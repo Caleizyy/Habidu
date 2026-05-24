@@ -1,12 +1,11 @@
 import * as React from 'react';
-import { HabitUnit } from '@/types/habit';
 
 interface LogRowProps {
   periodLabel: string;
   periodSublabel?: string;
   value: number;
   target: number;
-  unit: HabitUnit;
+  unit: string;
   isCurrentPeriod?: boolean;
   // called when user taps "Log" — client sends quickLog:true, value:targetValue
   onQuickLog: () => void;

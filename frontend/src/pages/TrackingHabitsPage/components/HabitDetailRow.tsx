@@ -1,10 +1,8 @@
-import { HabitUnit } from '@/types/habit';
-
 interface HabitDetailRowProps {
   habitName: string;
   value: number;
   target: number;
-  unit: HabitUnit;
+  unit: string;
 }
 
 export function HabitDetailRow({ habitName, value, target, unit }: HabitDetailRowProps) {

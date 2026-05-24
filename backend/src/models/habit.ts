@@ -1,6 +1,6 @@
 import { Schema, model, Document } from 'mongoose';
 
-import { HabitCategory, HabitDifficulty, HabitFrequency, HabitUnit } from '../types';
+import { HabitCategory, HabitDifficulty, HabitFrequency } from '../types';
 
 export interface IHabit extends Document {
   name: string;
@@ -8,7 +8,7 @@ export interface IHabit extends Document {
   difficulty: HabitDifficulty;
   category: HabitCategory;
   targetValue: number;
-  targetUnit: HabitUnit;
+  targetUnit: string;
   notes?: string;
 }
 
@@ -19,7 +19,7 @@ const HabitSchema = new Schema<IHabit>(
     difficulty: { type: String, enum: Object.values(HabitDifficulty), required: true },
     category: { type: String, enum: Object.values(HabitCategory), required: true },
     targetValue: { type: Number, required: true, min: 0 },
-    targetUnit: { type: String, enum: Object.values(HabitUnit), required: true },
+    targetUnit: { type: String, required: true },
     notes: { type: String },
   },
 
