@@ -1,19 +1,5 @@
 import * as React from 'react';
-
-interface LogRowProps {
-  periodLabel: string;
-  periodSublabel?: string;
-  value: number;
-  target: number;
-  unit: string;
-  isCurrentPeriod?: boolean;
-  // called when user taps "Log" — client sends quickLog:true, value:targetValue
-  onQuickLog: () => void;
-  // called when user manually edits — client sends quickLog:false, value:N
-  onEdit: (value: number) => void;
-  // called when user clicks "Undo" to delete the log entry
-  onUndo: () => void;
-}
+import { LogRowProps } from '@/types/tracking';
 
 export function LogRow({
   periodLabel,

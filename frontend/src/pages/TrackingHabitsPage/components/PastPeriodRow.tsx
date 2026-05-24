@@ -1,17 +1,4 @@
-import * as React from 'react';
-
-interface Habit {
-  value: number;
-  target: number;
-}
-
-interface PastPeriodRowProps {
-  periodLabel: string;
-  habits: Habit[];
-  isExpanded: boolean;
-  onToggle: () => void;
-  children: React.ReactNode;
-}
+import { PastPeriodRowProps } from '@/types/tracking';
 
 export function PastPeriodRow({ periodLabel, habits, isExpanded, onToggle, children }: PastPeriodRowProps) {
   // Calculate completion for each habit

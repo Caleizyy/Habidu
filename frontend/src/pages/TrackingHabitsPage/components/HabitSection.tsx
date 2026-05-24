@@ -1,15 +1,6 @@
 import * as React from 'react';
-import { Habit, PeriodCell } from '@/types/habit';
+import { HabitSectionProps } from '@/types/tracking';
 import { ProgressBar } from './ProgressBar';
-
-interface HabitSectionProps {
-  title: string;
-  rangeLabel: string;
-  habits: Habit[];
-  barCellsMap: Record<string, PeriodCell[]>; // habitId -> cells for the bar
-  children: React.ReactNode; // LogRows
-  highlightIndex?: number; // Optional: column index to highlight instead of first (for daily section to highlight today)
-}
 
 export function HabitSection({
   title,

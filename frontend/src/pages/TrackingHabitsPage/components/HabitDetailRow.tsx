@@ -1,9 +1,4 @@
-interface HabitDetailRowProps {
-  habitName: string;
-  value: number;
-  target: number;
-  unit: string;
-}
+import { HabitDetailRowProps } from '@/types/tracking';
 
 export function HabitDetailRow({ habitName, value, target, unit }: HabitDetailRowProps) {
   const completed = value >= target && target > 0;

@@ -6,15 +6,7 @@ import {
   PaginationNext,
   PaginationPrevious,
 } from '@/components/ui/Pagination';
-
-interface PastPeriodsPaginationListProps<T> {
-  items: T[];
-  itemsPerPage: number;
-  currentPage: number;
-  onPageChange: (page: number) => void;
-  renderItem: (item: T, index: number) => React.ReactNode;
-  isOpen: boolean;
-}
+import { PastPeriodsPaginationListProps } from '@/types/tracking';
 
 export function PastPeriodsPaginationList<T>({
   items,
