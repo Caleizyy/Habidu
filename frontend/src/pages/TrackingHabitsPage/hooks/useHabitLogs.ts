@@ -278,6 +278,17 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
       // Wait for all operations
       await Promise.all([...deletionPromises, ...creationPromises, ...deleteDeletionPromises]);
 
+      // Remove deleted logs from state
+      setLogs((prevLogs) => {
+        const newLogs = JSON.parse(JSON.stringify(prevLogs));
+        Object.entries(deletedLogIds).forEach(([logId, habitId]) => {
+          if (newLogs[habitId]) {
+            newLogs[habitId] = newLogs[habitId].filter((l: HabitLog) => l._id !== logId);
+          }
+        });
+        return newLogs;
+      });
+
       // Clear drafts and deleted logs
       setDrafts({});
       setDeletedLogIds({});
