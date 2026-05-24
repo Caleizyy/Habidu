@@ -17,6 +17,6 @@ export function update(id: string, value: number) {
   return habitLogRepository.update(id, value);
 }
 
-export function delete_(id: string) {
-  return habitLogRepository.delete_(id);
+export function remove(id: string) {
+  return habitLogRepository.remove(id);
 }

@@ -89,11 +89,11 @@ export const update = async (
   }
 };
 
-export const delete_ = async (req: Request<{ habitId: string; logId: string }>, res: Response) => {
+export const remove = async (req: Request<{ habitId: string; logId: string }>, res: Response) => {
   const { logId } = req.params;
 
   try {
-    const log = await habitLogService.delete_(logId);
+    const log = await habitLogService.remove(logId);
     if (!log) {
       return res.status(404).json({ error: 'Habit log not found' });
     }

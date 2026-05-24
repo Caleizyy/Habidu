@@ -35,6 +35,6 @@ export async function update(id: string, value: number) {
   return HabitLog.findByIdAndUpdate(id, { value }, { returnDocument: 'after' });
 }
 
-export async function delete_(id: string) {
+export async function remove(id: string) {
   return HabitLog.findByIdAndDelete(id);
 }

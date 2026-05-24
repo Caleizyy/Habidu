@@ -9,6 +9,6 @@ router.get('/', habitLogController.findByHabitId);
 
 router.put('/:logId', habitLogController.update);
 
-router.delete('/:logId', habitLogController.delete_);
+router.delete('/:logId', habitLogController.remove);
 
 export default router;
