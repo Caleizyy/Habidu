@@ -2,21 +2,29 @@ import HabitCard from '@/components/habits/HabitCard';
 import { useState, useEffect } from 'react';
 import { fetchHabits } from '@/services/habitService';
 import { AddHabitDialog } from '@/components/habits/AddHabitDialog';
+import { Habit } from '@/types/habit';
 
 export function HabitsPage() {
-  const [habits, setHabits] = useState([]);
-  const [refresh, setRefresh] = useState(0);
+  const [habits, setHabits] = useState<Habit[]>([]);
+  const [refreshKey, setRefreshKey] = useState(0);
+  const [error, setError] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
-    fetchHabits().then((data) => setHabits(data));
-  }, [refresh]);
+    fetchHabits()
+      .then((data) => setHabits(data))
+      .catch((err) => setError(err.message))
+      .finally(() => setIsLoading(false));
+  }, [refreshKey]);
 
   return (
     <div className="flex h-screen flex-1 flex-col">
       <h1 className="mt-12 ml-12 flex justify-start text-6xl text-black">Goals</h1>
-      <AddHabitDialog onHabitCreated={() => setRefresh((prev) => prev + 1)} />
+      <AddHabitDialog onHabitCreated={() => setRefreshKey((prev) => prev + 1)} />
       <div className="mt-12 ml-12 h-[60vh] w-[90vw]">
         <div className="h-full">
-          <HabitCard habits={habits} />
+          {isLoading && <p>Loading...</p>}
+          {error && <p className="text-red-500">{error}</p>}
+          {!isLoading && !error && <HabitCard habits={habits} />}
         </div>
       </div>
     </div>

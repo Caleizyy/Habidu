@@ -1,9 +1,12 @@
 import { Card } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
-import { HabitCardProps } from '@/types/habit';
+import { Habit } from '@/types/habit';
 import HabitItemCard from './HabitItemCard';
+interface HabitCardProps {
+  habits: Habit[];
+}
 
-export default function HabitCard({ habits }: HabitCardProps) {
+export default function HabitsCard({ habits }: HabitCardProps) {
   return (
     <Card className="h-full w-full">
       <div className="flex flex-row items-center justify-between">
@@ -11,7 +14,7 @@ export default function HabitCard({ habits }: HabitCardProps) {
       </div>
       <div className="mt-4 flex h-[50vh] flex-col gap-4 overflow-y-auto">
         {habits.map((habit) => (
-          <HabitItemCard key={habit._id} habit={habit} />
+          <HabitItemCard key={habit.id} habit={habit} />
         ))}
       </div>
     </Card>

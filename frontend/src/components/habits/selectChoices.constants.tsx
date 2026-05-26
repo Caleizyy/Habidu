@@ -1,14 +1,19 @@
-export const habitSelectOptions = [
+export const frequencyOptions = [
   {
     label: 'Timeliness',
     choices: ['Daily', 'Weekly', 'Monthly'],
   },
+];
+export const difficultyOptions = [
   {
     label: 'Category',
-    choices: ['Sports', 'Study', 'Skills', 'Chores'],
+    choices: ['Easy', 'Medium', 'Hard'],
   },
+];
+
+export const categoryOptions = [
   {
     label: 'Difficulty',
-    choices: ['Trivial', 'Easy', 'Medium', 'Hard'],
+    choices: ['Sports', 'Study', 'Skills', 'Chores'],
   },
 ];
