@@ -1,5 +1,5 @@
 export async function fetchHabits() {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/habits`);
+  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits`);
   if (!response.ok) {
     throw new Error('Failed to fetch habits');
   }
@@ -14,7 +14,7 @@ export async function createHabit(habit: {
   category: string;
   notes?: string;
 }) {
-  const response = await fetch(`${import.meta.env.VITE_API_URL}/habits`, {
+  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
