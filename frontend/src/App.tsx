@@ -16,6 +16,7 @@ import {
   AboutPage,
   LeaderboardsPage,
   SignInPage,
+  NotFoundPage,
 } from './pages';
 import { useAuth } from './context/AuthContext';
 
@@ -23,9 +24,7 @@ function App() {
   const { isAuthenticated } = useAuth();
   return (
     <BrowserRouter>
-      {!isAuthenticated ? (
-        <SignInPage />
-      ) : (
+      {isAuthenticated ? (
         <>
           <NavBar logo={APP_LOGO} menu={APP_MENU} />
           <Routes>
@@ -40,9 +39,11 @@ function App() {
             <Route path={ROUTES.FRIENDS} element={<FriendsPage />} />
             <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
             <Route path={ROUTES.GROUPS} element={<GroupsPage />} />
-            <Route path={ROUTES.SIGNIN} element={<SignInPage />} />
+            <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>
         </>
+      ) : (
+        <SignInPage />
       )}
     </BrowserRouter>
   );

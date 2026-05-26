@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
-  const signup = useGoogleLogin({
+  const signin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       await authApi.loginWithGoogle(tokenResponse.code);
       await refreshUser();
@@ -45,7 +45,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, refreshUser, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, refreshUser, signin, logout }}>
       {children}
     </AuthContext.Provider>
   );

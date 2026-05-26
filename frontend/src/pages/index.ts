@@ -10,3 +10,4 @@ export * from './AchievementsPage';
 export * from './CalendarPage';
 export * from './AboutPage';
 export * from './SignInPage';
+export * from './NotFoundPage';

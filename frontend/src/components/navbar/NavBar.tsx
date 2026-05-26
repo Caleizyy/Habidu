@@ -24,7 +24,7 @@ import { ROUTES } from '../../constants/Routes.constants';
 
 const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarProps) => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, refreshUser, signup, logout } = useAuth();
+  const { user, isAuthenticated, refreshUser, logout } = useAuth();
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
@@ -33,12 +33,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarP
 
   const handleLogout = () => {
     logout();
-    navigate('/');
-  };
-
-  const handleSignup = async () => {
-    signup();
-    navigate('/');
+    navigate(ROUTES.HOME);
   };
 
   return (
@@ -121,17 +116,15 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarP
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    {isAuthenticated ? (
+                    {isAuthenticated && (
                       <>
                         <Button asChild>
-                          <Link to="/profile">Profile</Link>
+                          <Link to={ROUTES.PROFILE}>Profile</Link>
                         </Button>
                         <Button variant="outline" onClick={handleLogout}>
                           Log out
                         </Button>
                       </>
-                    ) : (
-                      <></>
                     )}
                   </div>
                 </div>

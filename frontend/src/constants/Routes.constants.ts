@@ -11,4 +11,5 @@ export const ROUTES = {
   REQUESTS: '/requests',
   GROUPS: '/groups',
   SIGNIN: '/signin',
+  NOT_FOUND: '*',
 } as const;
