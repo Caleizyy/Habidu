@@ -11,3 +11,4 @@ export * from './CalendarPage';
 export * from './LogInPage';
 export * from './SignUpPage';
 export * from './AboutPage';
+export * from './NotFoundPage';

@@ -1,4 +1,4 @@
-import express, { ErrorRequestHandler } from 'express';
+import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import mongoose from 'mongoose';
@@ -6,6 +6,7 @@ import cors from 'cors';
 import sessionRoutes from './routes/sessionRoutes';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
+import { notFoundHandler, errorHandler } from './middleware';
 
 import habitRoutes from './routes/habitRoutes';
 
@@ -34,6 +35,7 @@ const apiRouter = express.Router();
 app.use('/api', apiRouter);
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/session', sessionRoutes);
+apiRouter.use('/habits', habitRoutes);
 
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
@@ -41,12 +43,8 @@ app.get('/', (req, res) => {
   res.send('Backend is alive');
 });
 
-app.use('/habits', habitRoutes);
+app.use(notFoundHandler);
 
-const errorHandler: ErrorRequestHandler = (err, _req, res, next) => {
-  console.error(err);
-  res.status(500).json({ error: 'Internal server error' });
-};
 app.use(errorHandler);
 
 mongoose
