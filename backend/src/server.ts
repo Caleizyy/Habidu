@@ -7,7 +7,7 @@ import sessionRoutes from './routes/sessionRoutes';
 import cookieParser from 'cookie-parser';
 import morgan from 'morgan';
 import { notFoundHandler, errorHandler } from './middleware';
-
+import profileRoutes from './routes/profileRoutes';
 import habitRoutes from './routes/habitRoutes';
 
 dotenv.config();
@@ -36,7 +36,7 @@ app.use('/api', apiRouter);
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/session', sessionRoutes);
 apiRouter.use('/habits', habitRoutes);
-
+apiRouter.use('/profile', profileRoutes);
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.get('/', (req, res) => {

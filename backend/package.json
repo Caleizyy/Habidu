@@ -16,6 +16,8 @@
   "type": "commonjs",
   "dependencies": {
     "axios": "^1.16.0",
+    "backend": "^0.0.0",
+    "cd": "^0.3.3",
     "cookie-parser": "^1.4.7",
     "cors": "^2.8.6",
     "dotenv": "^17.4.2",
