@@ -3,7 +3,7 @@ import { Habit } from '@/types/habit';
 
 export default function HabitItemCard({ habit }: { habit: Habit }) {
   return (
-    <div className="ml-6 flex h-[15vh] w-[70vw] flex-row">
+    <div className="ml-6 flex h-[15vh] w-[85vw] flex-row">
       <Card className="h-full w-full">
         <div className="flex h-full w-full items-center justify-start">
           <Card className="items-left ml-6 flex h-auto w-[15vw] justify-start bg-gray-300">

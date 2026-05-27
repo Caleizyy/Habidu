@@ -6,7 +6,7 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
 import { HabitSelect } from './HabitSelect';
 import { frequencyOptions, difficultyOptions, categoryOptions } from './selectChoices.constants';
-import { createHabit } from '@/services/habitService';
+import { createHabit } from '@/api/habit';
 import { useState } from 'react';
 
 interface AddHabitDialogProps {
@@ -68,7 +68,7 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
     >
       <div className="flex flex-row justify-end">
         <DialogTrigger asChild onClick={() => setOpen(true)}>
-          <Button className="mr-12 flex h-[5vh] w-[6vw] flex-row bg-gray-200">
+          <Button className="mt-12 mr-12 flex h-[5vh] w-[6vw] flex-row bg-gray-200">
             <PlusIcon className="size-8 text-black" />
           </Button>
         </DialogTrigger>

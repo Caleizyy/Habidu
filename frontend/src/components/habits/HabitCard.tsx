@@ -12,7 +12,7 @@ export default function HabitsCard({ habits }: HabitCardProps) {
       <div className="flex flex-row items-center justify-between">
         <Input placeholder="Enter habit name" className="mt-2 ml-6 h-[4vh] w-[25vw]" />
       </div>
-      <div className="mt-4 flex h-[50vh] flex-col gap-4 overflow-y-auto">
+      <div className="mt-4 flex h-[70vh] flex-col gap-4 overflow-y-auto">
         {habits.map((habit) => (
           <HabitItemCard key={habit.id} habit={habit} />
         ))}
