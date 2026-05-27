@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function LogInPage(): React.ReactNode {
+export function LogInPage() {
   return (
-    <div>
-      <h1>Log In</h1>
-    </div>
+    <PageLayout title="Login">
+      <div></div>
+    </PageLayout>
   );
 }

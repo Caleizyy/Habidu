@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function RequestsPage(): React.ReactNode {
+export function RequestsPage() {
   return (
-    <div>
-      <h1>Requests</h1>
-    </div>
+    <PageLayout title="Requests">
+      <div></div>
+    </PageLayout>
   );
 }

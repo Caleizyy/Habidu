@@ -231,3 +231,9 @@ code {
     @apply font-sans;
   }
 }
+
+@layer utilities {
+  .container {
+    @apply mx-auto w-full max-w-7xl px-4;
+  }
+}

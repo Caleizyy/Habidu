@@ -9,7 +9,7 @@ interface HabitCardProps {
 
 export default function HabitCard({ label, choices }: HabitCardProps) {
   return (
-    <Card className="h-130 w-93">
+    <Card className="min-h-130 w-full">
       <div className="flex flex-row items-center justify-between">
         <HabitSelect label={label} choices={choices} />
         <AddHabitDialog />

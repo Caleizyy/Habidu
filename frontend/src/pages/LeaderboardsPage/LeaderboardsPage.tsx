@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function LeaderboardsPage(): React.ReactNode {
+export function LeaderboardsPage() {
   return (
-    <div>
-      <h1>Leaderboards</h1>
-    </div>
+    <PageLayout title="Leaderboards">
+      <div></div>
+    </PageLayout>
   );
 }

@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function HomePage(): React.ReactNode {
+export function HomePage() {
   return (
-    <div>
-      <h1>Home</h1>
-    </div>
+    <PageLayout title="Home">
+      <div></div>
+    </PageLayout>
   );
 }
