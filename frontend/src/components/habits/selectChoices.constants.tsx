@@ -6,14 +6,14 @@ export const frequencyOptions = [
 ];
 export const difficultyOptions = [
   {
-    label: 'Category',
+    label: 'Difficulty',
     choices: ['Easy', 'Medium', 'Hard'],
   },
 ];
 
 export const categoryOptions = [
   {
-    label: 'Difficulty',
+    label: 'Category',
     choices: ['Sports', 'Study', 'Skills', 'Chores'],
   },
 ];
