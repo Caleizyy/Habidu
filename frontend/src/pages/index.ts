@@ -8,7 +8,6 @@ export * from './GroupsPage';
 export * from './LeaderboardsPage';
 export * from './AchievementsPage';
 export * from './CalendarPage';
-export * from './LogInPage';
-export * from './SignUpPage';
 export * from './AboutPage';
+export * from './SignInPage';
 export * from './NotFoundPage';

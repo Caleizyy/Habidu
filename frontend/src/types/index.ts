@@ -8,6 +8,6 @@ export interface AuthContextType {
   user: User | null;
   isAuthenticated: boolean;
   refreshUser: () => Promise<void>;
-  signup: () => void;
+  signin: () => void;
   logout: () => void;
 }
