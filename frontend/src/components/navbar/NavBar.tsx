@@ -1,7 +1,7 @@
 import { Menu, UserIcon, LogOutIcon } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import kittenImage from '../../assets/kitten.jpg';
-import { DEFAULT_LOGO, DEFAULT_MENU, DEFAULT_AUTH } from '../../constants/NavBar.constants';
+import { DEFAULT_LOGO, DEFAULT_MENU } from '../../constants/NavBar.constants';
 import { useAuth } from '@/context/AuthContext';
 import { MenuItemDesktop } from './components/MenuItemDesktop';
 import { MenuItemMobile } from './components/MenuItemMobile';
@@ -22,9 +22,9 @@ import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/Avatar';
 import { cn } from '@/lib/utils';
 import { ROUTES } from '../../constants/Routes.constants';
 
-const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH, className }: NavbarProps) => {
+const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarProps) => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, refreshUser, signup, logout } = useAuth();
+  const { user, isAuthenticated, refreshUser, logout } = useAuth();
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
@@ -33,12 +33,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
 
   const handleLogout = () => {
     logout();
-    navigate('/');
-  };
-
-  const handleSignup = async () => {
-    signup();
-    navigate('/');
+    navigate(ROUTES.HOME);
   };
 
   return (
@@ -87,11 +82,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
                 </DropdownMenuContent>
               </DropdownMenu>
             ) : (
-              <>
-                <Button size="sm" onClick={signup}>
-                  {auth.signup.title}
-                </Button>
-              </>
+              <></>
             )}
           </div>
         </nav>
@@ -125,18 +116,14 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, auth = DEFAULT_AUTH,
                   </Accordion>
 
                   <div className="flex flex-col gap-3">
-                    {isAuthenticated ? (
+                    {isAuthenticated && (
                       <>
                         <Button asChild>
-                          <Link to="/profile">Profile</Link>
+                          <Link to={ROUTES.PROFILE}>Profile</Link>
                         </Button>
                         <Button variant="outline" onClick={handleLogout}>
                           Log out
                         </Button>
-                      </>
-                    ) : (
-                      <>
-                        <Button onClick={handleSignup}>{auth.signup.title}</Button>
                       </>
                     )}
                   </div>
