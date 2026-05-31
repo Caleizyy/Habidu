@@ -1,3 +1,5 @@
+import { Schema } from 'mongoose';
+
 export enum UserRole {
   Admin = 'admin',
   Regular = 'regular',
@@ -21,6 +23,16 @@ export interface CreateRefreshTokenBody {
   refreshToken: string;
 }
 
+export interface CreateFriendRequestBody {
+  recipientEmail: string;
+}
+
+export interface CreateFriendRequestData {
+  recipientId: Schema.Types.ObjectId;
+  senderId: Schema.Types.ObjectId;
+  status: FriendRequestStatus;
+}
+
 export enum HabitCategory {
   Sports = 'Sports',
   Health = 'Health',
@@ -40,6 +52,12 @@ export enum HabitFrequency {
   Daily = 'Daily',
   Weekly = 'Weekly',
   Monthly = 'Monthly',
+}
+
+export enum FriendRequestStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Rejected = 'rejected',
 }
 
 export interface CreateHabitBody {
