@@ -16,18 +16,6 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
   const [savingLogIds, setSavingLogIds] = React.useState<Set<string>>(new Set());
   const [error, setError] = React.useState<string | null>(null);
 
-  const [pastDaysOpen, setPastDaysOpen] = React.useState(false);
-  const [pastWeeksOpen, setPastWeeksOpen] = React.useState(false);
-  const [pastMonthsOpen, setPastMonthsOpen] = React.useState(false);
-
-  const [pastDaysPage, setPastDaysPage] = React.useState(1);
-  const [pastWeeksPage, setPastWeeksPage] = React.useState(1);
-  const [pastMonthsPage, setPastMonthsPage] = React.useState(1);
-
-  const [expandedDailyDate, setExpandedDailyDate] = React.useState<string | null>(null);
-  const [expandedPastWeek, setExpandedPastWeek] = React.useState<string | null>(null);
-  const [expandedPastMonth, setExpandedPastMonth] = React.useState<string | null>(null);
-
   // Load data
   React.useEffect(() => {
     async function loadData() {
@@ -336,24 +324,6 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     isSaving,
     savingLogIds,
     error,
-    pastDaysOpen,
-    setPastDaysOpen,
-    pastWeeksOpen,
-    setPastWeeksOpen,
-    pastMonthsOpen,
-    setPastMonthsOpen,
-    pastDaysPage,
-    setPastDaysPage,
-    pastWeeksPage,
-    setPastWeeksPage,
-    pastMonthsPage,
-    setPastMonthsPage,
-    expandedDailyDate,
-    setExpandedDailyDate,
-    expandedPastWeek,
-    setExpandedPastWeek,
-    expandedPastMonth,
-    setExpandedPastMonth,
     // Functions
     addLog,
     editLog,

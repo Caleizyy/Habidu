@@ -150,12 +150,6 @@ export function TrackingHabitsPage(): React.ReactNode {
           barCellsMap={dailyBarCells}
           rangeLabel={dailyRangeLabel}
           dailyRowLabels={DAILY_ROW_LABELS}
-          expandedDailyDate={hookState.expandedDailyDate}
-          setExpandedDailyDate={hookState.setExpandedDailyDate}
-          pastDaysOpen={hookState.pastDaysOpen}
-          setPastDaysOpen={hookState.setPastDaysOpen}
-          pastDaysPage={hookState.pastDaysPage}
-          setPastDaysPage={hookState.setPastDaysPage}
           getDisplayValue={hookState.getDisplayValue}
           addLog={hookState.addLog}
           editLog={hookState.editLog}
@@ -170,18 +164,11 @@ export function TrackingHabitsPage(): React.ReactNode {
           barCellsMap={weeklyBarCells}
           rangeLabel={weeklyRangeLabel}
           weeklyRowLabels={WEEKLY_ROW_LABELS}
-          expandedPastWeek={hookState.expandedPastWeek}
-          setExpandedPastWeek={hookState.setExpandedPastWeek}
-          pastWeeksOpen={hookState.pastWeeksOpen}
-          setPastWeeksOpen={hookState.setPastWeeksOpen}
-          pastWeeksPage={hookState.pastWeeksPage}
-          setPastWeeksPage={hookState.setPastWeeksPage}
           getDisplayValueForDates={hookState.getDisplayValueForDates}
           getDisplayValueForWeek={hookState.getDisplayValueForWeek}
           addLog={hookState.addLog}
           editLog={hookState.editLog}
           undoLog={hookState.undoLog}
-          today={TODAY}
         />
 
         <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
@@ -191,18 +178,11 @@ export function TrackingHabitsPage(): React.ReactNode {
           barCellsMap={monthlyBarCells}
           rangeLabel={monthlyRangeLabel}
           monthlyRowLabels={MONTHLY_ROW_LABELS}
-          expandedPastMonth={hookState.expandedPastMonth}
-          setExpandedPastMonth={hookState.setExpandedPastMonth}
-          pastMonthsOpen={hookState.pastMonthsOpen}
-          setPastMonthsOpen={hookState.setPastMonthsOpen}
-          pastMonthsPage={hookState.pastMonthsPage}
-          setPastMonthsPage={hookState.setPastMonthsPage}
           getDisplayValueForMonth={hookState.getDisplayValueForMonth}
           getDisplayValueForMonthKey={hookState.getDisplayValueForMonthKey}
           addLog={hookState.addLog}
           editLog={hookState.editLog}
           undoLog={hookState.undoLog}
-          today={TODAY}
         />
       </div>
     </div>

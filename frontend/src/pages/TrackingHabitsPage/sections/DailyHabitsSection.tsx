@@ -1,3 +1,4 @@
+import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
 import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
@@ -7,12 +8,6 @@ export interface DailyHabitsSectionProps {
   barCellsMap: Record<string, PeriodCell[]>;
   rangeLabel: string;
   dailyRowLabels: Array<{ date: string; label: string; sublabel?: string }>;
-  expandedDailyDate: string | null;
-  setExpandedDailyDate: (date: string | null) => void;
-  pastDaysOpen: boolean;
-  setPastDaysOpen: (open: boolean) => void;
-  pastDaysPage: number;
-  setPastDaysPage: (page: number) => void;
   getDisplayValue: (habitId: string, date: string) => number;
   addLog: (habitId: string, value: number, date: string) => void;
   editLog: (habitId: string, date: string, value: number) => void;
@@ -25,12 +20,6 @@ export function DailyHabitsSection({
   barCellsMap,
   rangeLabel,
   dailyRowLabels,
-  expandedDailyDate,
-  setExpandedDailyDate,
-  pastDaysOpen,
-  setPastDaysOpen,
-  pastDaysPage,
-  setPastDaysPage,
   getDisplayValue,
   addLog,
   editLog,
@@ -38,6 +27,9 @@ export function DailyHabitsSection({
   dailyHighlightIndex,
 }: DailyHabitsSectionProps) {
   const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
+  const [expandedDailyDate, setExpandedDailyDate] = React.useState<string | null>(null);
+  const [pastDaysOpen, setPastDaysOpen] = React.useState(false);
+  const [pastDaysPage, setPastDaysPage] = React.useState(0);
 
   return (
     <>
