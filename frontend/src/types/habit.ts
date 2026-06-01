@@ -1,24 +1,22 @@
-<<<<<<< HEAD
-export interface Habit {
-  id: string;
-  name: string;
-  frequency: string;
-  difficulty: string;
-  category: string;
-  notes?: string;
-=======
 export enum HabitCategory {
-  Sports = 'sports',
-  Health = 'health',
-  Study = 'study',
-  Skills = 'skills',
-  Chores = 'chores',
+  Sports = 'Sports',
+  Health = 'Health',
+  Study = 'Study',
+  Skills = 'Skills',
+  Chores = 'Chores',
 }
 
 export enum HabitFrequency {
-  Daily = 'daily',
-  Weekly = 'weekly',
-  Monthly = 'monthly',
+  Daily = 'Daily',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
+}
+
+export enum HabitDifficulty {
+  Trivial = 'Trivial',
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard',
 }
 
 export interface Habit {
@@ -26,8 +24,10 @@ export interface Habit {
   name: string;
   category: HabitCategory;
   frequency: HabitFrequency;
+  difficulty: HabitDifficulty;
   targetValue: number;
   targetUnit: string;
+  notes?: string;
 }
 
 export interface HabitLog {
@@ -41,5 +41,4 @@ export interface PeriodCell {
   label: string;
   value: number; // sum of HabitLog.value for this period
   target: number; // sum of habit.targetValue for this period
->>>>>>> 33a588d (added constants and types for frontend)
 }

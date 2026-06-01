@@ -12,6 +12,8 @@ export async function createHabit(habit: {
   frequency: string;
   difficulty: string;
   category: string;
+  targetValue: number;
+  targetUnit: string;
   notes?: string;
 }) {
   const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits`, {
@@ -22,7 +24,8 @@ export async function createHabit(habit: {
     body: JSON.stringify(habit),
   });
   if (!response.ok) {
-    throw new Error('Failed to create habit');
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to create habit');
   }
   const data = await response.json();
   return data;

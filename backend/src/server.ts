@@ -1,5 +1,4 @@
-import express, { ErrorRequestHandler } from 'express';
-import cors from 'cors';
+import express from 'express';
 import dotenv from 'dotenv';
 import authRoutes from './routes/authRoutes';
 import mongoose from 'mongoose';

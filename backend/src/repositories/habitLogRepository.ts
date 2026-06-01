@@ -38,3 +38,18 @@ export async function update(id: string, value: number) {
 export async function remove(id: string) {
   return HabitLog.findByIdAndDelete(id);
 }
+
+export async function upsert(habitId: string, date: string, value: number) {
+  const dateObj = new Date(date);
+  return HabitLog.findOneAndUpdate(
+    {
+      habitId,
+      date: {
+        $gte: dateObj,
+        $lt: new Date(dateObj.getTime() + 24 * 60 * 60 * 1000),
+      },
+    },
+    { value, date: dateObj },
+    { upsert: true, returnDocument: 'after' }
+  );
+}

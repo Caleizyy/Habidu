@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Habit, HabitLog } from '@/types/habit';
-import { fetchHabits, fetchLogsForHabit, createLog, deleteLog } from '@/services/habitService';
+import { fetchHabits, fetchLogsForHabit, deleteLog, upsertLog } from '@/services/habitService';
 import { monthKey, getTodayDate } from '@/utils/habitHelpers';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 
@@ -242,7 +242,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
         const tempId = `temp-${habitId}-${date}-${Date.now()}`;
         logsBeingSaved.add(tempId);
         setSavingLogIds((prev) => new Set([...prev, tempId]));
-        return createLog(habitId, date, value)
+        return upsertLog(habitId, date, value)
           .then((newLog) => {
             setSavingLogIds((prev) => {
               const updated = new Set(prev);
@@ -250,14 +250,24 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
               updated.add(newLog._id);
               return updated;
             });
-            // Optimistically add the created log
-            setLogs((prevLogs) => ({
-              ...prevLogs,
-              [habitId]: [...(prevLogs[habitId] ?? []), newLog],
-            }));
+            // Optimistically add/update the log
+            setLogs((prevLogs) => {
+              const habitLogs = prevLogs[habitId] ?? [];
+              // Check if a log for this date already exists
+              const existingIndex = habitLogs.findIndex((l) => l.date === newLog.date);
+              if (existingIndex >= 0) {
+                // Update existing log
+                const updated = [...habitLogs];
+                updated[existingIndex] = newLog;
+                return { ...prevLogs, [habitId]: updated };
+              } else {
+                // Add new log
+                return { ...prevLogs, [habitId]: [...habitLogs, newLog] };
+              }
+            });
           })
           .catch((err) => {
-            console.error(`Failed to create log for ${habitId} on ${date}:`, err);
+            console.error(`Failed to upsert log for ${habitId} on ${date}:`, err);
             setSavingLogIds((prev) => {
               const updated = new Set(prev);
               updated.delete(tempId);

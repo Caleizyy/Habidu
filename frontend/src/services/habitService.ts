@@ -1,7 +1,7 @@
 import { Habit, HabitLog } from '@/types/habit';
 import { normalizeDateString } from '@/utils/habitHelpers';
 
-const API_BASE_URL = 'http://localhost:5000';
+const API_BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5000/api';
 
 export async function fetchHabits(): Promise<Habit[]> {
   const response = await fetch(`${API_BASE_URL}/habits`);
@@ -33,6 +33,24 @@ export async function createLog(habitId: string, date: string, value: number): P
   if (!response.ok) {
     const error = await response.json();
     throw new Error(error.error || 'Failed to create log');
+  }
+  const log = await response.json();
+  // Normalize date in response
+  return {
+    ...log,
+    date: normalizeDateString(log.date),
+  };
+}
+
+export async function upsertLog(habitId: string, date: string, value: number): Promise<HabitLog> {
+  const response = await fetch(`${API_BASE_URL}/habits/${habitId}/logs`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ date, value }),
+  });
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to upsert log');
   }
   const log = await response.json();
   // Normalize date in response

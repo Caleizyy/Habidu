@@ -103,3 +103,36 @@ export const remove = async (req: Request<{ habitId: string; logId: string }>, r
     return res.status(500).json({ error: 'Failed to delete habit log' });
   }
 };
+
+export const upsert = async (req: Request<{ habitId: string }, object, CreateHabitLogBody>, res: Response) => {
+  const { habitId } = req.params;
+  const { date, value } = req.body;
+
+  if (!date || value === undefined) {
+    return res.status(400).json({
+      error: 'Missing required fields: date (YYYY-MM-DD), value',
+    });
+  }
+
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
+    return res.status(400).json({
+      error: 'Invalid date format. Use YYYY-MM-DD',
+      received: date,
+    });
+  }
+
+  if (typeof value !== 'number' || value < 0) {
+    return res.status(400).json({
+      error: 'Value must be a non-negative number',
+      received: value,
+    });
+  }
+
+  try {
+    const log = await habitLogService.upsert(habitId, date, value);
+    return res.status(200).json(log);
+  } catch (error: unknown) {
+    console.error('Error upserting habit log:', error);
+    return res.status(500).json({ error: 'Failed to upsert habit log' });
+  }
+};

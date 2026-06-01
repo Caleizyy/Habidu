@@ -18,6 +18,8 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
   const [frequency, setFrequency] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [category, setCategory] = useState('');
+  const [targetValue, setTargetValue] = useState('');
+  const [targetUnit, setTargetUnit] = useState('');
   const [notes, setNotes] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
@@ -29,13 +31,15 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
     setFrequency('');
     setDifficulty('');
     setCategory('');
+    setTargetValue('');
+    setTargetUnit('');
     setNotes('');
     setSubmitted(false);
     setError(null);
   };
   async function handleSubmit() {
     setSubmitted(true);
-    if (!name || !frequency || !difficulty || !category) return;
+    if (!name || !frequency || !difficulty || !category || !targetValue || !targetUnit) return;
 
     setIsLoading(true);
     try {
@@ -44,6 +48,8 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
         frequency: frequency,
         difficulty: difficulty,
         category: category,
+        targetValue: parseFloat(targetValue),
+        targetUnit: targetUnit,
         notes: notes,
       });
       resetForm();
@@ -112,6 +118,29 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
             onValueChange={(value) => setCategory(value)}
           />
           {submitted && !category && <p className="mt-2 ml-4 text-sm text-red-500">Category is required.</p>}
+        </div>
+        <div className="mt-4">
+          <FieldLabel htmlFor="target-value">Target Value</FieldLabel>
+          <Input
+            id="target-value"
+            placeholder="e.g., 30"
+            type="number"
+            className="mb-2"
+            value={targetValue}
+            onChange={(e) => setTargetValue(e.target.value)}
+          />
+          {submitted && !targetValue && <p className="text-sm text-red-500">Target value is required.</p>}
+        </div>
+        <div className="mt-4">
+          <FieldLabel htmlFor="target-unit">Unit</FieldLabel>
+          <Input
+            id="target-unit"
+            placeholder="e.g., min, km, times"
+            className="mb-2"
+            value={targetUnit}
+            onChange={(e) => setTargetUnit(e.target.value)}
+          />
+          {submitted && !targetUnit && <p className="text-sm text-red-500">Unit is required.</p>}
         </div>
         <Field className="mt-8">
           <FieldLabel htmlFor="textarea-message">Notes</FieldLabel>

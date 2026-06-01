@@ -7,6 +7,8 @@ router.post('/', habitLogController.create);
 
 router.get('/', habitLogController.findByHabitId);
 
+router.put('/', habitLogController.upsert);
+
 router.put('/:logId', habitLogController.update);
 
 router.delete('/:logId', habitLogController.remove);

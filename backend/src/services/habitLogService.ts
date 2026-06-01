@@ -20,3 +20,7 @@ export function update(id: string, value: number) {
 export function remove(id: string) {
   return habitLogRepository.remove(id);
 }
+
+export function upsert(habitId: string, date: string, value: number) {
+  return habitLogRepository.upsert(habitId, date, value);
+}
