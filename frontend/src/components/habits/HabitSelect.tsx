@@ -3,12 +3,14 @@ import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectVa
 interface HabitSelectProps {
   label: string;
   choices: string[];
+  value?: string;
+  onValueChange?: (value: string) => void;
 }
 
-export function HabitSelect({ label, choices }: HabitSelectProps) {
+export function HabitSelect({ label, choices, value, onValueChange }: HabitSelectProps) {
   return (
     <div className="ml-4 flex">
-      <Select>
+      <Select value={value} onValueChange={onValueChange}>
         <SelectTrigger className="w-50">
           <SelectValue placeholder={label} />
         </SelectTrigger>
