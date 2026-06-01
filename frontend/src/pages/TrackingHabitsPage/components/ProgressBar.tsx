@@ -1,4 +1,9 @@
-import { ProgressBarProps } from '@/types/tracking';
+import { PeriodCell } from '@/types/habit';
+
+export interface ProgressBarProps {
+  cells: PeriodCell[];
+  showLabels?: boolean; // if false, labels go in header instead
+}
 
 export function ProgressBar({ cells, showLabels = false }: ProgressBarProps) {
   return (

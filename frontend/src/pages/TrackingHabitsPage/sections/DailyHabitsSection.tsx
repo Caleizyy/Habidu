@@ -1,6 +1,24 @@
-import { DailyHabitsSectionProps } from '@/types/tracking';
+import { Habit, PeriodCell } from '@/types/habit';
 import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
+
+export interface DailyHabitsSectionProps {
+  habits: Habit[];
+  barCellsMap: Record<string, PeriodCell[]>;
+  rangeLabel: string;
+  dailyRowLabels: Array<{ date: string; label: string; sublabel?: string }>;
+  expandedDailyDate: string | null;
+  setExpandedDailyDate: (date: string | null) => void;
+  pastDaysOpen: boolean;
+  setPastDaysOpen: (open: boolean) => void;
+  pastDaysPage: number;
+  setPastDaysPage: (page: number) => void;
+  getDisplayValue: (habitId: string, date: string) => number;
+  addLog: (habitId: string, value: number, date: string) => void;
+  editLog: (habitId: string, date: string, value: number) => void;
+  undoLog: (habitId: string, date: string) => void;
+  dailyHighlightIndex: number;
+}
 
 export function DailyHabitsSection({
   habits,

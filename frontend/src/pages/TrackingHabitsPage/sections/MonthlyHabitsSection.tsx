@@ -1,6 +1,25 @@
-import { MonthlyHabitsSectionProps } from '@/types/tracking';
+import { Habit, PeriodCell } from '@/types/habit';
 import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
+
+export interface MonthlyHabitsSectionProps {
+  habits: Habit[];
+  barCellsMap: Record<string, PeriodCell[]>;
+  rangeLabel: string;
+  monthlyRowLabels: Array<{ monthKey: string; label: string }>;
+  expandedPastMonth: string | null;
+  setExpandedPastMonth: (monthKey: string | null) => void;
+  pastMonthsOpen: boolean;
+  setPastMonthsOpen: (open: boolean) => void;
+  pastMonthsPage: number;
+  setPastMonthsPage: (page: number) => void;
+  getDisplayValueForMonth: (habitId: string, monthKey: string) => number;
+  getDisplayValueForMonthKey: (habitId: string, monthKey: string) => number;
+  addLog: (habitId: string, value: number, date: string) => void;
+  editLog: (habitId: string, date: string, value: number) => void;
+  undoLog: (habitId: string, date: string) => void;
+  today: string;
+}
 
 export function MonthlyHabitsSection({
   habits,
