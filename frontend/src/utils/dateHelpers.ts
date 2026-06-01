@@ -3,6 +3,14 @@ export function monthKey(dateStr: string): string {
   return dateStr.slice(0, 7);
 }
 
+// Convert a Date object to YYYY-MM-DD string format
+function dateToString(date: Date): string {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  const day = String(date.getDate()).padStart(2, '0');
+  return `${year}-${month}-${day}`;
+}
+
 // Format date range "2026-05-11" to "May 11"
 export function formatDate(dateStr: string): string {
   return new Date(dateStr + 'T00:00:00').toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
@@ -28,11 +36,7 @@ export function normalizeDateString(dateStr: string): string {
 
 // Get today's date in YYYY-MM-DD format
 export function getTodayDate(): string {
-  const today = new Date();
-  const year = today.getFullYear();
-  const month = String(today.getMonth() + 1).padStart(2, '0');
-  const day = String(today.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
+  return dateToString(new Date());
 }
 
 // Get the Monday of the week containing the given date
@@ -41,10 +45,7 @@ export function getMondayOfWeek(dateStr: string): string {
   const day = d.getDay(); // 0 = Sunday, 1 = Monday, ...
   const diff = d.getDate() - day + (day === 0 ? -6 : 1); // Adjust to Monday
   const monday = new Date(d.setDate(diff));
-  const year = monday.getFullYear();
-  const month = String(monday.getMonth() + 1).padStart(2, '0');
-  const date = String(monday.getDate()).padStart(2, '0');
-  return `${year}-${month}-${date}`;
+  return dateToString(monday);
 }
 
 // Get the Sunday of the week containing the given date
@@ -52,10 +53,7 @@ export function getSundayOfWeek(dateStr: string): string {
   const monday = getMondayOfWeek(dateStr);
   const d = new Date(monday + 'T00:00:00');
   d.setDate(d.getDate() + 6);
-  const year = d.getFullYear();
-  const month = String(d.getMonth() + 1).padStart(2, '0');
-  const date = String(d.getDate()).padStart(2, '0');
-  return `${year}-${month}-${date}`;
+  return dateToString(d);
 }
 
 // Get an array of dates for the full week (Mon-Sun) containing today
@@ -68,10 +66,7 @@ export function getFullWeek(today?: string): string[] {
   for (let i = 0; i < 7; i++) {
     const currentDate = new Date(d);
     currentDate.setDate(currentDate.getDate() + i);
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    dates.push(`${year}-${month}-${day}`);
+    dates.push(dateToString(currentDate));
   }
 
   return dates;
@@ -86,10 +81,7 @@ export function getLast7Days(today?: string): string[] {
   for (let i = 6; i >= 0; i--) {
     const currentDate = new Date(d);
     currentDate.setDate(currentDate.getDate() - i);
-    const year = currentDate.getFullYear();
-    const month = String(currentDate.getMonth() + 1).padStart(2, '0');
-    const day = String(currentDate.getDate()).padStart(2, '0');
-    dates.push(`${year}-${month}-${day}`);
+    dates.push(dateToString(currentDate));
   }
 
   return dates;
@@ -108,10 +100,7 @@ export function getLast4Weeks(today?: string) {
     const currentMonday = new Date(mondayOfThisWeek + 'T00:00:00');
     currentMonday.setDate(currentMonday.getDate() - i * 7);
 
-    const year = currentMonday.getFullYear();
-    const month = String(currentMonday.getMonth() + 1).padStart(2, '0');
-    const day = String(currentMonday.getDate()).padStart(2, '0');
-    const monday = `${year}-${month}-${day}`;
+    const monday = dateToString(currentMonday);
 
     const sunday = getSundayOfWeek(monday);
 
@@ -121,10 +110,7 @@ export function getLast4Weeks(today?: string) {
     for (let j = 0; j < 7; j++) {
       const dateObj = new Date(d);
       dateObj.setDate(dateObj.getDate() + j);
-      const y = dateObj.getFullYear();
-      const m = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const da = String(dateObj.getDate()).padStart(2, '0');
-      dates.push(`${y}-${m}-${da}`);
+      dates.push(dateToString(dateObj));
     }
 
     const weekKey = monday;
