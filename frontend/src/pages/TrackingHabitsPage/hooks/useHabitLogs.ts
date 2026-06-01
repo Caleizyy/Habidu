@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Habit, HabitLog } from '@/types/habit';
 import { fetchHabits, fetchLogsForHabit, deleteLog, upsertLog } from '@/api/habit';
-import { monthKey, getTodayDate } from '@/utils/habitHelpers';
+import { monthKey, getTodayDate } from '@/utils/dateHelpers';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 
 export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: string; dates: string[] }>) {

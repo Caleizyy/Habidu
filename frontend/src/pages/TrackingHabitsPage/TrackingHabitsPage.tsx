@@ -9,17 +9,15 @@ export function TrackingHabitsPage() {
 =======
 import * as React from 'react';
 import { HabitFrequency, PeriodCell } from '@/types/habit';
+import { buildDailyCells, buildWeeklyCells, buildMonthlyCells } from '@/utils/habitHelpers';
 import {
-  buildDailyCells,
-  buildWeeklyCells,
-  buildMonthlyCells,
   getTodayDate,
   getDailyRowLabels,
   getLast4Weeks,
   getLast5Months,
   getFullWeek,
   formatDate,
-} from '@/utils/habitHelpers';
+} from '@/utils/dateHelpers';
 import { useHabitLogs } from './hooks/useHabitLogs';
 import { DailyHabitsSection } from './sections/DailyHabitsSection';
 import { WeeklyHabitsSection } from './sections/WeeklyHabitsSection';
