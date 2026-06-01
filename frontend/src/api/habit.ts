@@ -5,7 +5,14 @@ const API_BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5000/api
 
 export async function fetchHabits(): Promise<Habit[]> {
   const response = await fetch(`${API_BASE_URL}/habits`);
-  if (!response.ok) throw new Error('Failed to fetch habits');
+  if (!response.ok) {
+    try {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch habits');
+    } catch {
+      throw new Error('Failed to fetch habits');
+    }
+  }
   return response.json();
 }
 
@@ -15,7 +22,14 @@ export async function fetchLogsForHabit(habitId: string, from?: string, to?: str
   if (to) params.append('to', to);
   const url = `${API_BASE_URL}/habits/${habitId}/logs${params.toString() ? '?' + params.toString() : ''}`;
   const response = await fetch(url);
-  if (!response.ok) throw new Error('Failed to fetch logs');
+  if (!response.ok) {
+    try {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch logs');
+    } catch {
+      throw new Error('Failed to fetch logs');
+    }
+  }
   const logs = await response.json();
   // Normalize dates from ISO format to YYYY-MM-DD
   return logs.map((log: HabitLog) => ({
@@ -66,7 +80,10 @@ export async function updateLog(habitId: string, logId: string, value: number): 
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ value }),
   });
-  if (!response.ok) throw new Error('Failed to update log');
+  if (!response.ok) {
+    const error = await response.json();
+    throw new Error(error.error || 'Failed to update log');
+  }
   const log = await response.json();
   // Normalize date in response
   return {
@@ -80,7 +97,14 @@ export async function deleteLog(habitId: string, logId: string): Promise<void> {
     method: 'DELETE',
     headers: { 'Content-Type': 'application/json' },
   });
-  if (!response.ok) throw new Error('Failed to delete log');
+  if (!response.ok) {
+    try {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to delete log');
+    } catch {
+      throw new Error('Failed to delete log');
+    }
+  }
 }
 
 export async function createHabit(habit: {
