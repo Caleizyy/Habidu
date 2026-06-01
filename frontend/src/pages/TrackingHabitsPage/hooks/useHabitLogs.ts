@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { Habit, HabitLog } from '@/types/habit';
-import { fetchHabits, fetchLogsForHabit, deleteLog, upsertLog } from '@/services/habitService';
+import { fetchHabits, fetchLogsForHabit, deleteLog, upsertLog } from '@/api/habit';
 import { monthKey, getTodayDate } from '@/utils/habitHelpers';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 
