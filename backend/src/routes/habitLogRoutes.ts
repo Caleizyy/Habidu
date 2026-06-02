@@ -1,15 +1,17 @@
 import express from 'express';
 import * as habitLogController from '../controllers/habitLogController';
+import { validateBody } from '../middleware';
+import { createHabitLogSchema, updateHabitLogSchema } from '../schemas/habitLogSchema';
 
 const router = express.Router({ mergeParams: true });
 
-router.post('/', habitLogController.create);
+router.post('/', validateBody(createHabitLogSchema), habitLogController.create);
 
 router.get('/', habitLogController.findByHabitId);
 
-router.put('/', habitLogController.upsert);
+router.put('/', validateBody(createHabitLogSchema), habitLogController.upsert);
 
-router.put('/:logId', habitLogController.update);
+router.put('/:logId', validateBody(updateHabitLogSchema), habitLogController.update);
 
 router.delete('/:logId', habitLogController.remove);
 

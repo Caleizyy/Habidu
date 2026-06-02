@@ -6,26 +6,6 @@ export const create = async (req: Request<{ habitId: string }, object, CreateHab
   const { habitId } = req.params;
   const { date, value } = req.body;
 
-  if (!date || value === undefined) {
-    return res.status(400).json({
-      error: 'Missing required fields: date (YYYY-MM-DD), value',
-    });
-  }
-
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return res.status(400).json({
-      error: 'Invalid date format. Use YYYY-MM-DD',
-      received: date,
-    });
-  }
-
-  if (typeof value !== 'number' || value < 0) {
-    return res.status(400).json({
-      error: 'Value must be a non-negative number',
-      received: value,
-    });
-  }
-
   try {
     const log = await habitLogService.create({
       habitId,
@@ -70,13 +50,6 @@ export const update = async (
   const { logId } = req.params;
   const { value } = req.body;
 
-  if (typeof value !== 'number' || value < 0) {
-    return res.status(400).json({
-      error: 'Value must be a non-negative number',
-      received: value,
-    });
-  }
-
   try {
     const log = await habitLogService.update(logId, value);
     if (!log) {
@@ -107,26 +80,6 @@ export const remove = async (req: Request<{ habitId: string; logId: string }>, r
 export const upsert = async (req: Request<{ habitId: string }, object, CreateHabitLogBody>, res: Response) => {
   const { habitId } = req.params;
   const { date, value } = req.body;
-
-  if (!date || value === undefined) {
-    return res.status(400).json({
-      error: 'Missing required fields: date (YYYY-MM-DD), value',
-    });
-  }
-
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(date)) {
-    return res.status(400).json({
-      error: 'Invalid date format. Use YYYY-MM-DD',
-      received: date,
-    });
-  }
-
-  if (typeof value !== 'number' || value < 0) {
-    return res.status(400).json({
-      error: 'Value must be a non-negative number',
-      received: value,
-    });
-  }
 
   try {
     const log = await habitLogService.upsert(habitId, date, value);

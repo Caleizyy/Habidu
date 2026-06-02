@@ -1,5 +1,9 @@
 import { HabitCategory, HabitDifficulty, HabitFrequency } from '../types';
 
+export const HABIT_CATEGORIES = Object.values(HabitCategory);
+export const HABIT_DIFFICULTIES = Object.values(HabitDifficulty);
+export const HABIT_FREQUENCIES = Object.values(HabitFrequency);
+
 export function isValidDifficulty(value: unknown): value is HabitDifficulty {
   return Object.values(HabitDifficulty).includes(value as HabitDifficulty);
 }
