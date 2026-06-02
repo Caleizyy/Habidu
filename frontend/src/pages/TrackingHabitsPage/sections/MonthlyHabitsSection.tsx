@@ -12,8 +12,8 @@ export interface MonthlyHabitsSectionProps {
   getDisplayValueForMonth: (habitId: string, monthKey: string) => number;
   getDisplayValueForMonthKey: (habitId: string, monthKey: string) => number;
   addLog: (habitId: string, value: number, date: string) => void;
-  editLog: (habitId: string, date: string, value: number) => void;
-  undoLog: (habitId: string, date: string) => void;
+  editMonthlyLog: (habitId: string, monthKey: string, value: number) => void;
+  undoMonthlyLog: (habitId: string, monthKey: string) => void;
 }
 
 export function MonthlyHabitsSection({
@@ -24,8 +24,8 @@ export function MonthlyHabitsSection({
   getDisplayValueForMonth,
   getDisplayValueForMonthKey,
   addLog,
-  editLog,
-  undoLog,
+  editMonthlyLog,
+  undoMonthlyLog,
 }: MonthlyHabitsSectionProps) {
   const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
   const today = getTodayDate();
@@ -53,8 +53,8 @@ export function MonthlyHabitsSection({
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
                 onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
-                onEdit={(newVal) => editLog(habit._id, today, newVal)}
-                onUndo={() => undoLog(habit._id, today)}
+                onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
+                onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
               />
             ))}
           </div>
@@ -115,8 +115,8 @@ export function MonthlyHabitsSection({
                         unit={habit.targetUnit}
                         isCurrentPeriod={false}
                         onQuickLog={() => addLog(habit._id, habit.targetValue, `${row.monthKey}-01`)}
-                        onEdit={(newVal) => editLog(habit._id, `${row.monthKey}-01`, newVal)}
-                        onUndo={() => undoLog(habit._id, `${row.monthKey}-01`)}
+                        onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
+                        onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
                       />
                     ))}
                   </PastPeriodRow>

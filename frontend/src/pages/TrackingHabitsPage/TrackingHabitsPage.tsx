@@ -167,8 +167,8 @@ export function TrackingHabitsPage(): React.ReactNode {
           getDisplayValueForDates={hookState.getDisplayValueForDates}
           getDisplayValueForWeek={hookState.getDisplayValueForWeek}
           addLog={hookState.addLog}
-          editLog={hookState.editLog}
-          undoLog={hookState.undoLog}
+          editWeeklyLog={hookState.editWeeklyLog}
+          undoWeeklyLog={hookState.undoWeeklyLog}
         />
 
         <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
@@ -181,8 +181,8 @@ export function TrackingHabitsPage(): React.ReactNode {
           getDisplayValueForMonth={hookState.getDisplayValueForMonth}
           getDisplayValueForMonthKey={hookState.getDisplayValueForMonthKey}
           addLog={hookState.addLog}
-          editLog={hookState.editLog}
-          undoLog={hookState.undoLog}
+          editMonthlyLog={hookState.editMonthlyLog}
+          undoMonthlyLog={hookState.undoMonthlyLog}
         />
       </div>
     </div>

@@ -132,21 +132,19 @@ export function LogRow({
 
         {/* Status badge */}
         {completed ? (
-          isCurrentPeriod ? (
-            <button
-              onClick={() => {
-                setEditing(false);
-                onUndo();
-              }}
-              className="cursor-pointer rounded-full bg-green-50 px-3 py-1.5 font-medium text-green-600 transition-colors hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50"
-            >
-              {over ? `+${Math.round(value - target)} ${unit}` : 'Undo'}
-            </button>
-          ) : (
-            <span className="rounded-full bg-green-50 px-2.5 py-1 text-xs font-medium text-green-600 dark:bg-green-900/30 dark:text-green-400">
-              {over ? `+${Math.round(value - target)} ${unit}` : 'Done'}
-            </span>
-          )
+          <button
+            onClick={() => {
+              setEditing(false);
+              onUndo();
+            }}
+            className={`cursor-pointer rounded-full font-medium transition-colors ${
+              isCurrentPeriod
+                ? 'bg-green-50 px-3 py-1.5 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50'
+                : 'bg-green-50 px-2.5 py-1 text-xs text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50'
+            }`}
+          >
+            {over ? `+${Math.round(value - target)} ${unit}` : 'Undo'}
+          </button>
         ) : isCurrentPeriod ? (
           <button
             onClick={onQuickLog}

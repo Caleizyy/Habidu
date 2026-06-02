@@ -1,137 +1,188 @@
 import * as React from 'react';
-import { Habit, HabitLog } from '@/types/habit';
-import { fetchHabits, fetchLogsForHabit, deleteLog, upsertLog } from '@/api/habit';
 import { monthKey, getTodayDate } from '@/utils/dateHelpers';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
+import { useHabitsQuery } from './useHabitsQuery';
+import { useAllHabitLogsQuery } from './useAllHabitLogsQuery';
+import { useHabitLogsMutations } from './useHabitLogsMutations';
+import { useDraftManager } from './useDraftManager';
 
 export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: string; dates: string[] }>) {
   const TODAY = getTodayDate();
 
-  const [habits, setHabits] = React.useState<Habit[]>([]);
-  const [logs, setLogs] = React.useState<Record<string, HabitLog[]>>({});
-  const [drafts, setDrafts] = React.useState<Record<string, Record<string, number>>>({});
-  const [deletedLogIds, setDeletedLogIds] = React.useState<Record<string, string>>({});
-  const [loading, setLoading] = React.useState(true);
-  const [isSaving, setIsSaving] = React.useState(false);
-  const [savingLogIds, setSavingLogIds] = React.useState<Set<string>>(new Set());
-  const [error, setError] = React.useState<string | null>(null);
+  // Query habits
+  const habitsQuery = useHabitsQuery();
 
-  // Load data
-  React.useEffect(() => {
-    async function loadData() {
-      try {
-        setLoading(true);
-        setError(null);
-
-        // Calculate date range: last 1 year from today
-        const todayDate = new Date(TODAY + 'T00:00:00');
-        const oneYearAgo = new Date(todayDate);
-        oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
-        const startDate = `${oneYearAgo.getFullYear()}-${String(oneYearAgo.getMonth() + 1).padStart(2, '0')}-${String(oneYearAgo.getDate()).padStart(2, '0')}`;
-        const endDate = TODAY;
-
-        // Fetch all habits
-        const habitsData = await fetchHabits();
-        setHabits(habitsData);
-
-        // Fetch logs for each habit
-        const logsData: Record<string, HabitLog[]> = {};
-        await Promise.all(
-          habitsData.map(async (habit) => {
-            try {
-              logsData[habit._id] = await fetchLogsForHabit(habit._id, startDate, endDate);
-            } catch (err) {
-              console.error(`Failed to fetch logs for habit ${habit._id}:`, err);
-              logsData[habit._id] = [];
-            }
-          })
-        );
-        setLogs(logsData);
-      } catch (err) {
-        const errorMessage = 'Unable to load your habits. Please refresh the page.';
-        setError(errorMessage);
-        console.error('Error loading data:', err);
-      } finally {
-        setLoading(false);
-      }
-    }
-
-    loadData();
+  // Calculate date range: last 1 year from today
+  const dateRange = React.useMemo(() => {
+    const todayDate = new Date(TODAY + 'T00:00:00');
+    const oneYearAgo = new Date(todayDate);
+    oneYearAgo.setFullYear(oneYearAgo.getFullYear() - 1);
+    const startDate = `${oneYearAgo.getFullYear()}-${String(oneYearAgo.getMonth() + 1).padStart(2, '0')}-${String(oneYearAgo.getDate()).padStart(2, '0')}`;
+    const endDate = TODAY;
+    return { startDate, endDate };
   }, [TODAY]);
 
-  // Log management functions
-  async function addLog(habitId: string, value: number, date: string = TODAY) {
-    setDrafts((prev) => ({
-      ...prev,
-      [habitId]: { ...(prev[habitId] ?? {}), [date]: value },
-    }));
-  }
+  // Query logs for each habit
+  const logsQuery = useAllHabitLogsQuery({
+    habitIds: habitsQuery.data?.map((h) => h._id) ?? [],
+    startDate: dateRange.startDate,
+    endDate: dateRange.endDate,
+    enabled: !!habitsQuery.data,
+  });
 
-  async function editLog(habitId: string, date: string, newValue: number) {
-    setDrafts((prev) => ({
-      ...prev,
-      [habitId]: { ...(prev[habitId] ?? {}), [date]: newValue },
-    }));
-  }
+  // Draft manager
+  const draftManager = useDraftManager();
 
-  async function undoLog(habitId: string, date: string) {
-    const isDraft = drafts[habitId]?.[date] !== undefined;
+  // Mutations
+  const mutations = useHabitLogsMutations();
 
-    if (isDraft) {
-      setDrafts((prev) => {
-        const habitDrafts = { ...prev[habitId] };
-        delete habitDrafts[date];
-        return { ...prev, [habitId]: habitDrafts };
-      });
-    } else {
-      const savedLogs = logs[habitId] ?? [];
-      const logToDelete = savedLogs.find((l) => l.date === date);
+  // Aggregate logs from all queries - memoized to avoid changing dependencies
+  const logs = React.useMemo(() => logsQuery.data ?? {}, [logsQuery.data]);
 
-      if (logToDelete) {
-        setDeletedLogIds((prev) => ({
-          ...prev,
-          [logToDelete._id]: habitId,
-        }));
-      }
+  // Combined loading state
+  const loading = React.useMemo(() => {
+    return habitsQuery.isLoading || logsQuery.isLoading;
+  }, [habitsQuery.isLoading, logsQuery.isLoading]);
+
+  // Combined error state
+  const error = React.useMemo(() => {
+    if (habitsQuery.isError) {
+      return 'Unable to load your habits. Please refresh the page.';
     }
-  }
+    if (logsQuery.isError) {
+      return 'Unable to load your logs. Please refresh the page.';
+    }
+    return null;
+  }, [habitsQuery.isError, logsQuery.isError]);
+
+  // Enhanced add/edit functions that also handle drafts
+  const addLog = React.useCallback(
+    (habitId: string, value: number, date: string = TODAY) => {
+      draftManager.addLog(habitId, value, date);
+    },
+    [draftManager, TODAY]
+  );
+
+  const editLog = React.useCallback(
+    (habitId: string, date: string, newValue: number) => {
+      draftManager.editLog(habitId, date, newValue);
+    },
+    [draftManager]
+  );
+
+  const editWeeklyLog = React.useCallback(
+    (habitId: string, dates: string[], newValue: number) => {
+      const draftKey = `WEEK:${dates[0]}`;
+      draftManager.editLog(habitId, draftKey, newValue);
+    },
+    [draftManager]
+  );
+
+  const editMonthlyLog = React.useCallback(
+    (habitId: string, mKey: string, newValue: number) => {
+      const draftKey = `MONTH:${mKey}`;
+      draftManager.editLog(habitId, draftKey, newValue);
+    },
+    [draftManager]
+  );
+
+  const undoLog = React.useCallback(
+    (habitId: string, date: string) => {
+      const isDraft = draftManager.drafts[habitId]?.[date] !== undefined;
+
+      if (isDraft) {
+        draftManager.undoDraft(habitId, date);
+      } else {
+        const savedLogs = logs[habitId] ?? [];
+        const logToDelete = savedLogs.find((l) => l.date === date);
+
+        if (logToDelete) {
+          draftManager.markLogForDeletion(logToDelete._id, habitId);
+        }
+      }
+    },
+    [draftManager, logs]
+  );
+
+  const undoWeeklyLog = React.useCallback(
+    (habitId: string, dates: string[]) => {
+      // Check if this week has a draft
+      const draftKey = `WEEK:${dates[0]}`;
+      const isDraft = draftManager.drafts[habitId]?.[draftKey] !== undefined;
+
+      if (isDraft) {
+        draftManager.undoDraft(habitId, draftKey);
+      } else {
+        // Mark all logs in this week for deletion
+        const savedLogs = logs[habitId] ?? [];
+        const dateSet = new Set(dates);
+        savedLogs.forEach((log) => {
+          if (dateSet.has(log.date)) {
+            draftManager.markLogForDeletion(log._id, habitId);
+          }
+        });
+      }
+    },
+    [draftManager, logs]
+  );
+
+  const undoMonthlyLog = React.useCallback(
+    (habitId: string, mKey: string) => {
+      // Check if this month has a draft
+      const draftKey = `MONTH:${mKey}`;
+      const isDraft = draftManager.drafts[habitId]?.[draftKey] !== undefined;
+
+      if (isDraft) {
+        draftManager.undoDraft(habitId, draftKey);
+      } else {
+        // Mark all logs in this month for deletion
+        const savedLogs = logs[habitId] ?? [];
+        savedLogs.forEach((log) => {
+          if (monthKey(log.date) === mKey) {
+            draftManager.markLogForDeletion(log._id, habitId);
+          }
+        });
+      }
+    },
+    [draftManager, logs]
+  );
 
   // Display value helpers
   function getDisplayValue(habitId: string, date: string): number {
-    const draftValue = drafts[habitId]?.[date];
+    const draftValue = draftManager.drafts[habitId]?.[date];
     if (draftValue !== undefined) return draftValue;
     return (logs[habitId] ?? [])
-      .filter((l) => l.date === date && !(l._id in deletedLogIds))
+      .filter((l) => l.date === date && !(l._id in draftManager.deletedLogIds))
       .reduce((s, l) => s + l.value, 0);
   }
 
   function getDisplayValueForDates(habitId: string, dates: string[]): number {
     const set = new Set(dates);
-    const todayDraft = drafts[habitId]?.[TODAY];
+    const todayDraft = draftManager.drafts[habitId]?.[TODAY];
     if (todayDraft !== undefined) return todayDraft;
     return (logs[habitId] ?? [])
-      .filter((l) => set.has(l.date) && !(l._id in deletedLogIds))
+      .filter((l) => set.has(l.date) && !(l._id in draftManager.deletedLogIds))
       .reduce((s, l) => s + l.value, 0);
   }
 
   function getDisplayValueForMonth(habitId: string, mKey: string): number {
-    const todayDraft = drafts[habitId]?.[TODAY];
+    const todayDraft = draftManager.drafts[habitId]?.[TODAY];
     if (todayDraft !== undefined && monthKey(TODAY) === mKey) return todayDraft;
     return (logs[habitId] ?? [])
-      .filter((l) => monthKey(l.date) === mKey && !(l._id in deletedLogIds))
+      .filter((l) => monthKey(l.date) === mKey && !(l._id in draftManager.deletedLogIds))
       .reduce((s, l) => s + l.value, 0);
   }
 
   function getDisplayValueForWeek(habitId: string, dates: string[]): number {
-    const startDate = dates[0];
-    const draftValue = drafts[habitId]?.[startDate];
+    const draftKey = `WEEK:${dates[0]}`;
+    const draftValue = draftManager.drafts[habitId]?.[draftKey];
     if (draftValue !== undefined) return draftValue;
     return sumForDates(habitId, dates);
   }
 
   function getDisplayValueForMonthKey(habitId: string, mKey: string): number {
-    const firstDay = `${mKey}-01`;
-    const draftValue = drafts[habitId]?.[firstDay];
+    const draftKey = `MONTH:${mKey}`;
+    const draftValue = draftManager.drafts[habitId]?.[draftKey];
     if (draftValue !== undefined) return draftValue;
     return sumForMonth(habitId, mKey);
   }
@@ -140,202 +191,124 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
   function sumForDates(habitId: string, dates: string[]): number {
     const set = new Set(dates);
     return (logs[habitId] ?? [])
-      .filter((l) => set.has(l.date) && !(l._id in deletedLogIds))
+      .filter((l) => set.has(l.date) && !(l._id in draftManager.deletedLogIds))
       .reduce((s, l) => s + l.value, 0);
   }
 
   function sumForMonth(habitId: string, mKey: string): number {
     return (logs[habitId] ?? [])
-      .filter((l) => monthKey(l.date) === mKey && !(l._id in deletedLogIds))
+      .filter((l) => monthKey(l.date) === mKey && !(l._id in draftManager.deletedLogIds))
       .reduce((s, l) => s + l.value, 0);
   }
 
-  // Check for unsaved changes
-  const hasUnsavedChanges =
-    Object.values(drafts).some((habitDrafts) => Object.keys(habitDrafts).length > 0) ||
-    Object.keys(deletedLogIds).length > 0;
-
-  // Save function with optimistic loading
-  async function saveDrafts() {
-    setIsSaving(true);
+  // Save drafts with minimum loading time
+  const saveDrafts = React.useCallback(async () => {
     const startTime = Date.now();
     const MIN_LOADING_TIME = HABIT_TRACKING_CONSTANTS.MIN_LOADING_TIME_MS;
 
-    // Backup logs for rollback on failure
-    const logsBackup = JSON.parse(JSON.stringify(logs));
-
     try {
+      // Prepare updates and deletions
       const updates: Array<{ habitId: string; date: string; value: number }> = [];
-      Object.entries(drafts).forEach(([habitId, dates]) => {
-        Object.entries(dates).forEach(([date, value]) => {
-          updates.push({ habitId, date, value });
+      const logsToDelete: Array<{ habitId: string; logId: string }> = [];
+
+      Object.entries(draftManager.drafts).forEach(([habitId, draftEntries]) => {
+        Object.entries(draftEntries).forEach(([draftKey, value]) => {
+          const existingLogs = logs[habitId] ?? [];
+
+          // Handle weekly entries (key format: "WEEK:2026-05-27")
+          if (draftKey.startsWith('WEEK:')) {
+            const dateStr = draftKey.substring(5); // Remove "WEEK:" prefix
+            const weekRow = WEEKLY_ROW_LABELS.find((w) => w.dates[0] === dateStr);
+
+            if (weekRow) {
+              // Mark all logs in this week for deletion
+              weekRow.dates.forEach((weekDate) => {
+                existingLogs
+                  .filter((l) => l.date === weekDate)
+                  .forEach((log) => {
+                    logsToDelete.push({ habitId, logId: log._id });
+                  });
+              });
+              // Create single update for the week
+              updates.push({ habitId, date: dateStr, value });
+            }
+          }
+          // Handle monthly entries (key format: "MONTH:2026-06")
+          else if (draftKey.startsWith('MONTH:')) {
+            const mKey = draftKey.substring(6); // Remove "MONTH:" prefix
+            // Mark all logs in this month for deletion
+            existingLogs
+              .filter((l) => monthKey(l.date) === mKey)
+              .forEach((log) => {
+                logsToDelete.push({ habitId, logId: log._id });
+              });
+            // Create update for the month (using first day as the date)
+            updates.push({ habitId, date: `${mKey}-01`, value });
+          }
+          // Handle daily entries (regular date format: "2026-06-01")
+          else {
+            // Mark existing logs for this date for deletion
+            existingLogs
+              .filter((l) => l.date === draftKey)
+              .forEach((log) => {
+                logsToDelete.push({ habitId, logId: log._id });
+              });
+            updates.push({ habitId, date: draftKey, value });
+          }
         });
       });
 
-      const logsToDelete: Array<{ habitId: string; logId: string }> = [];
-      for (const update of updates) {
-        const existingLogs = logs[update.habitId] ?? [];
-        const weekRow = WEEKLY_ROW_LABELS.find((w) => w.dates[0] === update.date);
-        const isMonthlyEdit = update.date.endsWith('-01') && monthKey(update.date) === update.date.slice(0, 7);
+      // Also add explicitly deleted logs (not drafts, but marked for deletion)
+      Object.entries(draftManager.deletedLogIds).forEach(([logId, habitId]) => {
+        logsToDelete.push({ habitId, logId });
+      });
 
-        if (weekRow) {
-          weekRow.dates.forEach((weekDate) => {
-            const logsForDate = existingLogs.filter((l) => l.date === weekDate);
-            logsForDate.forEach((log) => {
-              logsToDelete.push({ habitId: update.habitId, logId: log._id });
-            });
-          });
-        } else if (isMonthlyEdit) {
-          const mKey = update.date.slice(0, 7);
-          const logsForMonth = existingLogs.filter((l) => monthKey(l.date) === mKey);
-          logsForMonth.forEach((log) => {
-            logsToDelete.push({ habitId: update.habitId, logId: log._id });
-          });
-        } else {
-          const logsForDate = existingLogs.filter((l) => l.date === update.date);
-          logsForDate.forEach((log) => {
-            logsToDelete.push({ habitId: update.habitId, logId: log._id });
-          });
-        }
+      // Execute batch save mutation
+      if (updates.length > 0 || logsToDelete.length > 0) {
+        await mutations.batchSaveMutation.mutateAsync({
+          updates,
+          logsToDelete,
+        });
       }
 
-      // Optimistically update logs state
-      setLogs((prevLogs) => {
-        const newLogs = JSON.parse(JSON.stringify(prevLogs));
-
-        // Remove deleted logs
-        logsToDelete.forEach(({ habitId, logId }) => {
-          if (newLogs[habitId]) {
-            newLogs[habitId] = newLogs[habitId].filter((l: HabitLog) => l._id !== logId);
-          }
-        });
-
-        return newLogs;
-      });
-
-      // Track which logs are being saved
-      const logsBeingSaved = new Set<string>();
-      logsToDelete.forEach(({ logId }) => logsBeingSaved.add(logId));
-
-      // Make API calls (don't wait to update UI, but track completion)
-      const deletionPromises = logsToDelete.map(({ habitId, logId }) => {
-        logsBeingSaved.add(logId);
-        return deleteLog(habitId, logId).catch((err) => {
-          console.error(`Failed to delete log ${logId}:`, err);
-          throw err;
-        });
-      });
-
-      const creationPromises = updates.map(({ habitId, date, value }) => {
-        const tempId = `temp-${habitId}-${date}-${Date.now()}`;
-        logsBeingSaved.add(tempId);
-        setSavingLogIds((prev) => new Set([...prev, tempId]));
-        return upsertLog(habitId, date, value)
-          .then((newLog) => {
-            setSavingLogIds((prev) => {
-              const updated = new Set(prev);
-              updated.delete(tempId);
-              updated.add(newLog._id);
-              return updated;
-            });
-            // Optimistically add/update the log
-            setLogs((prevLogs) => {
-              const habitLogs = prevLogs[habitId] ?? [];
-              // Check if a log for this date already exists
-              const existingIndex = habitLogs.findIndex((l) => l.date === newLog.date);
-              if (existingIndex >= 0) {
-                // Update existing log
-                const updated = [...habitLogs];
-                updated[existingIndex] = newLog;
-                return { ...prevLogs, [habitId]: updated };
-              } else {
-                // Add new log
-                return { ...prevLogs, [habitId]: [...habitLogs, newLog] };
-              }
-            });
-          })
-          .catch((err) => {
-            console.error(`Failed to upsert log for ${habitId} on ${date}:`, err);
-            setSavingLogIds((prev) => {
-              const updated = new Set(prev);
-              updated.delete(tempId);
-              return updated;
-            });
-            throw err;
-          });
-      });
-
-      const deleteDeletionPromises = Object.entries(deletedLogIds).map(([logId, habitId]) => {
-        logsBeingSaved.add(logId);
-        return deleteLog(habitId, logId).catch((err) => {
-          console.error(`Failed to delete log ${logId}:`, err);
-          throw err;
-        });
-      });
-
-      // Wait for all operations
-      await Promise.all([...deletionPromises, ...creationPromises, ...deleteDeletionPromises]);
-
-      // Remove deleted logs from state
-      setLogs((prevLogs) => {
-        const newLogs = JSON.parse(JSON.stringify(prevLogs));
-        Object.entries(deletedLogIds).forEach(([logId, habitId]) => {
-          if (newLogs[habitId]) {
-            newLogs[habitId] = newLogs[habitId].filter((l: HabitLog) => l._id !== logId);
-          }
-        });
-        return newLogs;
-      });
-
-      // Clear drafts and deleted logs
-      setDrafts({});
-      setDeletedLogIds({});
-      setSavingLogIds(new Set());
-      setError(null);
+      // Clear drafts only after successful save
+      draftManager.clearAllDrafts();
     } catch (err) {
-      // Rollback on failure
-      setLogs(logsBackup);
-      setSavingLogIds(new Set());
-
-      // User-friendly error messages
-      const errorMessage =
-        err instanceof Error && err.message.includes('Failed to')
-          ? "Couldn't save your changes. Please try again."
-          : 'Unable to save your logs. Check your connection and try again.';
-
-      setError(errorMessage);
       console.error('Error saving drafts:', err);
+      throw err;
     } finally {
+      // Enforce minimum loading time
       const elapsedTime = Date.now() - startTime;
       const remainingTime = Math.max(0, MIN_LOADING_TIME - elapsedTime);
-      setTimeout(() => {
-        setIsSaving(false);
-      }, remainingTime);
+      if (remainingTime > 0) {
+        await new Promise((resolve) => setTimeout(resolve, remainingTime));
+      }
     }
-  }
+  }, [draftManager, logs, mutations.batchSaveMutation, WEEKLY_ROW_LABELS]);
 
   return {
-    // State
-    habits,
+    habits: habitsQuery.data ?? [],
     logs,
-    drafts,
-    deletedLogIds,
+    drafts: draftManager.drafts,
+    deletedLogIds: draftManager.deletedLogIds,
     loading,
-    isSaving,
-    savingLogIds,
+    isSaving: mutations.isSaving,
+    savingLogIds: new Set<string>(),
     error,
-    // Functions
     addLog,
     editLog,
+    editWeeklyLog,
+    editMonthlyLog,
     undoLog,
+    undoWeeklyLog,
+    undoMonthlyLog,
     getDisplayValue,
     getDisplayValueForDates,
     getDisplayValueForMonth,
     getDisplayValueForWeek,
     getDisplayValueForMonthKey,
     saveDrafts,
-    hasUnsavedChanges,
-    // Constants
+    hasUnsavedChanges: draftManager.hasUnsavedChanges,
     ITEMS_PER_PAGE: HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE,
     TODAY,
   };

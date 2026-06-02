@@ -12,8 +12,8 @@ export interface WeeklyHabitsSectionProps {
   getDisplayValueForDates: (habitId: string, dates: string[]) => number;
   getDisplayValueForWeek: (habitId: string, dates: string[]) => number;
   addLog: (habitId: string, value: number, date: string) => void;
-  editLog: (habitId: string, date: string, value: number) => void;
-  undoLog: (habitId: string, date: string) => void;
+  editWeeklyLog: (habitId: string, dates: string[], value: number) => void;
+  undoWeeklyLog: (habitId: string, dates: string[]) => void;
 }
 
 export function WeeklyHabitsSection({
@@ -24,8 +24,8 @@ export function WeeklyHabitsSection({
   getDisplayValueForDates,
   getDisplayValueForWeek,
   addLog,
-  editLog,
-  undoLog,
+  editWeeklyLog,
+  undoWeeklyLog,
 }: WeeklyHabitsSectionProps) {
   const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
   const today = getTodayDate();
@@ -53,8 +53,8 @@ export function WeeklyHabitsSection({
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
                 onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
-                onEdit={(newVal) => editLog(habit._id, today, newVal)}
-                onUndo={() => undoLog(habit._id, today)}
+                onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
+                onUndo={() => undoWeeklyLog(habit._id, row.dates)}
               />
             ))}
           </div>
@@ -115,8 +115,8 @@ export function WeeklyHabitsSection({
                         unit={habit.targetUnit}
                         isCurrentPeriod={false}
                         onQuickLog={() => addLog(habit._id, habit.targetValue, row.dates[0])}
-                        onEdit={(newVal) => editLog(habit._id, row.dates[0], newVal)}
-                        onUndo={() => undoLog(habit._id, row.dates[0])}
+                        onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
+                        onUndo={() => undoWeeklyLog(habit._id, row.dates)}
                       />
                     ))}
                   </PastPeriodRow>

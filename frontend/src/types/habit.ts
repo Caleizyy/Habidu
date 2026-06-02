@@ -35,6 +35,8 @@ export interface HabitLog {
   habitId: string;
   date: string; // "YYYY-MM-DD"
   value: number;
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 export interface PeriodCell {
