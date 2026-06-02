@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function TrackingHabitsPage(): React.ReactNode {
+export function TrackingHabitsPage() {
   return (
-    <div>
-      <h1>Tracking Habits</h1>
-    </div>
+    <PageLayout title="Tracking Habits">
+      <div></div>
+    </PageLayout>
   );
 }
