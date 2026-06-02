@@ -8,6 +8,7 @@ export interface IHabit extends Document {
   difficulty: HabitDifficulty;
   category: HabitCategory;
   notes?: string;
+  createdBy: string;
 }
 
 const HabitSchema = new Schema<IHabit>(
@@ -17,6 +18,7 @@ const HabitSchema = new Schema<IHabit>(
     difficulty: { type: String, enum: Object.values(HabitDifficulty), required: true },
     category: { type: String, enum: Object.values(HabitCategory), required: true },
     notes: { type: String },
+    createdBy: { type: String, required: true },
   },
 
   { timestamps: true }

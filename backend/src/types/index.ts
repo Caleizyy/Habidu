@@ -48,9 +48,11 @@ export interface CreateHabitBody {
   frequency: HabitFrequency;
   difficulty: HabitDifficulty;
   notes?: string;
+  createdBy: string;
 }
 
 export interface HabitQueryFilter {
   category?: HabitCategory;
   frequency?: HabitFrequency;
+  createdBy?: string;
 }
