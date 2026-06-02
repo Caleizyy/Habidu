@@ -31,7 +31,7 @@ export function WeeklyHabitsSection({
   const today = getTodayDate();
   const [expandedPastWeek, setExpandedPastWeek] = React.useState<string | null>(null);
   const [pastWeeksOpen, setPastWeeksOpen] = React.useState(false);
-  const [pastWeeksPage, setPastWeeksPage] = React.useState(0);
+  const [pastWeeksPage, setPastWeeksPage] = React.useState(1);
 
   return (
     <>
@@ -64,7 +64,10 @@ export function WeeklyHabitsSection({
         {weeklyRowLabels.slice(1).length > 0 && (
           <>
             <button
-              onClick={() => setPastWeeksOpen(!pastWeeksOpen)}
+              onClick={() => {
+                setPastWeeksOpen(!pastWeeksOpen);
+                setPastWeeksPage(1); // Reset to first page when toggling
+              }}
               className="hover:bg-neutral-150 flex w-full items-center gap-2 border-b border-neutral-200 bg-neutral-100 px-4 py-2 transition-colors dark:border-neutral-700 dark:bg-neutral-800/80 dark:hover:bg-neutral-800"
             >
               <span className="text-xs font-semibold tracking-wide text-neutral-500 uppercase dark:text-neutral-400">

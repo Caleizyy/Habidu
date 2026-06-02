@@ -29,7 +29,7 @@ export function DailyHabitsSection({
   const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
   const [expandedDailyDate, setExpandedDailyDate] = React.useState<string | null>(null);
   const [pastDaysOpen, setPastDaysOpen] = React.useState(false);
-  const [pastDaysPage, setPastDaysPage] = React.useState(0);
+  const [pastDaysPage, setPastDaysPage] = React.useState(1);
 
   return (
     <>
@@ -68,7 +68,10 @@ export function DailyHabitsSection({
         {dailyRowLabels.slice(0, -1).length > 0 && (
           <>
             <button
-              onClick={() => setPastDaysOpen(!pastDaysOpen)}
+              onClick={() => {
+                setPastDaysOpen(!pastDaysOpen);
+                setPastDaysPage(1); // Reset to first page when toggling
+              }}
               className="hover:bg-neutral-150 flex w-full items-center gap-2 border-b border-neutral-200 bg-neutral-100 px-4 py-2 transition-colors dark:border-neutral-700 dark:bg-neutral-800/80 dark:hover:bg-neutral-800"
             >
               <span className="text-xs font-semibold tracking-wide text-neutral-500 uppercase dark:text-neutral-400">
