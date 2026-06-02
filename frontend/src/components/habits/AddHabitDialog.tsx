@@ -6,8 +6,8 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
 import { HabitSelect } from './HabitSelect';
 import { frequencyOptions, difficultyOptions, categoryOptions } from './selectChoices.constants';
-import { createHabit } from '@/api/habit';
 import { useState } from 'react';
+import { useCreateHabitMutation } from '@/hooks/useCreateHabitMutation';
 
 interface AddHabitDialogProps {
   onHabitCreated: () => void;
@@ -21,10 +21,11 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
   const [targetValue, setTargetValue] = useState('');
   const [targetUnit, setTargetUnit] = useState('');
   const [notes, setNotes] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const createHabitMutation = useCreateHabitMutation();
 
   const resetForm = () => {
     setName('');
@@ -37,13 +38,14 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
     setSubmitted(false);
     setError(null);
   };
+
   async function handleSubmit() {
     setSubmitted(true);
     if (!name || !frequency || !difficulty || !category || !targetValue || !targetUnit) return;
 
-    setIsLoading(true);
+    setError(null);
     try {
-      await createHabit({
+      await createHabitMutation.mutateAsync({
         name: name,
         frequency: frequency,
         difficulty: difficulty,
@@ -57,8 +59,6 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
       onHabitCreated();
     } catch {
       setError('Something went wrong. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -156,8 +156,12 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
           <div className="flex w-full justify-center">
             {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
-              <Button className="h-10 w-30 bg-gray-200 text-black" onClick={handleSubmit} disabled={isLoading}>
-                {isLoading ? 'Adding...' : 'Add Habit'}
+              <Button
+                className="h-10 w-30 bg-gray-200 text-black"
+                onClick={handleSubmit}
+                disabled={createHabitMutation.isPending}
+              >
+                {createHabitMutation.isPending ? 'Adding...' : 'Add Habit'}
               </Button>
             )}
           </div>
