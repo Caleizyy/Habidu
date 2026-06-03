@@ -8,3 +8,7 @@ export function getBySub(sub: string) {
 export function create(data: CreateUserBody) {
   return User.create(data);
 }
+
+export function getByEmail(email: string) {
+  return User.findOne({ email });
+}

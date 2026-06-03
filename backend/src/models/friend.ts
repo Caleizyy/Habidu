@@ -1,9 +1,9 @@
-import { Schema, model, Document } from 'mongoose';
+import { Types, Schema, model, Document } from 'mongoose';
 import { FriendRequestStatus } from '../types';
 
 export interface IFriend extends Document {
-  recipientId: Schema.Types.ObjectId;
-  senderId: Schema.Types.ObjectId;
+  recipientId: Types.ObjectId;
+  senderId: Types.ObjectId;
   status: FriendRequestStatus;
 }
 

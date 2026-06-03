@@ -1,4 +1,4 @@
-import { Schema } from 'mongoose';
+import { Types } from 'mongoose';
 
 export enum UserRole {
   Admin = 'admin',
@@ -28,8 +28,8 @@ export interface CreateFriendRequestBody {
 }
 
 export interface CreateFriendRequestData {
-  recipientId: Schema.Types.ObjectId;
-  senderId: Schema.Types.ObjectId;
+  recipientId: Types.ObjectId;
+  requesterId: Types.ObjectId;
   status: FriendRequestStatus;
 }
 
@@ -58,6 +58,7 @@ export enum FriendRequestStatus {
   Pending = 'pending',
   Accepted = 'accepted',
   Rejected = 'rejected',
+  Blocked = 'blocked',
 }
 
 export interface CreateHabitBody {
