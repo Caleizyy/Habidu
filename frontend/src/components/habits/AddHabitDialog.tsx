@@ -72,13 +72,11 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
         }
       }}
     >
-      <div className="flex flex-row justify-end">
-        <DialogTrigger asChild onClick={() => setOpen(true)}>
-          <Button className="mt-12 mr-12 flex h-[5vh] w-[6vw] flex-row bg-gray-200">
-            <PlusIcon className="size-8 text-black" />
-          </Button>
-        </DialogTrigger>
-      </div>
+      <DialogTrigger asChild onClick={() => setOpen(true)}>
+        <Button className="flex h-[5vh] w-[6vw] flex-row bg-gray-200">
+          <PlusIcon className="size-8 text-black" />
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-black-200">Add a Habit</DialogTitle>

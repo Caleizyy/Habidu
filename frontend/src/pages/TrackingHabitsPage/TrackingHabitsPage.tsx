@@ -1,14 +1,6 @@
-<<<<<<< HEAD
-import { PageLayout } from '@/components/layout/PageLayout';
-
-export function TrackingHabitsPage() {
-  return (
-    <PageLayout title="Tracking Habits">
-      <div></div>
-    </PageLayout>
-=======
 import * as React from 'react';
 import { HabitFrequency, PeriodCell } from '@/types/habit';
+import { PageLayout } from '@/components/layout/PageLayout';
 import { buildDailyCells, buildWeeklyCells, buildMonthlyCells } from '@/utils/habitHelpers';
 import {
   getTodayDate,
@@ -76,116 +68,107 @@ export function TrackingHabitsPage(): React.ReactNode {
   // Loading state
   if (hookState.loading) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-neutral-900">
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-500"></div>
-              <p className="text-neutral-600 dark:text-neutral-400">Loading habits...</p>
-            </div>
+      <PageLayout title="Tracking Habits">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <div className="mx-auto mb-4 h-12 w-12 animate-spin rounded-full border-b-2 border-blue-500"></div>
+            <p className="text-neutral-600 dark:text-neutral-400">Loading habits...</p>
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   // Error state
   if (hookState.error) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-neutral-900">
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <p className="mb-2 text-lg font-semibold text-red-600 dark:text-red-400">Something went wrong</p>
-              <p className="text-neutral-600 dark:text-neutral-400">{hookState.error}</p>
-            </div>
+      <PageLayout title="Tracking Habits">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <p className="mb-2 text-lg font-semibold text-red-600 dark:text-red-400">Something went wrong</p>
+            <p className="text-neutral-600 dark:text-neutral-400">{hookState.error}</p>
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   // Empty state
   if (hookState.habits.length === 0) {
     return (
-      <div className="container mx-auto py-8">
-        <div className="rounded-2xl bg-white p-6 shadow-lg dark:bg-neutral-900">
-          <div className="flex items-center justify-center py-12">
-            <div className="text-center">
-              <p className="text-neutral-600 dark:text-neutral-400">No habits found. Create your first habit.</p>
-            </div>
+      <PageLayout title="Tracking Habits">
+        <div className="flex items-center justify-center py-12">
+          <div className="text-center">
+            <p className="text-neutral-600 dark:text-neutral-400">No habits found. Create your first habit.</p>
           </div>
         </div>
-      </div>
+      </PageLayout>
     );
   }
 
   return (
-    <div className="container mx-auto py-8">
-      <div className="rounded-2xl bg-white p-6 shadow-lg dark:border-neutral-800 dark:bg-neutral-900">
-        <div className="flex items-center justify-between gap-4">
-          <h1 className="text-3xl font-bold">Tracking Habits</h1>
-          <button
-            onClick={hookState.saveDrafts}
-            disabled={!hookState.hasUnsavedChanges || hookState.isSaving}
-            className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-colors ${
-              hookState.hasUnsavedChanges
-                ? hookState.isSaving
-                  ? 'cursor-wait bg-green-400 text-white dark:bg-green-700'
-                  : 'bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700'
-                : 'invisible'
-            }`}
-          >
-            {hookState.isSaving && (
-              <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
-            )}
-            Save Changes
-          </button>
-        </div>
+    <PageLayout
+      title="Tracking Habits"
+      actions={
+        <button
+          onClick={hookState.saveDrafts}
+          disabled={!hookState.hasUnsavedChanges || hookState.isSaving}
+          className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-colors ${
+            hookState.hasUnsavedChanges
+              ? hookState.isSaving
+                ? 'cursor-wait bg-green-400 text-white dark:bg-green-700'
+                : 'bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700'
+              : 'invisible'
+          }`}
+        >
+          {hookState.isSaving && (
+            <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
+          )}
+          Save Changes
+        </button>
+      }
+    >
+      <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
 
-        <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
+      <DailyHabitsSection
+        habits={dailyHabits}
+        barCellsMap={dailyBarCells}
+        rangeLabel={dailyRangeLabel}
+        dailyRowLabels={DAILY_ROW_LABELS}
+        getDisplayValue={hookState.getDisplayValue}
+        addLog={hookState.addLog}
+        editLog={hookState.editLog}
+        undoLog={hookState.undoLog}
+        dailyHighlightIndex={dailyHighlightIndex}
+      />
 
-        <DailyHabitsSection
-          habits={dailyHabits}
-          barCellsMap={dailyBarCells}
-          rangeLabel={dailyRangeLabel}
-          dailyRowLabels={DAILY_ROW_LABELS}
-          getDisplayValue={hookState.getDisplayValue}
-          addLog={hookState.addLog}
-          editLog={hookState.editLog}
-          undoLog={hookState.undoLog}
-          dailyHighlightIndex={dailyHighlightIndex}
-        />
+      <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
 
-        <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
+      <WeeklyHabitsSection
+        habits={weeklyHabits}
+        barCellsMap={weeklyBarCells}
+        rangeLabel={weeklyRangeLabel}
+        weeklyRowLabels={WEEKLY_ROW_LABELS}
+        getDisplayValueForDates={hookState.getDisplayValueForDates}
+        getDisplayValueForWeek={hookState.getDisplayValueForWeek}
+        addLog={hookState.addLog}
+        editWeeklyLog={hookState.editWeeklyLog}
+        undoWeeklyLog={hookState.undoWeeklyLog}
+      />
 
-        <WeeklyHabitsSection
-          habits={weeklyHabits}
-          barCellsMap={weeklyBarCells}
-          rangeLabel={weeklyRangeLabel}
-          weeklyRowLabels={WEEKLY_ROW_LABELS}
-          getDisplayValueForDates={hookState.getDisplayValueForDates}
-          getDisplayValueForWeek={hookState.getDisplayValueForWeek}
-          addLog={hookState.addLog}
-          editWeeklyLog={hookState.editWeeklyLog}
-          undoWeeklyLog={hookState.undoWeeklyLog}
-        />
+      <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
 
-        <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
-
-        <MonthlyHabitsSection
-          habits={monthlyHabits}
-          barCellsMap={monthlyBarCells}
-          rangeLabel={monthlyRangeLabel}
-          monthlyRowLabels={MONTHLY_ROW_LABELS}
-          getDisplayValueForMonth={hookState.getDisplayValueForMonth}
-          getDisplayValueForMonthKey={hookState.getDisplayValueForMonthKey}
-          addLog={hookState.addLog}
-          editMonthlyLog={hookState.editMonthlyLog}
-          undoMonthlyLog={hookState.undoMonthlyLog}
-        />
-      </div>
-    </div>
->>>>>>> c0b67fc (Habit Tracking Page base)
+      <MonthlyHabitsSection
+        habits={monthlyHabits}
+        barCellsMap={monthlyBarCells}
+        rangeLabel={monthlyRangeLabel}
+        monthlyRowLabels={MONTHLY_ROW_LABELS}
+        getDisplayValueForMonth={hookState.getDisplayValueForMonth}
+        getDisplayValueForMonthKey={hookState.getDisplayValueForMonthKey}
+        addLog={hookState.addLog}
+        editMonthlyLog={hookState.editMonthlyLog}
+        undoMonthlyLog={hookState.undoMonthlyLog}
+      />
+    </PageLayout>
   );
 }
