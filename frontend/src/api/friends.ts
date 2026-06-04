@@ -5,6 +5,6 @@ export const friendsApi = {
   getFriends: () => client.get<User[]>('/friends', { withCredentials: true }).then((r) => r.data),
   getRequestSearch: (query: string) =>
     client.get<User[]>(`/user/search?name=${query}`, { withCredentials: true }).then((r) => r.data),
-  sendFriendRequest: (email: string) =>
-    client.post('/friends', { email }, { withCredentials: true }).then((r) => r.data),
+  sendFriendRequest: (recipientEmail: string) =>
+    client.post('/friends/requests', { recipientEmail }, { withCredentials: true }).then((r) => r.data),
 };
