@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/Button';
 import { Check, X } from 'lucide-react';
+import { AlertCircle } from 'lucide-react';
 
 interface ProfileEditActionsProps {
   isSaving: boolean;
@@ -11,7 +12,12 @@ interface ProfileEditActionsProps {
 export function ProfileEditActions({ isSaving, error, onSave, onCancel }: ProfileEditActionsProps) {
   return (
     <div className="space-y-2">
-      {error && <p className="text-sm text-red-500">{error}</p>}
+      {error && (
+        <div className="flex gap-2 rounded-md border border-red-200 bg-red-50 p-3">
+          <AlertCircle className="mt-0.5 h-5 w-5 flex-shrink-0 text-red-600" />
+          <p className="text-sm text-red-700">{error}</p>
+        </div>
+      )}
       <div className="flex gap-3">
         <Button onClick={onSave} disabled={isSaving}>
           <Check className="mr-2 h-4 w-4" />
