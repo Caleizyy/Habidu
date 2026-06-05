@@ -35,7 +35,14 @@ export function MonthlyHabitsSection({
 
   return (
     <>
-      <HabitSection title="Monthly" rangeLabel={rangeLabel} habits={habits} barCellsMap={barCellsMap}>
+      <HabitSection
+        title="Monthly"
+        rangeLabel={rangeLabel}
+        habits={habits}
+        barCellsMap={barCellsMap}
+        sectionStreak={0}
+        sectionPersonalBest={0}
+      >
         {/* THIS MONTH section */}
         {monthlyRowLabels.slice(0, 1).map((row) => (
           <div key={`this-month-section-${row.monthKey}`}>
@@ -52,7 +59,13 @@ export function MonthlyHabitsSection({
                 target={habit.targetValue}
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
+<<<<<<< HEAD
                 onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
+=======
+                currentStreak={habit.currentStreak || 0}
+                personalBest={habit.personalBest || 0}
+                onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
+>>>>>>> 753ccd9 (added streak/personal best frontend(hardcoded values))
                 onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
                 onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
               />
@@ -117,6 +130,8 @@ export function MonthlyHabitsSection({
                         target={habit.targetValue}
                         unit={habit.targetUnit}
                         isCurrentPeriod={false}
+                        currentStreak={habit.currentStreak || 0}
+                        personalBest={habit.personalBest || 0}
                         onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
                         onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
                         onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}

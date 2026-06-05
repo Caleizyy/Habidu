@@ -1,4 +1,5 @@
 import * as React from 'react';
+import { HabitStreakPopUp } from './HabitStreakPopUp';
 
 export interface LogRowProps {
   periodLabel: string;
@@ -7,6 +8,8 @@ export interface LogRowProps {
   target: number;
   unit: string;
   isCurrentPeriod?: boolean;
+  currentStreak?: number;
+  personalBest?: number;
   // called when user taps "Log" — client sends quickLog:true, value:targetValue
   onQuickLog: () => void;
   // called when user manually edits — client sends quickLog:false, value:N
@@ -22,6 +25,8 @@ export function LogRow({
   target,
   unit,
   isCurrentPeriod,
+  currentStreak = 0,
+  personalBest = 0,
   onQuickLog,
   onEdit,
   onUndo,
@@ -29,6 +34,31 @@ export function LogRow({
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState(String(value));
   const prevValueRef = React.useRef(value);
+  const [showBadge, setShowBadge] = React.useState(false);
+  const hoverTimerRef = React.useRef<NodeJS.Timeout | null>(null);
+  const circleRef = React.useRef<HTMLDivElement>(null);
+
+  const handleMouseEnter = () => {
+    hoverTimerRef.current = setTimeout(() => {
+      setShowBadge(true);
+    }, 1000); // 1 second delay
+  };
+
+  const handleMouseLeave = () => {
+    setShowBadge(false);
+    if (hoverTimerRef.current) {
+      clearTimeout(hoverTimerRef.current);
+      hoverTimerRef.current = null;
+    }
+  };
+
+  React.useEffect(() => {
+    return () => {
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
+      }
+    };
+  }, []);
 
   React.useEffect(() => {
     // Only reset draft if value changed externally (e.g., via undo)
@@ -52,14 +82,17 @@ export function LogRow({
   return (
     <div
       className={`flex w-full items-center gap-3 border-b border-neutral-100 px-4 text-left transition-colors last:border-b-0 dark:border-neutral-800 ${isCurrentPeriod ? 'bg-neutral-50 py-4 dark:bg-neutral-800/60' : 'py-3'} `}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
     >
-      {/* Status circle */}
+      {/* Status circle - with Pop Up on hover */}
       <div
-        className={`flex shrink-0 items-center justify-center rounded-full transition-all ${isCurrentPeriod ? 'h-9 w-9' : 'h-7 w-7'} ${
+        ref={circleRef}
+        className={`flex shrink-0 items-center justify-center rounded-full transition-all ${
           completed
             ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400'
             : 'bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500'
-        }`}
+        } ${isCurrentPeriod ? 'h-9 w-9' : 'h-7 w-7'}`}
       >
         {completed ? (
           <svg className={isCurrentPeriod ? 'h-5 w-5' : 'h-4 w-4'} viewBox="0 0 16 16" fill="none">
@@ -77,6 +110,14 @@ export function LogRow({
           </span>
         )}
       </div>
+
+      {/* Streak Pop Up */}
+      <HabitStreakPopUp
+        currentStreak={currentStreak}
+        personalBest={personalBest}
+        visible={showBadge}
+        triggerRef={circleRef}
+      />
 
       {/* Period label */}
       <div className="flex flex-col gap-0.5">

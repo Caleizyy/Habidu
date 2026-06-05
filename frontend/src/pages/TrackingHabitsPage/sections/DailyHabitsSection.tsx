@@ -39,6 +39,8 @@ export function DailyHabitsSection({
         habits={habits}
         barCellsMap={barCellsMap}
         highlightIndex={dailyHighlightIndex}
+        sectionStreak={0}
+        sectionPersonalBest={0}
       >
         {/* TODAY section */}
         {dailyRowLabels.slice(-1).map((row) => (
@@ -56,6 +58,8 @@ export function DailyHabitsSection({
                 target={habit.targetValue}
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
+                currentStreak={habit.currentStreak || 0}
+                personalBest={habit.personalBest || 0}
                 onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
                 onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
                 onUndo={() => undoLog(habit._id, row.date)}
@@ -122,6 +126,8 @@ export function DailyHabitsSection({
                         target={habit.targetValue}
                         unit={habit.targetUnit}
                         isCurrentPeriod={false}
+                        currentStreak={habit.currentStreak || 0}
+                        personalBest={habit.personalBest || 0}
                         onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
                         onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
                         onUndo={() => undoLog(habit._id, row.date)}

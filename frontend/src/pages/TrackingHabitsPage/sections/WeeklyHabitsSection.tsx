@@ -35,7 +35,14 @@ export function WeeklyHabitsSection({
 
   return (
     <>
-      <HabitSection title="Weekly" rangeLabel={rangeLabel} habits={habits} barCellsMap={barCellsMap}>
+      <HabitSection
+        title="Weekly"
+        rangeLabel={rangeLabel}
+        habits={habits}
+        barCellsMap={barCellsMap}
+        sectionStreak={0}
+        sectionPersonalBest={0}
+      >
         {/* THIS WEEK section */}
         {weeklyRowLabels.slice(0, 1).map((row) => (
           <div key={`this-week-section-${row.weekKey}`}>
@@ -52,7 +59,13 @@ export function WeeklyHabitsSection({
                 target={habit.targetValue}
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
+<<<<<<< HEAD
                 onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
+=======
+                currentStreak={habit.currentStreak || 0}
+                personalBest={habit.personalBest || 0}
+                onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
+>>>>>>> 753ccd9 (added streak/personal best frontend(hardcoded values))
                 onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
                 onUndo={() => undoWeeklyLog(habit._id, row.dates)}
               />
@@ -117,6 +130,8 @@ export function WeeklyHabitsSection({
                         target={habit.targetValue}
                         unit={habit.targetUnit}
                         isCurrentPeriod={false}
+                        currentStreak={habit.currentStreak || 0}
+                        personalBest={habit.personalBest || 0}
                         onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
                         onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
                         onUndo={() => undoWeeklyLog(habit._id, row.dates)}

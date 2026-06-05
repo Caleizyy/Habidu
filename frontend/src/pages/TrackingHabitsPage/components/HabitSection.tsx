@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
 import { ProgressBar } from './ProgressBar';
+import { SectionStreakDisplay } from './SectionStreakDisplay';
 
 export interface HabitSectionProps {
   title: string;
@@ -8,7 +9,9 @@ export interface HabitSectionProps {
   habits: Habit[];
   barCellsMap: Record<string, PeriodCell[]>; // habitId -> cells for the bar
   children: React.ReactNode; // LogRows
-  highlightIndex?: number; // Optional: column index to highlight instead of first (for daily section to highlight today)
+  highlightIndex?: number;
+  sectionStreak?: number;
+  sectionPersonalBest?: number;
 }
 
 export function HabitSection({
@@ -18,6 +21,8 @@ export function HabitSection({
   barCellsMap,
   children,
   highlightIndex = 0,
+  sectionStreak = 0,
+  sectionPersonalBest = 0,
 }: HabitSectionProps) {
   const [open, setOpen] = React.useState(true);
 
@@ -28,14 +33,20 @@ export function HabitSection({
       {/* Section header */}
       <button
         onClick={() => setOpen((o) => !o)}
-        className="flex w-full items-center gap-3 border-b border-neutral-200 bg-white px-4 py-3 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800/80"
+        className="flex w-full items-center gap-3 border-b border-neutral-200 bg-white px-4 py-2 transition-colors hover:bg-neutral-50 dark:border-neutral-700 dark:bg-neutral-900 dark:hover:bg-neutral-800/80"
       >
         <span className="text-sm font-bold tracking-wide text-neutral-800 uppercase dark:text-neutral-100">
           {title}
         </span>
         <span className="text-xs font-normal text-neutral-400 dark:text-neutral-500">{rangeLabel}</span>
+
+        {/* Streak indicator */}
+        <div className="ml-auto flex-shrink-0">
+          <SectionStreakDisplay currentStreak={sectionStreak} personalBest={sectionPersonalBest} />
+        </div>
+
         <svg
-          className={`ml-auto h-4 w-4 text-neutral-400 transition-transform ${open ? 'rotate-180' : ''}`}
+          className={`h-4 w-4 flex-shrink-0 text-neutral-400 transition-transform ${open ? 'rotate-180' : ''}`}
           viewBox="0 0 16 16"
           fill="none"
         >
