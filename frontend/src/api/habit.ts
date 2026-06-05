@@ -133,3 +133,25 @@ export async function createHabit(habit: {
   const data = await response.json();
   return data;
 }
+
+export async function updateHabit(habit: {
+  id: string;
+  name?: string;
+  frequency?: string;
+  difficulty?: string;
+  category?: string;
+  notes?: string;
+}) {
+  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits/${habit.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(habit),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update habit');
+  }
+  const data = await response.json();
+  return data;
+}
