@@ -64,3 +64,11 @@ export interface CreateHabitLogBody {
   date: string;
   value: number;
 }
+
+export interface UpdateHabitBody {
+  name?: string;
+  category?: HabitCategory;
+  frequency?: HabitFrequency;
+  difficulty?: HabitDifficulty;
+  notes?: string;
+}
