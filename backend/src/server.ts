@@ -38,7 +38,6 @@ app.use('/api', apiRouter);
 apiRouter.use('/auth', authRoutes);
 apiRouter.use('/session', sessionRoutes);
 apiRouter.use('/habits', habitRoutes);
-apiRouter.use('/friends/requests', friendRoutes);
 apiRouter.use('/friends', friendRoutes);
 apiRouter.use('/user', userRoutes);
 

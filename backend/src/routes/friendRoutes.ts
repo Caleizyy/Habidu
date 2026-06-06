@@ -3,7 +3,7 @@ import * as friendController from '../controllers/friendController';
 
 const router = express.Router();
 
-router.post('/', friendController.sendFriendRequest);
+router.post('/requests', friendController.sendFriendRequest);
 router.get('/', friendController.getFriends);
 
 export default router;

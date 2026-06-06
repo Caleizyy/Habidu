@@ -7,7 +7,7 @@ import FriendRequestCard from '@/components/friendRequests/FriendRequestCard';
 
 export function FriendsPage(): React.ReactNode {
   const [friends, setFriends] = useState<User[]>([]);
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
   useEffect(() => {
     friendsApi

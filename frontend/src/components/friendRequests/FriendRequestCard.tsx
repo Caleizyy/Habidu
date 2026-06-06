@@ -8,7 +8,7 @@ import { useState } from 'react';
 export default function FriendRequestCard() {
   const [friendRequests, setFriendRequests] = useState<User[]>([]);
   const [defaultText, setDefaultText] = useState('Type in an email above to send a friend request');
-  const [error, setError] = useState(null);
+  const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const debounce = <T extends unknown[]>(callback: (...args: T) => void, delay: number) => {
@@ -36,8 +36,10 @@ export default function FriendRequestCard() {
       .then((data) => {
         if (data.length > 0) {
           setFriendRequests(data);
+          setDefaultText('Type in an email above to send a friend request');
         } else {
-          setDefaultText('No users found with that email');
+          setFriendRequests([]);
+          setDefaultText('No users found. Try searching with a different email?');
         }
         setError(null);
       })
@@ -59,8 +61,8 @@ export default function FriendRequestCard() {
         {isLoading && <p className="flex justify-center truncate text-sm">Loading...</p>}
         {error && <p className="flex justify-center truncate text-sm text-red-500">{error}</p>}
         {!isLoading && !error && friendRequests.length > 0 ? (
-          friendRequests.map((friendRequests) => (
-            <FriendRequestItemCard key={friendRequests.sub} friend={friendRequests} />
+          friendRequests.map((friendRequest) => (
+            <FriendRequestItemCard key={friendRequest.sub} friend={friendRequest} />
           ))
         ) : (
           <p className="flex justify-center truncate text-sm text-gray-500">{defaultText}</p>

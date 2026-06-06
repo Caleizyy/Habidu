@@ -15,5 +15,8 @@ export function getByEmail(email: string) {
 }
 
 export function searchByEmail(email: string, excludedUserIds: Types.ObjectId[]) {
-  return User.find({ email, _id: { $nin: excludedUserIds } });
+  return User.find({
+    email: { $regex: email, $options: 'i' },
+    _id: { $nin: excludedUserIds },
+  });
 }

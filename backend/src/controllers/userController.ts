@@ -23,7 +23,7 @@ export const findUsers = async (req: Request<object, object, object, { name: str
       return res.status(401).json({ error: 'User not found' });
     }
     const users = await userService.searchUsers(req.query.name, user._id);
-    res.status(200).json(users);
+    return res.status(200).json(users);
   } catch (error) {
     console.error('Error fetching users:', error);
     res.status(500).json({ error: 'Failed to fetch users' });
