@@ -6,8 +6,8 @@ import { Field, FieldDescription, FieldLabel } from '@/components/ui/Field';
 import { Input } from '@/components/ui/Input';
 import { HabitSelect } from './HabitSelect';
 import { frequencyOptions, difficultyOptions, categoryOptions } from './selectChoices.constants';
-import { createHabit } from '@/api/habit';
 import { useState } from 'react';
+import { useCreateHabitMutation } from '@/hooks/useCreateHabitMutation';
 
 interface AddHabitDialogProps {
   onHabitCreated: () => void;
@@ -18,32 +18,40 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
   const [frequency, setFrequency] = useState('');
   const [difficulty, setDifficulty] = useState('');
   const [category, setCategory] = useState('');
+  const [targetValue, setTargetValue] = useState('');
+  const [targetUnit, setTargetUnit] = useState('');
   const [notes, setNotes] = useState('');
-  const [isLoading, setIsLoading] = useState(false);
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+
+  const createHabitMutation = useCreateHabitMutation();
 
   const resetForm = () => {
     setName('');
     setFrequency('');
     setDifficulty('');
     setCategory('');
+    setTargetValue('');
+    setTargetUnit('');
     setNotes('');
     setSubmitted(false);
     setError(null);
   };
+
   async function handleSubmit() {
     setSubmitted(true);
-    if (!name || !frequency || !difficulty || !category) return;
+    if (!name || !frequency || !difficulty || !category || !targetValue || !targetUnit) return;
 
-    setIsLoading(true);
+    setError(null);
     try {
-      await createHabit({
+      await createHabitMutation.mutateAsync({
         name: name,
         frequency: frequency,
         difficulty: difficulty,
         category: category,
+        targetValue: parseFloat(targetValue),
+        targetUnit: targetUnit,
         notes: notes,
       });
       resetForm();
@@ -51,8 +59,6 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
       onHabitCreated();
     } catch {
       setError('Something went wrong. Please try again.');
-    } finally {
-      setIsLoading(false);
     }
   }
 
@@ -66,13 +72,11 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
         }
       }}
     >
-      <div className="flex flex-row justify-end">
-        <DialogTrigger asChild onClick={() => setOpen(true)}>
-          <Button className="mt-12 mr-12 flex h-[5vh] w-[6vw] flex-row bg-gray-200">
-            <PlusIcon className="size-8 text-black" />
-          </Button>
-        </DialogTrigger>
-      </div>
+      <DialogTrigger asChild onClick={() => setOpen(true)}>
+        <Button className="flex h-[5vh] w-[6vw] flex-row bg-gray-200">
+          <PlusIcon className="size-8 text-black" />
+        </Button>
+      </DialogTrigger>
       <DialogContent>
         <DialogHeader>
           <DialogTitle className="text-black-200">Add a Habit</DialogTitle>
@@ -113,6 +117,29 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
           />
           {submitted && !category && <p className="mt-2 ml-4 text-sm text-red-500">Category is required.</p>}
         </div>
+        <div className="mt-4">
+          <FieldLabel htmlFor="target-value">Target Value</FieldLabel>
+          <Input
+            id="target-value"
+            placeholder="e.g., 30"
+            type="number"
+            className="mb-2"
+            value={targetValue}
+            onChange={(e) => setTargetValue(e.target.value)}
+          />
+          {submitted && !targetValue && <p className="text-sm text-red-500">Target value is required.</p>}
+        </div>
+        <div className="mt-4">
+          <FieldLabel htmlFor="target-unit">Unit</FieldLabel>
+          <Input
+            id="target-unit"
+            placeholder="e.g., min, km, times"
+            className="mb-2"
+            value={targetUnit}
+            onChange={(e) => setTargetUnit(e.target.value)}
+          />
+          {submitted && !targetUnit && <p className="text-sm text-red-500">Unit is required.</p>}
+        </div>
         <Field className="mt-8">
           <FieldLabel htmlFor="textarea-message">Notes</FieldLabel>
           <FieldDescription>Enter notes for your habit below.</FieldDescription>
@@ -127,8 +154,12 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
           <div className="flex w-full justify-center">
             {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
-              <Button className="h-10 w-30 bg-gray-200 text-black" onClick={handleSubmit} disabled={isLoading}>
-                {isLoading ? 'Adding...' : 'Add Habit'}
+              <Button
+                className="h-10 w-30 bg-gray-200 text-black"
+                onClick={handleSubmit}
+                disabled={createHabitMutation.isPending}
+              >
+                {createHabitMutation.isPending ? 'Adding...' : 'Add Habit'}
               </Button>
             )}
           </div>

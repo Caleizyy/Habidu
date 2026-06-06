@@ -14,12 +14,6 @@ export const find = async (req: Request<object, object, object, HabitQueryFilter
 };
 
 export const create = async (req: Request<object, object, CreateHabitBody>, res: Response) => {
-  const { name, category, frequency, difficulty, notes } = req.body;
-
-  if (!name || !category || !frequency || !difficulty) {
-    return res.status(400).json({ error: 'Missing required fields' });
-  }
-
   try {
     const newHabit = await habitService.create({ ...req.body, createdBy: res.locals.sub });
     return res.status(201).json(newHabit);
