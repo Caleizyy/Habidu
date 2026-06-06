@@ -1,3 +1,4 @@
+import { Types } from 'mongoose';
 import { User } from '../models/user';
 import { CreateUserBody } from '../types';
 
@@ -11,4 +12,8 @@ export function create(data: CreateUserBody) {
 
 export function getByEmail(email: string) {
   return User.findOne({ email });
+}
+
+export function searchByEmail(email: string, excludedUserIds: Types.ObjectId[]) {
+  return User.find({ email, _id: { $nin: excludedUserIds } });
 }

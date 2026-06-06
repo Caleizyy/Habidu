@@ -73,3 +73,9 @@ export interface HabitQueryFilter {
   category?: HabitCategory;
   frequency?: HabitFrequency;
 }
+
+export interface User {
+  name: string;
+  email: string;
+  avatar?: string;
+}

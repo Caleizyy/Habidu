@@ -12,3 +12,18 @@ export async function find(userId: Types.ObjectId) {
     status: FriendRequestStatus.Accepted,
   });
 }
+
+export async function findPending(requesterId: Types.ObjectId, recipientId: Types.ObjectId) {
+  return Friend.findOne({
+    requesterId,
+    recipientId,
+    status: FriendRequestStatus.Pending,
+  });
+}
+
+export async function findAllPending(userId: Types.ObjectId) {
+  return Friend.find({
+    $or: [{ requesterId: userId }, { recipientId: userId }],
+    status: FriendRequestStatus.Pending,
+  });
+}

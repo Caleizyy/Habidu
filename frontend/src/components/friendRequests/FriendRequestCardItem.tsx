@@ -13,7 +13,7 @@ export default function FriendRequestItemCard({ friend }: { friend: User }) {
     setClicked(true);
     setRequestText('Sending...');
     friendsApi
-      .sendFriendRequest(friend.sub)
+      .sendFriendRequest(friend.email)
       .then(() => {
         setRequestText('Friend request sent!');
       })

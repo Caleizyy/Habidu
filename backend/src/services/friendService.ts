@@ -8,6 +8,13 @@ export async function send(requesterId: Types.ObjectId, recipientEmail: string) 
   if (!recipient) {
     throw new Error('Recipient not found');
   }
+  if (requesterId.equals(recipient._id)) {
+    throw new Error('Cannot send friend request to yourself');
+  }
+  const reverseRequest = await friendRepository.findPending(recipient._id, requesterId);
+  if (reverseRequest) {
+    throw new Error('A pending friend request already exists from the recipient to the requester'); // TODO: change this error to an accepted friends request in the accept friends request story
+  }
   const recipientId = recipient._id;
   const status = FriendRequestStatus.Pending;
   return friendRepository.create({ recipientId, requesterId, status } as CreateFriendRequestData);
