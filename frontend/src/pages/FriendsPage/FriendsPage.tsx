@@ -1,11 +1,11 @@
 import { friendsApi } from '@/api/friends';
 import FriendsCard from '@/components/friends/FriendsCard';
 import { User } from '@/types';
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 import { useState, useEffect } from 'react';
 import FriendRequestCard from '@/components/friendRequests/FriendRequestCard';
 
-export function FriendsPage(): React.ReactNode {
+export function FriendsPage() {
   const [friends, setFriends] = useState<User[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -18,7 +18,8 @@ export function FriendsPage(): React.ReactNode {
   }, []);
 
   return (
-    <div className="flex h-screen flex-1 flex-col">
+    <PageLayout title="Friends">
+      <div className="flex h-screen flex-1 flex-col">
       <div className="flex flex-row items-center justify-between">
         <h1 className="mt-12 ml-12 flex justify-start text-6xl text-black">Friends</h1>
       </div>
@@ -29,5 +30,6 @@ export function FriendsPage(): React.ReactNode {
         <FriendRequestCard />
       </div>
     </div>
+    </PageLayout>
   );
 }

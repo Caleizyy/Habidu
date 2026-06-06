@@ -66,12 +66,22 @@ export interface CreateHabitBody {
   category: HabitCategory;
   frequency: HabitFrequency;
   difficulty: HabitDifficulty;
+  // Target value for the habit (e.g., 30 minutes, 5 km, 2 times)
+  targetValue: number;
+  // Custom unit string (e.g., 'min', 'km', 'liters', 'pages', etc.)
+  targetUnit: string;
   notes?: string;
 }
 
 export interface HabitQueryFilter {
   category?: HabitCategory;
   frequency?: HabitFrequency;
+}
+
+export interface CreateHabitLogBody {
+  habitId: string;
+  date: string;
+  value: number;
 }
 
 export interface User {

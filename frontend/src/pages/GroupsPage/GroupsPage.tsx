@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function GroupsPage(): React.ReactNode {
+export function GroupsPage() {
   return (
-    <div>
-      <h1>Groups</h1>
-    </div>
+    <PageLayout title="Groups">
+      <div></div>
+    </PageLayout>
   );
 }

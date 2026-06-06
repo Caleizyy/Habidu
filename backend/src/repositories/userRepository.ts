@@ -18,5 +18,5 @@ export function searchByEmail(email: string, excludedUserIds: Types.ObjectId[]) 
   return User.find({
     email: { $regex: email, $options: 'i' },
     _id: { $nin: excludedUserIds },
-  });
+  }).collation({ locale: 'en', strength: 2 });
 }

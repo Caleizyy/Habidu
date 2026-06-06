@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function AchievementsPage(): React.ReactNode {
+export function AchievementsPage() {
   return (
-    <div>
-      <h1>Achievements</h1>
-    </div>
+    <PageLayout title="Achievements">
+      <div></div>
+    </PageLayout>
   );
 }

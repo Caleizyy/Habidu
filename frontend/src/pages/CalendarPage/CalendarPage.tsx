@@ -1,9 +1,9 @@
-import * as React from 'react';
+import { PageLayout } from '@/components/layout/PageLayout';
 
-export function CalendarPage(): React.ReactNode {
+export function CalendarPage() {
   return (
-    <div>
-      <h1>Calendar</h1>
-    </div>
+    <PageLayout title="Calendar">
+      <div></div>
+    </PageLayout>
   );
 }
