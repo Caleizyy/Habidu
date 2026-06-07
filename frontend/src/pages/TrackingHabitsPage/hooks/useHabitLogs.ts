@@ -158,16 +158,18 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
 
   function getDisplayValueForDates(habitId: string, dates: string[]): number {
     const set = new Set(dates);
-    const todayDraft = draftManager.drafts[habitId]?.[TODAY];
-    if (todayDraft !== undefined) return todayDraft;
+    const draftKey = `WEEK:${dates[0]}`;
+    const draftValue = draftManager.drafts[habitId]?.[draftKey];
+    if (draftValue !== undefined) return draftValue;
     return (logs[habitId] ?? [])
       .filter((l) => set.has(l.date) && !(l._id in draftManager.deletedLogIds))
       .reduce((s, l) => s + l.value, 0);
   }
 
   function getDisplayValueForMonth(habitId: string, mKey: string): number {
-    const todayDraft = draftManager.drafts[habitId]?.[TODAY];
-    if (todayDraft !== undefined && monthKey(TODAY) === mKey) return todayDraft;
+    const draftKey = `MONTH:${mKey}`;
+    const draftValue = draftManager.drafts[habitId]?.[draftKey];
+    if (draftValue !== undefined) return draftValue;
     return (logs[habitId] ?? [])
       .filter((l) => monthKey(l.date) === mKey && !(l._id in draftManager.deletedLogIds))
       .reduce((s, l) => s + l.value, 0);
