@@ -52,7 +52,7 @@ export function WeeklyHabitsSection({
                 target={habit.targetValue}
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
-                onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
+                onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
                 onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
                 onUndo={() => undoWeeklyLog(habit._id, row.dates)}
               />
@@ -117,7 +117,7 @@ export function WeeklyHabitsSection({
                         target={habit.targetValue}
                         unit={habit.targetUnit}
                         isCurrentPeriod={false}
-                        onQuickLog={() => addLog(habit._id, habit.targetValue, row.dates[0])}
+                        onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
                         onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
                         onUndo={() => undoWeeklyLog(habit._id, row.dates)}
                       />
