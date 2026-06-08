@@ -71,11 +71,13 @@ export interface CreateHabitBody {
   // Custom unit string (e.g., 'min', 'km', 'liters', 'pages', etc.)
   targetUnit: string;
   notes?: string;
+  createdBy: string;
 }
 
 export interface HabitQueryFilter {
   category?: HabitCategory;
   frequency?: HabitFrequency;
+  createdBy?: string;
 }
 
 export interface CreateHabitLogBody {
