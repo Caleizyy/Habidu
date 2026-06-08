@@ -10,6 +10,7 @@ export interface IHabit extends Document {
   targetValue: number;
   targetUnit: string;
   notes?: string;
+  createdBy: string;
 }
 
 const HabitSchema = new Schema<IHabit>(
@@ -21,6 +22,7 @@ const HabitSchema = new Schema<IHabit>(
     targetValue: { type: Number, required: true, min: 0 },
     targetUnit: { type: String, required: true },
     notes: { type: String },
+    createdBy: { type: String, required: true },
   },
 
   { timestamps: true }
