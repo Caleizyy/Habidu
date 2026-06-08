@@ -10,7 +10,9 @@ export async function find(userId: Types.ObjectId) {
   return Friend.find({
     $or: [{ requesterId: userId }, { recipientId: userId }],
     status: FriendRequestStatus.Accepted,
-  });
+  })
+    .populate('requesterId', 'firstName lastName email avatar')
+    .populate('recipientId', 'firstName lastName email avatar');
 }
 
 export async function findPending(requesterId: Types.ObjectId, recipientId: Types.ObjectId) {

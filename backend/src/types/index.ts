@@ -10,7 +10,7 @@ export interface CreateUserBody {
   email: string;
   sub: string;
   role: UserRole;
-  picture?: string;
+  avatar?: string;
 }
 export interface CreateSessionBody {
   sessionId: string;

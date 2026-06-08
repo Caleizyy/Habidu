@@ -25,5 +25,8 @@ export async function send(requesterId: Types.ObjectId, recipientEmail: string) 
 }
 
 export async function getFriends(userId: Types.ObjectId) {
-  return friendRepository.find(userId);
+  const friends = await friendRepository.find(userId);
+  return friends.map((friend) => {
+    return friend.requesterId._id.equals(userId) ? friend.recipientId : friend.requesterId;
+  });
 }

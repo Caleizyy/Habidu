@@ -3,7 +3,7 @@ import { Input } from '@/components/ui/Input';
 import { User } from '@/types';
 import FriendRequestItemCard from './FriendRequestCardItem';
 import { friendsApi } from '@/api/friends';
-import { useState } from 'react';
+import { useCallback, useRef, useState } from 'react';
 
 export default function FriendRequestCard() {
   const [friendRequests, setFriendRequests] = useState<User[]>([]);
@@ -25,12 +25,7 @@ export default function FriendRequestCard() {
     };
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = e.currentTarget.value;
-    debounce(fetchFriendRequests, import.meta.env.VITE_DEBOUNCE_DELAY)(value);
-  };
-
-  const fetchFriendRequests = (query: string) => {
+  const fetchFriendRequests = useCallback((query: string) => {
     friendsApi
       .getRequestSearch(query)
       .then((data) => {
@@ -45,6 +40,18 @@ export default function FriendRequestCard() {
       })
       .catch((error) => setError(error.message))
       .finally(() => setIsLoading(false));
+  }, []);
+
+  const debouncedFetch = useRef(debounce(fetchFriendRequests, 300));
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = e.currentTarget.value;
+    if (!value) {
+      setFriendRequests([]);
+      setDefaultText('Type in an email above to send a friend request');
+      return;
+    }
+    debouncedFetch.current(value);
   };
 
   return (

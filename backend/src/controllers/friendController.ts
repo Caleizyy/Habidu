@@ -1,7 +1,6 @@
 import { Request, Response } from 'express';
 import * as friendService from '../services/friendService';
 import * as authService from '../services/authService';
-import * as sessionService from '../services/sessionService';
 import { CreateFriendRequestBody } from '../types';
 
 export const sendFriendRequest = async (req: Request<unknown, unknown, CreateFriendRequestBody>, res: Response) => {
@@ -11,17 +10,7 @@ export const sendFriendRequest = async (req: Request<unknown, unknown, CreateFri
       return res.status(400).json({ error: 'Recipient email is required' });
     }
 
-    const sessionId = req.cookies?.session;
-    if (!sessionId) {
-      return res.status(401).json({ error: 'No session' });
-    }
-
-    const requesterSession = await sessionService.getSessionById(sessionId);
-    if (!requesterSession) {
-      return res.status(401).json({ error: 'Invalid session' });
-    }
-
-    const requester = await authService.getBySub(requesterSession.sub);
+    const requester = await authService.getBySub(res.locals.sub);
     if (!requester) {
       return res.status(401).json({ error: 'User not found' });
     }
@@ -35,17 +24,7 @@ export const sendFriendRequest = async (req: Request<unknown, unknown, CreateFri
 
 export const getFriends = async (req: Request, res: Response) => {
   try {
-    const sessionId = req.cookies?.session;
-    if (!sessionId) {
-      return res.status(401).json({ error: 'No session' });
-    }
-
-    const userSession = await sessionService.getSessionById(sessionId);
-    if (!userSession) {
-      return res.status(401).json({ error: 'Invalid session' });
-    }
-
-    const user = await authService.getBySub(userSession.sub);
+    const user = await authService.getBySub(res.locals.sub);
     if (!user) {
       return res.status(401).json({ error: 'User not found' });
     }
