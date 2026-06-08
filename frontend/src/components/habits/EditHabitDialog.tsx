@@ -1,0 +1,171 @@
+import { Button } from '@/components/ui/Button';
+import { EditIcon } from 'lucide-react';
+import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/Dialog';
+import { Textarea } from '@/components/ui/Textarea';
+import { Field, FieldDescription, FieldLabel } from '@/components/ui/Field';
+import { Input } from '@/components/ui/Input';
+import { HabitSelect } from './HabitSelect';
+import { frequencyOptions, difficultyOptions, categoryOptions } from './selectChoices.constants';
+import { useState } from 'react';
+import { useUpdateHabitMutation } from '@/hooks/useUpdateHabitMutation';
+import { Habit } from '@/types/habit';
+
+interface EditHabitDialogProps {
+  onHabitUpdated: () => void;
+  habit: Habit;
+}
+
+export function EditHabitDialog({ onHabitUpdated, habit }: Readonly<EditHabitDialogProps>) {
+  const [name, setName] = useState<string>(habit.name);
+  const [frequency, setFrequency] = useState<string>(habit.frequency);
+  const [difficulty, setDifficulty] = useState<string>(habit.difficulty);
+  const [category, setCategory] = useState<string>(habit.category);
+  const [targetValue, setTargetValue] = useState<number>(habit.targetValue);
+  const [targetUnit, setTargetUnit] = useState<string>(habit.targetUnit);
+  const [notes, setNotes] = useState<string>(habit.notes);
+  const [submitted, setSubmitted] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+
+  const updateHabitMutation = useUpdateHabitMutation();
+
+  const resetForm = () => {
+    setName(habit.name);
+    setFrequency(habit.frequency);
+    setDifficulty(habit.difficulty);
+    setCategory(habit.category);
+    setTargetValue(habit.targetValue);
+    setTargetUnit(habit.targetUnit);
+    setNotes(habit.notes);
+    setSubmitted(false);
+    setError(null);
+  };
+
+  async function handleSubmit() {
+    setSubmitted(true);
+    if (!name || !frequency || !difficulty || !category || !targetValue || !targetUnit) return;
+
+    setError(null);
+    try {
+      await updateHabitMutation.mutateAsync({
+        id: habit._id,
+        name: name,
+        frequency: frequency,
+        difficulty: difficulty,
+        category: category,
+        targetValue: targetValue,
+        targetUnit: targetUnit,
+        notes: notes,
+      });
+      resetForm();
+      setOpen(false);
+      onHabitUpdated();
+    } catch {
+      setError('Something went wrong. Please try again.');
+    }
+  }
+
+  return (
+    <Dialog
+      open={open}
+      onOpenChange={(isOpen) => {
+        setOpen(isOpen);
+        resetForm();
+      }}
+    >
+      <DialogTrigger asChild onClick={() => setOpen(true)}>
+        <Button className="flex h-[5vh] w-[6vw] flex-row bg-white">
+          <EditIcon className="size-8 bg-white text-black" />
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle className="text-black-200">Edit a Habit</DialogTitle>
+        </DialogHeader>
+        <div className="mb-8">
+          <Input
+            placeholder="Enter habit name"
+            className="mb-2"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+          />
+          {submitted && !name && <p className="text-sm text-red-500">Habit name is required.</p>}
+        </div>
+        <div>
+          <HabitSelect
+            label={frequencyOptions[0].label}
+            choices={frequencyOptions[0].choices}
+            value={frequency}
+            onValueChange={(value) => setFrequency(value)}
+          />
+          {submitted && !frequency && <p className="mt-2 ml-4 text-sm text-red-500">Frequency is required.</p>}
+        </div>
+        <div>
+          <HabitSelect
+            label={difficultyOptions[0].label}
+            choices={difficultyOptions[0].choices}
+            value={difficulty}
+            onValueChange={(value) => setDifficulty(value)}
+          />
+          {submitted && !difficulty && <p className="mt-2 ml-4 text-sm text-red-500">Difficulty is required.</p>}
+        </div>
+        <div>
+          <HabitSelect
+            label={categoryOptions[0].label}
+            choices={categoryOptions[0].choices}
+            value={category}
+            onValueChange={(value) => setCategory(value)}
+          />
+          {submitted && !category && <p className="mt-2 ml-4 text-sm text-red-500">Category is required.</p>}
+        </div>
+        <div className="mt-4">
+          <FieldLabel htmlFor="target-value">Target Value</FieldLabel>
+          <Input
+            id="target-value"
+            placeholder="e.g., 30"
+            type="number"
+            className="mb-2"
+            value={targetValue}
+            onChange={(e) => setTargetValue(parseFloat(e.target.value))}
+          />
+          {submitted && !targetValue && <p className="text-sm text-red-500">Target value is required.</p>}
+        </div>
+        <div className="mt-4">
+          <FieldLabel htmlFor="target-unit">Unit</FieldLabel>
+          <Input
+            id="target-unit"
+            placeholder="e.g., min, km, times"
+            className="mb-2"
+            value={targetUnit}
+            onChange={(e) => setTargetUnit(e.target.value)}
+          />
+          {submitted && !targetUnit && <p className="text-sm text-red-500">Unit is required.</p>}
+        </div>
+        <Field className="mt-8">
+          <FieldLabel htmlFor="textarea-message">Notes</FieldLabel>
+          <FieldDescription>Enter notes for your habit below.</FieldDescription>
+          <Textarea
+            id="textarea-message"
+            placeholder="Type your notes here."
+            value={notes}
+            onChange={(e) => setNotes(e.target.value)}
+          />
+        </Field>
+        <DialogFooter>
+          <div className="flex w-full justify-center">
+            {error && <p className="text-sm text-red-500">{error}</p>}
+            {!error && (
+              <Button
+                className="h-10 w-30 bg-gray-200 text-black"
+                onClick={handleSubmit}
+                disabled={updateHabitMutation.isPending}
+              >
+                {updateHabitMutation.isPending ? 'Editing...' : 'Edit Habit'}
+              </Button>
+            )}
+          </div>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  );
+}
