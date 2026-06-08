@@ -23,7 +23,7 @@ export function HabitsPage() {
         <div className="flex min-h-0 flex-1 flex-col">
           {isLoading && <p>Loading...</p>}
           {error && <p className="text-red-500">{error}</p>}
-          {!isLoading && !error && <HabitCard habits={habits} />}
+          {!isLoading && !error && <HabitCard habits={habits} setRefreshKey={setRefreshKey} />}
         </div>
       </div>
     </PageLayout>
