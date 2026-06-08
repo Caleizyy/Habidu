@@ -141,6 +141,8 @@ export async function updateHabit(habit: {
   difficulty?: string;
   category?: string;
   notes?: string;
+  targetValue?: number;
+  targetUnit?: string;
 }) {
   const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits/${habit.id}`, {
     method: 'PATCH',
@@ -154,4 +156,13 @@ export async function updateHabit(habit: {
   }
   const data = await response.json();
   return data;
+}
+
+export async function deleteHabit(id: string) {
+  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits/${id}`, {
+    method: 'DELETE',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete habit');
+  }
 }
