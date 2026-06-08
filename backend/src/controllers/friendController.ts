@@ -14,7 +14,7 @@ export const sendFriendRequest = async (req: Request<unknown, unknown, CreateFri
     if (!requester) {
       return res.status(401).json({ error: 'User not found' });
     }
-    await friendService.send(requester._id, recipientEmail);
+    await friendService.sendRequest(requester._id, recipientEmail);
     return res.status(201).json({ message: 'Friend request sent successfully' });
   } catch (error) {
     console.error('Error sending friend request:', error);
