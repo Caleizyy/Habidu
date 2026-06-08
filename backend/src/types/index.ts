@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export enum UserRole {
   Admin = 'admin',
   Regular = 'regular',
@@ -8,7 +10,7 @@ export interface CreateUserBody {
   email: string;
   sub: string;
   role: UserRole;
-  picture?: string;
+  avatar?: string;
 }
 export interface CreateSessionBody {
   sessionId: string;
@@ -19,6 +21,16 @@ export interface CreateSessionBody {
 export interface CreateRefreshTokenBody {
   sub: string;
   refreshToken: string;
+}
+
+export interface CreateFriendRequestBody {
+  recipientEmail: string;
+}
+
+export interface CreateFriendRequestData {
+  recipientId: Types.ObjectId;
+  requesterId: Types.ObjectId;
+  status: FriendRequestStatus;
 }
 
 export enum HabitCategory {
@@ -40,6 +52,13 @@ export enum HabitFrequency {
   Daily = 'Daily',
   Weekly = 'Weekly',
   Monthly = 'Monthly',
+}
+
+export enum FriendRequestStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Rejected = 'rejected',
+  Blocked = 'blocked',
 }
 
 export interface CreateHabitBody {
@@ -65,4 +84,10 @@ export interface CreateHabitLogBody {
   habitId: string;
   date: string;
   value: number;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  avatar?: string;
 }
