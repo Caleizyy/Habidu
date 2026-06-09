@@ -5,6 +5,7 @@ import { profileApi } from '@/api/profile';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileDetails } from '@/components/profile/ProfileDetails';
 import { ProfileEditActions } from '@/components/profile/ProfileEditActions';
+import { PageLayout } from '@/components/layout/PageLayout';
 
 export function ProfilePage() {
   const { user, isAuthenticated, refreshUser } = useAuth();
@@ -18,7 +19,8 @@ export function ProfilePage() {
 
   useEffect(() => {
     if (!isAuthenticated) {
-      navigate('/login');
+      const timeout = setTimeout(() => navigate('/login'), 0);
+      return () => clearTimeout(timeout);
     }
   }, [isAuthenticated, navigate]);
 
@@ -79,26 +81,28 @@ export function ProfilePage() {
   };
 
   return (
-    <div className="flex flex-1 flex-col items-center px-6 py-12">
-      <div className="w-full max-w-2xl space-y-6">
-        <ProfileHeader user={user} isEditing={isEditing} onEditClick={handleEdit} />
+    <PageLayout title="Profile">
+      <div className="flex flex-1 flex-col items-center px-6 py-12">
+        <div className="w-full max-w-2xl space-y-6">
+          <ProfileHeader user={user} isEditing={isEditing} onEditClick={handleEdit} />
 
-        <ProfileDetails
-          isEditing={isEditing}
-          isLoading={isLoading}
-          error={error}
-          name={user?.name ?? ''}
-          email={user?.email ?? ''}
-          bio={bio}
-          displayName={displayName}
-          onDisplayNameChange={setDisplayName}
-          onBioChange={setBio}
-        />
+          <ProfileDetails
+            isEditing={isEditing}
+            isLoading={isLoading}
+            error={error}
+            name={user?.name ?? ''}
+            email={user?.email ?? ''}
+            bio={bio}
+            displayName={displayName}
+            onDisplayNameChange={setDisplayName}
+            onBioChange={setBio}
+          />
 
-        {isEditing && (
-          <ProfileEditActions isSaving={isSaving} error={error} onSave={handleSave} onCancel={handleCancel} />
-        )}
+          {isEditing && (
+            <ProfileEditActions isSaving={isSaving} error={error} onSave={handleSave} onCancel={handleCancel} />
+          )}
+        </div>
       </div>
-    </div>
+    </PageLayout>
   );
 }

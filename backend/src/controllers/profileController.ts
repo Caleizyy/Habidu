@@ -26,7 +26,7 @@ export const getProfile = async (req: Request, res: Response) => {
       sub: user.sub,
       email: user.email,
       name: `${user.firstName} ${user.lastName}`.trim(),
-      avatar: user.picture,
+      avatar: user.avatar,
       bio: user.bio || '',
     });
   } catch (err) {
@@ -88,7 +88,7 @@ export const updateProfile = async (req: Request, res: Response) => {
       sub: updated.sub,
       email: updated.email,
       name: `${updated.firstName} ${updated.lastName}`.trim(),
-      avatar: updated.picture,
+      avatar: updated.avatar,
       bio: updated.bio,
     });
   } catch (err) {
