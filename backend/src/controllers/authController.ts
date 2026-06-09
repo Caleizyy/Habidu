@@ -43,7 +43,7 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
         firstName: payload.given_name,
         lastName: payload.family_name,
         email: payload.email,
-        picture: payload.picture,
+        avatar: payload.picture,
         role: UserRole.Regular,
       };
 

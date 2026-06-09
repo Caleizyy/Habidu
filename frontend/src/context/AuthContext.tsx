@@ -1,4 +1,4 @@
-import { createContext, useContext, useState, ReactNode } from 'react';
+import { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { useGoogleLogin } from '@react-oauth/google';
 import { authApi } from '../api/auth';
 import { User, AuthContextType } from '../types/index';
@@ -9,7 +9,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [user, setUser] = useState<User | null>(null);
 
-  const signup = useGoogleLogin({
+  const signin = useGoogleLogin({
     onSuccess: async (tokenResponse) => {
       await authApi.loginWithGoogle(tokenResponse.code);
       await refreshUser();
@@ -32,14 +32,20 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const response = await authApi.sessionCheck();
       setUser(response);
+      setIsAuthenticated(true);
     } catch (error) {
       setUser(null);
+      setIsAuthenticated(false);
       console.log(error);
     }
   };
 
+  useEffect(() => {
+    refreshUser();
+  }, []);
+
   return (
-    <AuthContext.Provider value={{ user, isAuthenticated, refreshUser, signup, logout }}>
+    <AuthContext.Provider value={{ user, isAuthenticated, refreshUser, signin, logout }}>
       {children}
     </AuthContext.Provider>
   );

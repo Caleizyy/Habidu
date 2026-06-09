@@ -1,3 +1,5 @@
+import { Types } from 'mongoose';
+
 export enum UserRole {
   Admin = 'admin',
   Regular = 'regular',
@@ -8,7 +10,7 @@ export interface CreateUserBody {
   email: string;
   sub: string;
   role: UserRole;
-  picture?: string;
+  avatar?: string;
 }
 export interface CreateSessionBody {
   sessionId: string;
@@ -21,25 +23,42 @@ export interface CreateRefreshTokenBody {
   refreshToken: string;
 }
 
+export interface CreateFriendRequestBody {
+  recipientEmail: string;
+}
+
+export interface CreateFriendRequestData {
+  recipientId: Types.ObjectId;
+  requesterId: Types.ObjectId;
+  status: FriendRequestStatus;
+}
+
 export enum HabitCategory {
-  Sports = 'sports',
-  Health = 'health',
-  Study = 'study',
-  Skills = 'skills',
-  Chores = 'chores',
+  Sports = 'Sports',
+  Health = 'Health',
+  Study = 'Study',
+  Skills = 'Skills',
+  Chores = 'Chores',
 }
 
 export enum HabitDifficulty {
-  Trivial = 'trivial',
-  Easy = 'easy',
-  Medium = 'medium',
-  Hard = 'hard',
+  Trivial = 'Trivial',
+  Easy = 'Easy',
+  Medium = 'Medium',
+  Hard = 'Hard',
 }
 
 export enum HabitFrequency {
-  Daily = 'daily',
-  Weekly = 'weekly',
-  Monthly = 'monthly',
+  Daily = 'Daily',
+  Weekly = 'Weekly',
+  Monthly = 'Monthly',
+}
+
+export enum FriendRequestStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Rejected = 'rejected',
+  Blocked = 'blocked',
 }
 
 export interface CreateHabitBody {
@@ -47,10 +66,28 @@ export interface CreateHabitBody {
   category: HabitCategory;
   frequency: HabitFrequency;
   difficulty: HabitDifficulty;
+  // Target value for the habit (e.g., 30 minutes, 5 km, 2 times)
+  targetValue: number;
+  // Custom unit string (e.g., 'min', 'km', 'liters', 'pages', etc.)
+  targetUnit: string;
   notes?: string;
+  createdBy: string;
 }
 
 export interface HabitQueryFilter {
   category?: HabitCategory;
   frequency?: HabitFrequency;
+  createdBy?: string;
+}
+
+export interface CreateHabitLogBody {
+  habitId: string;
+  date: string;
+  value: number;
+}
+
+export interface User {
+  name: string;
+  email: string;
+  avatar?: string;
 }

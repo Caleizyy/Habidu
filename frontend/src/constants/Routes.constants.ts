@@ -10,7 +10,6 @@ export const ROUTES = {
   FRIENDS: '/friends',
   REQUESTS: '/requests',
   GROUPS: '/groups',
-  LOGIN: '/login',
-  SIGNUP: '/signup',
+  SIGNIN: '/signin',
   NOT_FOUND: '*',
 } as const;
