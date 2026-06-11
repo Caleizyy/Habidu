@@ -5,6 +5,7 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog';
+import { Input } from '@/components/ui/Input';
 import { fetchGroup, inviteMember } from '@/api/group';
 import { friendsApi } from '@/api/friends';
 import { Group } from '@/types/group';
@@ -32,6 +33,7 @@ export function GroupDetailPage() {
   const [allUsers, setAllUsers] = useState<User[]>([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [inviting, setInviting] = useState<string | null>(null);
+  const [inviteSearch, setInviteSearch] = useState('');
 
   useEffect(() => {
     if (!id) return;
@@ -43,6 +45,7 @@ export function GroupDetailPage() {
 
   async function handleOpenInvite(open: boolean) {
     setInviteOpen(open);
+    if (!open) setInviteSearch('');
     if (open && allUsers.length === 0) {
       setUsersLoading(true);
       friendsApi
@@ -69,6 +72,10 @@ export function GroupDetailPage() {
   const isOwner = user?.sub === group?.owner;
   const memberSubs = new Set(group?.members.map((m) => m.sub) ?? []);
   const invitableUsers = allUsers.filter((u) => !memberSubs.has(u.sub));
+  const q = inviteSearch.toLowerCase();
+  const visibleUsers = invitableUsers.filter(
+    (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+  );
 
   return (
     <PageLayout
@@ -86,13 +93,21 @@ export function GroupDetailPage() {
               <DialogHeader>
                 <DialogTitle>Invite to {group.name}</DialogTitle>
               </DialogHeader>
+              <Input
+                placeholder="Search by name or email"
+                value={inviteSearch}
+                onChange={(e) => setInviteSearch(e.target.value)}
+              />
               {usersLoading && <p>Loading...</p>}
               {!usersLoading && invitableUsers.length === 0 && (
-                <p className="text-muted-foreground text-sm">No users available to invite.</p>
+                <p className="text-muted-foreground text-sm">No friends available to invite.</p>
               )}
-              {!usersLoading && invitableUsers.length > 0 && (
+              {!usersLoading && invitableUsers.length > 0 && visibleUsers.length === 0 && (
+                <p className="text-muted-foreground text-sm">No results for &ldquo;{inviteSearch}&rdquo;.</p>
+              )}
+              {!usersLoading && visibleUsers.length > 0 && (
                 <ul className="flex flex-col gap-2">
-                  {invitableUsers.map((u) => (
+                  {visibleUsers.map((u) => (
                     <li key={u.sub} className="flex items-center justify-between gap-3">
                       <div className="flex items-center gap-2">
                         <Avatar size="sm">

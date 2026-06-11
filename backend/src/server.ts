@@ -11,6 +11,7 @@ import friendRoutes from './routes/friendRoutes';
 import userRoutes from './routes/userRoutes';
 
 import habitRoutes from './routes/habitRoutes';
+import groupRoutes from './routes/groupRoutes';
 
 dotenv.config();
 
@@ -40,6 +41,7 @@ apiRouter.use('/session', sessionRoutes);
 apiRouter.use('/habits', habitRoutes);
 apiRouter.use('/friends', friendRoutes);
 apiRouter.use('/user', userRoutes);
+apiRouter.use('/groups', groupRoutes);
 
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 

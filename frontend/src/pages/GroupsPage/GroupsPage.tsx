@@ -79,7 +79,6 @@ export function GroupsPage() {
               <Input
                 id="group-name"
                 placeholder="My awesome group"
-                maxLength={60}
                 value={groupName}
                 onChange={handleNameChange}
                 aria-invalid={!!nameError}
