@@ -13,6 +13,7 @@ import {
   CalendarPage,
   RequestsPage,
   GroupsPage,
+  GroupDetailPage,
   AboutPage,
   LeaderboardsPage,
   SignInPage,
@@ -39,6 +40,7 @@ function App() {
             <Route path={ROUTES.FRIENDS} element={<FriendsPage />} />
             <Route path={ROUTES.REQUESTS} element={<RequestsPage />} />
             <Route path={ROUTES.GROUPS} element={<GroupsPage />} />
+            <Route path={ROUTES.GROUP_DETAIL} element={<GroupDetailPage />} />
             <Route path={ROUTES.NOT_FOUND} element={<NotFoundPage />} />
           </Routes>
         </>
