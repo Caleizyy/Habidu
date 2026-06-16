@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
 import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
-import { getTodayDate } from '@/utils/dateHelpers';
 
 export interface MonthlyHabitsSectionProps {
   habits: Habit[];
@@ -14,6 +13,8 @@ export interface MonthlyHabitsSectionProps {
   addLog: (habitId: string, value: number, date: string) => void;
   editMonthlyLog: (habitId: string, monthKey: string, value: number) => void;
   undoMonthlyLog: (habitId: string, monthKey: string) => void;
+  sectionStreak: number;
+  sectionPersonalBest: number;
 }
 
 export function MonthlyHabitsSection({
@@ -23,12 +24,12 @@ export function MonthlyHabitsSection({
   monthlyRowLabels,
   getDisplayValueForMonth,
   getDisplayValueForMonthKey,
-  addLog,
   editMonthlyLog,
   undoMonthlyLog,
+  sectionStreak,
+  sectionPersonalBest,
 }: MonthlyHabitsSectionProps) {
   const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
-  const today = getTodayDate();
   const [expandedPastMonth, setExpandedPastMonth] = React.useState<string | null>(null);
   const [pastMonthsOpen, setPastMonthsOpen] = React.useState(false);
   const [pastMonthsPage, setPastMonthsPage] = React.useState(1);
@@ -40,8 +41,8 @@ export function MonthlyHabitsSection({
         rangeLabel={rangeLabel}
         habits={habits}
         barCellsMap={barCellsMap}
-        sectionStreak={0}
-        sectionPersonalBest={0}
+        sectionStreak={sectionStreak}
+        sectionPersonalBest={sectionPersonalBest}
       >
         {/* THIS MONTH section */}
         {monthlyRowLabels.slice(0, 1).map((row) => (

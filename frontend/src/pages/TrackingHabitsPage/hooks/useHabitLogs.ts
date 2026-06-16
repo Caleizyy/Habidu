@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { monthKey, getTodayDate } from '@/utils/dateHelpers';
-import { calculateStreaks } from '@/utils/streakHelpers';
+import { calculateStreaks, calculateSectionStreaks } from '@/utils/streakHelpers';
+import { HabitFrequency } from '@/types/habit';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 import { useHabitsQuery } from './useHabitsQuery';
 import { useAllHabitLogsQuery } from './useAllHabitLogsQuery';
@@ -217,6 +218,19 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     });
   }, [habitsQuery.data, logs]);
 
+  // Calculate section streaks (only increase if ALL habits in section are complete)
+  const sectionStreaks = React.useMemo(() => {
+    const dailyHabits = habitsWithStreaks.filter((h) => h.frequency === HabitFrequency.Daily);
+    const weeklyHabits = habitsWithStreaks.filter((h) => h.frequency === HabitFrequency.Weekly);
+    const monthlyHabits = habitsWithStreaks.filter((h) => h.frequency === HabitFrequency.Monthly);
+
+    return {
+      daily: calculateSectionStreaks(dailyHabits, logs, HabitFrequency.Daily),
+      weekly: calculateSectionStreaks(weeklyHabits, logs, HabitFrequency.Weekly),
+      monthly: calculateSectionStreaks(monthlyHabits, logs, HabitFrequency.Monthly),
+    };
+  }, [habitsWithStreaks, logs]);
+
   // Save drafts with minimum loading time
   const saveDrafts = React.useCallback(async () => {
     const startTime = Date.now();
@@ -311,6 +325,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     isSaving: mutations.isSaving,
     savingLogIds: new Set<string>(),
     error,
+    sectionStreaks,
     addLog,
     editLog,
     editWeeklyLog,

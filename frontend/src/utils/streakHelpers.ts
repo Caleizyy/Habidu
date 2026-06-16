@@ -6,183 +6,74 @@ export interface StreakData {
   personalBest: number;
 }
 
-export function calculateStreaks(habit: Habit, logs: HabitLog[]): StreakData {
-  const today = getTodayDate();
-
-  if (habit.frequency === HabitFrequency.Daily) {
-    return calculateDailyStreaks(logs, habit.targetValue, today);
-  } else if (habit.frequency === HabitFrequency.Weekly) {
-    return calculateWeeklyStreaks(logs, habit.targetValue, today);
-  } else if (habit.frequency === HabitFrequency.Monthly) {
-    return calculateMonthlyStreaks(logs, habit.targetValue, today);
-  }
-
-  return { currentStreak: 0, personalBest: 0 };
+function getPeriodKey(date: string, frequency: HabitFrequency): string {
+  if (frequency === HabitFrequency.Daily) return date;
+  if (frequency === HabitFrequency.Weekly) return getMondayOfWeek(date);
+  return monthKey(date); // Monthly
 }
 
-function calculateDailyStreaks(logs: HabitLog[], targetValue: number, today: string): StreakData {
-  // Group logs by date and sum values
-  const logsByDate = new Map<string, number>();
-  logs.forEach((log) => {
-    const current = logsByDate.get(log.date) ?? 0;
-    logsByDate.set(log.date, current + log.value);
-  });
-
-  // Get all unique dates and sort them
-  const dates = Array.from(logsByDate.keys()).sort();
-
-  // Calculate current streak (from today backwards)
-  let currentStreak = 0;
-  const currentDate = new Date(today + 'T00:00:00');
-
-  for (let i = 0; i < 365; i++) {
-    const dateStr = dateToString(currentDate);
-    const value = logsByDate.get(dateStr) ?? 0;
-
-    if (value >= targetValue) {
-      currentStreak++;
-      currentDate.setDate(currentDate.getDate() - 1);
-    } else {
-      break;
-    }
-  }
-
-  // Calculate personal best (longest streak ever)
-  let personalBest = 0;
-  let streak = 0;
-
-  for (const date of dates) {
-    const value = logsByDate.get(date) ?? 0;
-    if (value >= targetValue) {
-      streak++;
-    } else {
-      if (streak > personalBest) {
-        personalBest = streak;
-      }
-      streak = 0;
-    }
-  }
-  if (streak > personalBest) {
-    personalBest = streak;
-  }
-
-  return { currentStreak, personalBest };
+function getCurrentPeriod(today: string, frequency: HabitFrequency): string {
+  if (frequency === HabitFrequency.Daily) return today;
+  if (frequency === HabitFrequency.Weekly) return getMondayOfWeek(today);
+  return monthKey(today); // Monthly
 }
 
-function calculateWeeklyStreaks(logs: HabitLog[], targetValue: number, today: string): StreakData {
-  // Group logs by week (using Monday as week start)
-  const logsByWeek = new Map<string, number>();
-
-  logs.forEach((log) => {
-    const weekStart = getMondayOfWeek(log.date);
-    const current = logsByWeek.get(weekStart) ?? 0;
-    logsByWeek.set(weekStart, current + log.value);
-  });
-
-  // Get all unique weeks and sort them
-  const weeks = Array.from(logsByWeek.keys()).sort().reverse(); // Most recent first
-
-  // Calculate current streak (from this week backwards)
-  let currentStreak = 0;
-  const currentDate = new Date(today + 'T00:00:00');
-  let currentWeekStart = getMondayOfWeek(today);
-
-  for (let i = 0; i < 52; i++) {
-    const value = logsByWeek.get(currentWeekStart) ?? 0;
-
-    if (value >= targetValue) {
-      currentStreak++;
-      // Move to previous week
-      currentDate.setDate(currentDate.getDate() - 7);
-      currentWeekStart = getMondayOfWeek(dateToString(currentDate));
-    } else {
-      break;
-    }
+function getNextPeriod(period: string, frequency: HabitFrequency): string {
+  if (frequency === HabitFrequency.Daily) {
+    const date = new Date(period + 'T00:00:00');
+    date.setDate(date.getDate() + 1);
+    return dateToString(date);
   }
 
-  // Calculate personal best
-  let personalBest = 0;
-  let streak = 0;
-
-  for (const week of weeks.reverse()) {
-    const value = logsByWeek.get(week) ?? 0;
-    if (value >= targetValue) {
-      streak++;
-    } else {
-      if (streak > personalBest) {
-        personalBest = streak;
-      }
-      streak = 0;
-    }
-  }
-  if (streak > personalBest) {
-    personalBest = streak;
+  if (frequency === HabitFrequency.Weekly) {
+    const date = new Date(period + 'T00:00:00');
+    date.setDate(date.getDate() + 7);
+    return getMondayOfWeek(dateToString(date));
   }
 
-  return { currentStreak, personalBest };
+  // Monthly
+  const [year, month] = period.split('-');
+  let nextMonth = parseInt(month) + 1;
+  let nextYear = parseInt(year);
+
+  if (nextMonth === 13) {
+    nextMonth = 1;
+    nextYear++;
+  }
+
+  return `${nextYear}-${String(nextMonth).padStart(2, '0')}`;
 }
 
-function calculateMonthlyStreaks(logs: HabitLog[], targetValue: number, today: string): StreakData {
-  // Group logs by month
-  const logsByMonth = new Map<string, number>();
-
-  logs.forEach((log) => {
-    const mKey = monthKey(log.date);
-    const current = logsByMonth.get(mKey) ?? 0;
-    logsByMonth.set(mKey, current + log.value);
-  });
-
-  // Get all unique months and sort them
-  const months = Array.from(logsByMonth.keys()).sort();
-
-  // Get current month
-  const currentMonth = monthKey(today);
-
-  // Calculate current streak (from this month backwards)
-  let currentStreak = 0;
-  let checkMonth = currentMonth;
-
-  for (let i = 0; i < 24; i++) {
-    const value = logsByMonth.get(checkMonth) ?? 0;
-
-    if (value >= targetValue) {
-      currentStreak++;
-      // Move to previous month
-      const [year, month] = checkMonth.split('-');
-      let prevMonth = parseInt(month) - 1;
-      let prevYear = parseInt(year);
-
-      if (prevMonth === 0) {
-        prevMonth = 12;
-        prevYear--;
-      }
-
-      checkMonth = `${prevYear}-${String(prevMonth).padStart(2, '0')}`;
-    } else {
-      break;
-    }
+function getPreviousPeriod(period: string, frequency: HabitFrequency): string {
+  if (frequency === HabitFrequency.Daily) {
+    const date = new Date(period + 'T00:00:00');
+    date.setDate(date.getDate() - 1);
+    return dateToString(date);
   }
 
-  // Calculate personal best
-  let personalBest = 0;
-  let streak = 0;
-
-  for (const month of months) {
-    const value = logsByMonth.get(month) ?? 0;
-    if (value >= targetValue) {
-      streak++;
-    } else {
-      if (streak > personalBest) {
-        personalBest = streak;
-      }
-      streak = 0;
-    }
-  }
-  if (streak > personalBest) {
-    personalBest = streak;
+  if (frequency === HabitFrequency.Weekly) {
+    const date = new Date(period + 'T00:00:00');
+    date.setDate(date.getDate() - 7);
+    return getMondayOfWeek(dateToString(date));
   }
 
-  return { currentStreak, personalBest };
+  // Monthly
+  const [year, month] = period.split('-');
+  let prevMonth = parseInt(month) - 1;
+  let prevYear = parseInt(year);
+
+  if (prevMonth === 0) {
+    prevMonth = 12;
+    prevYear--;
+  }
+
+  return `${prevYear}-${String(prevMonth).padStart(2, '0')}`;
+}
+
+function getMaxIterations(frequency: HabitFrequency): number {
+  if (frequency === HabitFrequency.Daily) return 365;
+  if (frequency === HabitFrequency.Weekly) return 52;
+  return 24; // Monthly
 }
 
 function dateToString(date: Date): string {
@@ -198,4 +89,174 @@ function getMondayOfWeek(dateStr: string): string {
   const diff = d.getDate() - day + (day === 0 ? -6 : 1);
   const monday = new Date(d.setDate(diff));
   return dateToString(monday);
+}
+
+function calculateStreakByPeriod(
+  logs: HabitLog[],
+  targetValue: number,
+  today: string,
+  frequency: HabitFrequency
+): StreakData {
+  if (logs.length === 0) {
+    return { currentStreak: 0, personalBest: 0 };
+  }
+
+  // Group logs by period and sum values
+  const logsByPeriod = new Map<string, number>();
+  logs.forEach((log) => {
+    const periodKey = getPeriodKey(log.date, frequency);
+    const current = logsByPeriod.get(periodKey) ?? 0;
+    logsByPeriod.set(periodKey, current + log.value);
+  });
+
+  // Find the earliest period with logs
+  const periods = Array.from(logsByPeriod.keys()).sort();
+  if (periods.length === 0) {
+    return { currentStreak: 0, personalBest: 0 };
+  }
+
+  const earliestPeriod = periods[0];
+  const currentPeriod = getCurrentPeriod(today, frequency);
+  const maxIterations = getMaxIterations(frequency);
+
+  // Calculate current streak (from today backwards)
+  let currentStreak = 0;
+  let checkPeriod = currentPeriod;
+
+  for (let i = 0; i < maxIterations; i++) {
+    const value = logsByPeriod.get(checkPeriod) ?? 0;
+    if (value >= targetValue) {
+      currentStreak++;
+      checkPeriod = getPreviousPeriod(checkPeriod, frequency);
+    } else {
+      break;
+    }
+  }
+
+  // Calculate personal best by iterating forward from earliest period to today
+  let personalBest = 0;
+  let streak = 0;
+  let checkPeriod2 = earliestPeriod;
+
+  while (true) {
+    const value = logsByPeriod.get(checkPeriod2) ?? 0;
+
+    // Only increment streak if the period has enough value
+    if (value >= targetValue) {
+      streak++;
+      personalBest = Math.max(personalBest, streak);
+    } else {
+      // Any period without enough value breaks the streak
+      streak = 0;
+    }
+
+    // Stop if we've reached the current period
+    if (checkPeriod2 === currentPeriod) {
+      break;
+    }
+
+    // Move to next period
+    checkPeriod2 = getNextPeriod(checkPeriod2, frequency);
+  }
+
+  return { currentStreak, personalBest };
+}
+
+function calculateSectionStreakByPeriod(
+  habits: Habit[],
+  logs: Record<string, HabitLog[]>,
+  today: string,
+  frequency: HabitFrequency
+): StreakData {
+  if (habits.length === 0) {
+    return { currentStreak: 0, personalBest: 0 };
+  }
+
+  // Get all unique periods from all habits' logs
+  const allPeriods = new Set<string>();
+  habits.forEach((habit) => {
+    const habitLogs = logs[habit._id] ?? [];
+    habitLogs.forEach((log) => {
+      const periodKey = getPeriodKey(log.date, frequency);
+      allPeriods.add(periodKey);
+    });
+  });
+
+  const periods = Array.from(allPeriods).sort();
+  if (periods.length === 0) {
+    return { currentStreak: 0, personalBest: 0 };
+  }
+
+  const earliestPeriod = periods[0];
+  const currentPeriod = getCurrentPeriod(today, frequency);
+  const maxIterations = getMaxIterations(frequency);
+
+  // Calculate current streak (from today backwards)
+  let currentStreak = 0;
+  let checkPeriod = currentPeriod;
+
+  for (let i = 0; i < maxIterations; i++) {
+    const allHabitsComplete = habits.every((habit) => {
+      const habitLogs = logs[habit._id] ?? [];
+      const periodValue = habitLogs
+        .filter((l) => getPeriodKey(l.date, frequency) === checkPeriod)
+        .reduce((sum, l) => sum + l.value, 0);
+      return periodValue >= habit.targetValue;
+    });
+
+    if (allHabitsComplete) {
+      currentStreak++;
+      checkPeriod = getPreviousPeriod(checkPeriod, frequency);
+    } else {
+      break;
+    }
+  }
+
+  // Calculate personal best by iterating forward from earliest period to today
+  let personalBest = 0;
+  let streak = 0;
+  let checkPeriod2 = earliestPeriod;
+
+  while (true) {
+    const allHabitsComplete = habits.every((habit) => {
+      const habitLogs = logs[habit._id] ?? [];
+      const periodValue = habitLogs
+        .filter((l) => getPeriodKey(l.date, frequency) === checkPeriod2)
+        .reduce((sum, l) => sum + l.value, 0);
+      return periodValue >= habit.targetValue;
+    });
+
+    // Only increment streak if ALL habits are complete in this period
+    if (allHabitsComplete) {
+      streak++;
+      personalBest = Math.max(personalBest, streak);
+    } else {
+      // Any period where not all habits are complete breaks the streak
+      streak = 0;
+    }
+
+    // Stop if we've reached the current period
+    if (checkPeriod2 === currentPeriod) {
+      break;
+    }
+
+    // Move to next period
+    checkPeriod2 = getNextPeriod(checkPeriod2, frequency);
+  }
+
+  return { currentStreak, personalBest };
+}
+
+export function calculateStreaks(habit: Habit, logs: HabitLog[]): StreakData {
+  const today = getTodayDate();
+  return calculateStreakByPeriod(logs, habit.targetValue, today, habit.frequency);
+}
+
+export function calculateSectionStreaks(
+  habits: Habit[],
+  logs: Record<string, HabitLog[]>,
+  frequency: HabitFrequency
+): StreakData {
+  const today = getTodayDate();
+  return calculateSectionStreakByPeriod(habits, logs, today, frequency);
 }

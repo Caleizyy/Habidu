@@ -140,6 +140,8 @@ export function TrackingHabitsPage(): React.ReactNode {
         editLog={hookState.editLog}
         undoLog={hookState.undoLog}
         dailyHighlightIndex={dailyHighlightIndex}
+        sectionStreak={hookState.sectionStreaks.daily.currentStreak}
+        sectionPersonalBest={hookState.sectionStreaks.daily.personalBest}
       />
 
       <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
@@ -154,6 +156,8 @@ export function TrackingHabitsPage(): React.ReactNode {
         addLog={hookState.addLog}
         editWeeklyLog={hookState.editWeeklyLog}
         undoWeeklyLog={hookState.undoWeeklyLog}
+        sectionStreak={hookState.sectionStreaks.weekly.currentStreak}
+        sectionPersonalBest={hookState.sectionStreaks.weekly.personalBest}
       />
 
       <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
@@ -168,6 +172,8 @@ export function TrackingHabitsPage(): React.ReactNode {
         addLog={hookState.addLog}
         editMonthlyLog={hookState.editMonthlyLog}
         undoMonthlyLog={hookState.undoMonthlyLog}
+        sectionStreak={hookState.sectionStreaks.monthly.currentStreak}
+        sectionPersonalBest={hookState.sectionStreaks.monthly.personalBest}
       />
     </PageLayout>
   );

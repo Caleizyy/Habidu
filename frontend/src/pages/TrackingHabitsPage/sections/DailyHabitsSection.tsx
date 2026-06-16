@@ -13,6 +13,8 @@ export interface DailyHabitsSectionProps {
   editLog: (habitId: string, date: string, value: number) => void;
   undoLog: (habitId: string, date: string) => void;
   dailyHighlightIndex: number;
+  sectionStreak: number;
+  sectionPersonalBest: number;
 }
 
 export function DailyHabitsSection({
@@ -25,6 +27,8 @@ export function DailyHabitsSection({
   editLog,
   undoLog,
   dailyHighlightIndex,
+  sectionStreak,
+  sectionPersonalBest,
 }: DailyHabitsSectionProps) {
   const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
   const [expandedDailyDate, setExpandedDailyDate] = React.useState<string | null>(null);
@@ -39,8 +43,8 @@ export function DailyHabitsSection({
         habits={habits}
         barCellsMap={barCellsMap}
         highlightIndex={dailyHighlightIndex}
-        sectionStreak={0}
-        sectionPersonalBest={0}
+        sectionStreak={sectionStreak}
+        sectionPersonalBest={sectionPersonalBest}
       >
         {/* TODAY section */}
         {dailyRowLabels.slice(-1).map((row) => (

@@ -2,7 +2,6 @@ import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
 import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
-import { getTodayDate } from '@/utils/dateHelpers';
 
 export interface WeeklyHabitsSectionProps {
   habits: Habit[];
@@ -14,6 +13,8 @@ export interface WeeklyHabitsSectionProps {
   addLog: (habitId: string, value: number, date: string) => void;
   editWeeklyLog: (habitId: string, dates: string[], value: number) => void;
   undoWeeklyLog: (habitId: string, dates: string[]) => void;
+  sectionStreak: number;
+  sectionPersonalBest: number;
 }
 
 export function WeeklyHabitsSection({
@@ -23,12 +24,12 @@ export function WeeklyHabitsSection({
   weeklyRowLabels,
   getDisplayValueForDates,
   getDisplayValueForWeek,
-  addLog,
   editWeeklyLog,
   undoWeeklyLog,
+  sectionStreak,
+  sectionPersonalBest,
 }: WeeklyHabitsSectionProps) {
   const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
-  const today = getTodayDate();
   const [expandedPastWeek, setExpandedPastWeek] = React.useState<string | null>(null);
   const [pastWeeksOpen, setPastWeeksOpen] = React.useState(false);
   const [pastWeeksPage, setPastWeeksPage] = React.useState(1);
@@ -40,8 +41,8 @@ export function WeeklyHabitsSection({
         rangeLabel={rangeLabel}
         habits={habits}
         barCellsMap={barCellsMap}
-        sectionStreak={0}
-        sectionPersonalBest={0}
+        sectionStreak={sectionStreak}
+        sectionPersonalBest={sectionPersonalBest}
       >
         {/* THIS WEEK section */}
         {weeklyRowLabels.slice(0, 1).map((row) => (
