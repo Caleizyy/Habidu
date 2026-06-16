@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { monthKey, getTodayDate } from '@/utils/dateHelpers';
+import { calculateStreaks } from '@/utils/streakHelpers';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 import { useHabitsQuery } from './useHabitsQuery';
 import { useAllHabitLogsQuery } from './useAllHabitLogsQuery';
@@ -203,6 +204,19 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
       .reduce((s, l) => s + l.value, 0);
   }
 
+  // Calculate streaks for all habits when logs change
+  const habitsWithStreaks = React.useMemo(() => {
+    return (habitsQuery.data ?? []).map((habit) => {
+      const habitLogs = logs[habit._id] ?? [];
+      const streaks = calculateStreaks(habit, habitLogs);
+      return {
+        ...habit,
+        currentStreak: streaks.currentStreak,
+        personalBest: streaks.personalBest,
+      };
+    });
+  }, [habitsQuery.data, logs]);
+
   // Save drafts with minimum loading time
   const saveDrafts = React.useCallback(async () => {
     const startTime = Date.now();
@@ -289,7 +303,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
   }, [draftManager, logs, mutations.batchSaveMutation, WEEKLY_ROW_LABELS]);
 
   return {
-    habits: habitsQuery.data ?? [],
+    habits: habitsWithStreaks,
     logs,
     drafts: draftManager.drafts,
     deletedLogIds: draftManager.deletedLogIds,
