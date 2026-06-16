@@ -59,13 +59,9 @@ export function MonthlyHabitsSection({
                 target={habit.targetValue}
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
-<<<<<<< HEAD
-                onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
-=======
                 currentStreak={habit.currentStreak || 0}
                 personalBest={habit.personalBest || 0}
-                onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
->>>>>>> 753ccd9 (added streak/personal best frontend(hardcoded values))
+                onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
                 onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
                 onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
               />

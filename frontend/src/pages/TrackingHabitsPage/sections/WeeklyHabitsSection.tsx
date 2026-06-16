@@ -59,13 +59,9 @@ export function WeeklyHabitsSection({
                 target={habit.targetValue}
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
-<<<<<<< HEAD
-                onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
-=======
                 currentStreak={habit.currentStreak || 0}
                 personalBest={habit.personalBest || 0}
-                onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
->>>>>>> 753ccd9 (added streak/personal best frontend(hardcoded values))
+                onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
                 onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
                 onUndo={() => undoWeeklyLog(habit._id, row.dates)}
               />
