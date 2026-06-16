@@ -91,3 +91,10 @@ export interface User {
   email: string;
   avatar?: string;
 }
+export interface PopulatedUser {
+  _id: Types.ObjectId;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar?: string;
+}
