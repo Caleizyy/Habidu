@@ -35,6 +35,10 @@ export function GroupCreateDialog({ onCreated }: Props) {
       setNameError('Group name is required.');
       return;
     }
+    if (groupName.trim().length > 60) {
+      setNameError('Group name must be 60 characters or fewer.');
+      return;
+    }
     setSubmitting(true);
     try {
       const group = await createGroup(groupName.trim());
@@ -66,6 +70,7 @@ export function GroupCreateDialog({ onCreated }: Props) {
             placeholder="My awesome group"
             value={groupName}
             onChange={handleNameChange}
+            maxLength={60}
             aria-invalid={!!nameError}
           />
           {nameError && <p className="text-destructive text-sm">{nameError}</p>}

@@ -5,4 +5,5 @@ export interface Group {
   name: string;
   owner: string;
   members: User[];
+  pendingInvites: string[];
 }

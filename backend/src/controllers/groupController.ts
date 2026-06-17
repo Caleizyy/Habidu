@@ -10,7 +10,7 @@ const ERROR_STATUS: Record<string, number> = {
   'Invite already sent': 400,
 };
 
-export const findGroups = async (req: Request, res: Response) => {
+export const findGroups = async (_req: Request, res: Response) => {
   try {
     const user = res.locals.user as IUser;
     const groups = await groupService.list(user);
@@ -40,6 +40,20 @@ export const getGroup = async (req: Request<{ id: string }>, res: Response) => {
   } catch (error) {
     console.error('Error fetching group:', error);
     return res.status(500).json({ error: 'Failed to fetch group' });
+  }
+};
+
+export const getInviteableFriends = async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const user = res.locals.user as IUser;
+    const friends = await groupService.getInviteableFriends(req.params.id, user);
+    return res.json(friends);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : '';
+    const status = ERROR_STATUS[msg];
+    if (status) return res.status(status).json({ error: msg });
+    console.error('Error fetching inviteable friends:', error);
+    return res.status(500).json({ error: 'Failed to fetch inviteable friends' });
   }
 };
 

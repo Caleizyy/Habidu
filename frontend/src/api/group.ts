@@ -1,4 +1,5 @@
 import { Group } from '@/types/group';
+import { Friend } from '@/types/index';
 
 const API_BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5000/api';
 
@@ -28,6 +29,11 @@ export async function createGroup(name: string): Promise<Group> {
     body: JSON.stringify({ name }),
   });
   return handleResponse<Group>(response);
+}
+
+export async function fetchInviteableFriends(groupId: string): Promise<Friend[]> {
+  const response = await fetch(`${API_BASE_URL}/groups/${groupId}/inviteable-friends`, { credentials: 'include' });
+  return handleResponse<Friend[]>(response);
 }
 
 export async function inviteMember(groupId: string, email: string): Promise<void> {

@@ -4,6 +4,7 @@ import { GroupRequestStatus, PopulatedUser } from '../types';
 import * as groupRepository from '../repositories/groupRepository';
 import * as groupRequestRepository from '../repositories/groupRequestRepository';
 import * as userRepository from '../repositories/userRepository';
+import * as friendService from './friendService';
 
 interface PopulatedGroup {
   _id: Types.ObjectId;
@@ -34,9 +35,13 @@ export async function list(user: IUser) {
 }
 
 export async function getById(id: string) {
-  const group = await groupRepository.findById(id);
+  const [group, pendingRequests] = await Promise.all([
+    groupRepository.findById(id),
+    groupRequestRepository.findPendingByGroup(id),
+  ]);
   if (!group) return null;
-  return mapGroup(group as unknown as PopulatedGroup);
+  const pendingInvites = pendingRequests.map((r) => (r.invitee as unknown as { email: string }).email);
+  return { ...mapGroup(group as unknown as PopulatedGroup), pendingInvites };
 }
 
 export async function create(name: string, user: IUser) {
@@ -57,6 +62,16 @@ export async function create(name: string, user: IUser) {
       },
     ],
   };
+}
+
+export async function getInviteableFriends(groupId: string, user: IUser) {
+  const [friends, group] = await Promise.all([
+    friendService.getFriends(user._id as Types.ObjectId),
+    groupRepository.findById(groupId),
+  ]);
+  if (!group) throw new Error('Group not found');
+  const memberEmails = new Set((group as unknown as PopulatedGroup).members.map((m) => m.email));
+  return friends.filter((f) => !memberEmails.has(f.email));
 }
 
 export async function invite(groupId: string, email: string, inviter: IUser) {

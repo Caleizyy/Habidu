@@ -9,6 +9,7 @@ router.use(requireAuth, requireUser);
 router.get('/', groupController.findGroups);
 router.post('/', validateBody(createGroupSchema), groupController.createGroup);
 router.get('/:id', groupController.getGroup);
+router.get('/:id/inviteable-friends', groupController.getInviteableFriends);
 router.post('/:id/invite', validateBody(inviteMemberSchema), groupController.inviteMember);
 
 export default router;

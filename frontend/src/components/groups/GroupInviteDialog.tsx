@@ -3,8 +3,7 @@ import { UserPlusIcon } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog';
 import { Input } from '@/components/ui/Input';
-import { friendsApi } from '@/api/friends';
-import { inviteMember } from '@/api/group';
+import { fetchInviteableFriends, inviteMember } from '@/api/group';
 import { Group } from '@/types/group';
 import { Friend } from '@/types/index';
 import { GroupInviteItem } from './GroupInviteItem';
@@ -16,6 +15,7 @@ interface Props {
 export function GroupInviteDialog({ group }: Props) {
   const [open, setOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
+  const [pendingEmails, setPendingEmails] = useState<string[]>(group.pendingInvites);
   const [usersLoading, setUsersLoading] = useState(false);
   const [inviting, setInviting] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -25,8 +25,7 @@ export function GroupInviteDialog({ group }: Props) {
     if (!nextOpen) setSearch('');
     if (nextOpen && friends.length === 0) {
       setUsersLoading(true);
-      friendsApi
-        .getFriends()
+      fetchInviteableFriends(group._id)
         .then(setFriends)
         .catch(console.error)
         .finally(() => setUsersLoading(false));
@@ -37,7 +36,7 @@ export function GroupInviteDialog({ group }: Props) {
     setInviting(email);
     try {
       await inviteMember(group._id, email);
-      setFriends((prev) => prev.filter((u) => u.email !== email));
+      setPendingEmails((prev) => [...prev, email]);
     } catch (err) {
       console.error(err);
     } finally {
@@ -45,10 +44,9 @@ export function GroupInviteDialog({ group }: Props) {
     }
   }
 
-  const memberEmails = new Set(group.members.map((m) => m.email));
-  const invitableUsers = friends.filter((friend) => !memberEmails.has(friend.email));
+  const pendingSet = new Set(pendingEmails);
   const query = search.toLowerCase();
-  const visibleUsers = invitableUsers.filter(
+  const visibleUsers = friends.filter(
     (friend) =>
       `${friend.firstName} ${friend.lastName}`.toLowerCase().includes(query) ||
       friend.email.toLowerCase().includes(query)
@@ -68,10 +66,10 @@ export function GroupInviteDialog({ group }: Props) {
         </DialogHeader>
         <Input placeholder="Search by email" value={search} onChange={(e) => setSearch(e.target.value)} />
         {usersLoading && <p>Loading...</p>}
-        {!usersLoading && invitableUsers.length === 0 && (
+        {!usersLoading && friends.length === 0 && (
           <p className="text-muted-foreground text-sm">No friends available to invite.</p>
         )}
-        {!usersLoading && invitableUsers.length > 0 && visibleUsers.length === 0 && (
+        {!usersLoading && friends.length > 0 && visibleUsers.length === 0 && (
           <p className="text-muted-foreground text-sm">No results for &ldquo;{search}&rdquo;.</p>
         )}
         {!usersLoading && visibleUsers.length > 0 && (
@@ -80,6 +78,7 @@ export function GroupInviteDialog({ group }: Props) {
               <GroupInviteItem
                 key={u._id}
                 user={u}
+                isPending={pendingSet.has(u.email)}
                 inviting={inviting === u.email}
                 onInvite={() => handleInvite(u.email)}
               />

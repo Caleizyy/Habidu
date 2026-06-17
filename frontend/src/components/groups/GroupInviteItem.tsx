@@ -5,11 +5,12 @@ import { initials } from '@/utils/initials';
 
 interface Props {
   user: Friend;
+  isPending: boolean;
   inviting: boolean;
   onInvite: () => void;
 }
 
-export function GroupInviteItem({ user, inviting, onInvite }: Props) {
+export function GroupInviteItem({ user, isPending, inviting, onInvite }: Props) {
   const name = `${user.firstName} ${user.lastName}`;
   return (
     <li className="flex items-center justify-between gap-3">
@@ -23,8 +24,8 @@ export function GroupInviteItem({ user, inviting, onInvite }: Props) {
           <p className="text-muted-foreground text-xs">{user.email}</p>
         </div>
       </div>
-      <Button size="sm" variant="outline" disabled={inviting} onClick={onInvite}>
-        {inviting ? 'Adding…' : 'Add'}
+      <Button size="sm" variant="outline" disabled={inviting || isPending} onClick={onInvite}>
+        {inviting ? 'Adding…' : isPending ? 'Pending' : 'Add'}
       </Button>
     </li>
   );
