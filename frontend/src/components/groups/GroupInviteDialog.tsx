@@ -16,7 +16,7 @@ export function GroupInviteDialog({ group }: Props) {
   const [open, setOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
   const [pendingEmails, setPendingEmails] = useState<string[]>(group.pendingInvites);
-  const [usersLoading, setUsersLoading] = useState(false);
+  const [loading, setLoading] = useState(false);
   const [inviting, setInviting] = useState<string | null>(null);
   const [search, setSearch] = useState('');
 
@@ -24,11 +24,11 @@ export function GroupInviteDialog({ group }: Props) {
     setOpen(nextOpen);
     if (!nextOpen) setSearch('');
     if (nextOpen && friends.length === 0) {
-      setUsersLoading(true);
+      setLoading(true);
       fetchInviteableFriends(group._id)
         .then(setFriends)
         .catch(console.error)
-        .finally(() => setUsersLoading(false));
+        .finally(() => setLoading(false));
     }
   }
 
@@ -65,25 +65,27 @@ export function GroupInviteDialog({ group }: Props) {
           <DialogTitle>Invite to {group.name}</DialogTitle>
         </DialogHeader>
         <Input placeholder="Search by email" value={search} onChange={(e) => setSearch(e.target.value)} />
-        {usersLoading && <p>Loading...</p>}
-        {!usersLoading && friends.length === 0 && (
-          <p className="text-muted-foreground text-sm">No friends available to invite.</p>
-        )}
-        {!usersLoading && friends.length > 0 && visibleUsers.length === 0 && (
-          <p className="text-muted-foreground text-sm">No results for &ldquo;{search}&rdquo;.</p>
-        )}
-        {!usersLoading && visibleUsers.length > 0 && (
-          <ul className="flex flex-col gap-2">
-            {visibleUsers.map((u) => (
-              <GroupInviteItem
-                key={u._id}
-                user={u}
-                isPending={pendingSet.has(u.email)}
-                inviting={inviting === u.email}
-                onInvite={() => handleInvite(u.email)}
-              />
-            ))}
-          </ul>
+        {loading && <p>Loading...</p>}
+        {!loading && (
+          <>
+            {friends.length === 0 && <p className="text-muted-foreground text-sm">No friends available to invite.</p>}
+            {friends.length > 0 && visibleUsers.length === 0 && (
+              <p className="text-muted-foreground text-sm">No results for &ldquo;{search}&rdquo;.</p>
+            )}
+            {visibleUsers.length > 0 && (
+              <ul className="flex flex-col gap-2">
+                {visibleUsers.map((f) => (
+                  <GroupInviteItem
+                    key={f._id}
+                    friend={f}
+                    isPending={pendingSet.has(f.email)}
+                    inviting={inviting === f.email}
+                    onInvite={() => handleInvite(f.email)}
+                  />
+                ))}
+              </ul>
+            )}
+          </>
         )}
         <DialogFooter showCloseButton />
       </DialogContent>

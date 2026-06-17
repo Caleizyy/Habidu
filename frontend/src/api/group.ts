@@ -1,50 +1,15 @@
-import { Group } from '@/types/group';
-import { Friend } from '@/types/index';
+import { client } from './client';
+import type { Group } from '@/types/group';
+import type { Friend } from '@/types/index';
 
-const API_BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5000/api';
+export const fetchGroups = () => client.get<Group[]>('/groups').then((r) => r.data);
 
-async function handleResponse<T>(response: Response): Promise<T> {
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || 'Request failed');
-  }
-  return response.json();
-}
+export const fetchGroup = (id: string) => client.get<Group>(`/groups/${id}`).then((r) => r.data);
 
-export async function fetchGroups(): Promise<Group[]> {
-  const response = await fetch(`${API_BASE_URL}/groups`, { credentials: 'include' });
-  return handleResponse<Group[]>(response);
-}
+export const createGroup = (name: string) => client.post<Group>('/groups', { name }).then((r) => r.data);
 
-export async function fetchGroup(id: string): Promise<Group> {
-  const response = await fetch(`${API_BASE_URL}/groups/${id}`, { credentials: 'include' });
-  return handleResponse<Group>(response);
-}
+export const fetchInviteableFriends = (groupId: string) =>
+  client.get<Friend[]>(`/groups/${groupId}/inviteable-friends`).then((r) => r.data);
 
-export async function createGroup(name: string): Promise<Group> {
-  const response = await fetch(`${API_BASE_URL}/groups`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name }),
-  });
-  return handleResponse<Group>(response);
-}
-
-export async function fetchInviteableFriends(groupId: string): Promise<Friend[]> {
-  const response = await fetch(`${API_BASE_URL}/groups/${groupId}/inviteable-friends`, { credentials: 'include' });
-  return handleResponse<Friend[]>(response);
-}
-
-export async function inviteMember(groupId: string, email: string): Promise<void> {
-  const response = await fetch(`${API_BASE_URL}/groups/${groupId}/invite`, {
-    method: 'POST',
-    credentials: 'include',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ email }),
-  });
-  if (!response.ok) {
-    const error = await response.json().catch(() => ({}));
-    throw new Error(error.error || 'Request failed');
-  }
-}
+export const inviteMember = (groupId: string, email: string) =>
+  client.post(`/groups/${groupId}/invite`, { email }).then((r) => r.data);

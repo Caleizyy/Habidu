@@ -16,7 +16,7 @@ const GroupRequestSchema = new Schema<IGroupRequest>(
     status: {
       type: String,
       enum: Object.values(GroupRequestStatus),
-      default: GroupRequestStatus.Pending,
+      required: true,
     },
   },
   { timestamps: true }

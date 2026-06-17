@@ -13,7 +13,7 @@ export function GroupDetailPage() {
   const { user } = useAuth();
 
   const [group, setGroup] = useState<Group | null>(null);
-  const [isLoading, setIsLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export function GroupDetailPage() {
     fetchGroup(id)
       .then(setGroup)
       .catch((err) => setError(err.message))
-      .finally(() => setIsLoading(false));
+      .finally(() => setLoading(false));
   }, [id]);
 
   const isOwner = user?.sub === group?.owner;
@@ -32,9 +32,9 @@ export function GroupDetailPage() {
       actions={isOwner && group ? <GroupInviteDialog group={group} /> : undefined}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-4">
-        {isLoading && <p>Loading...</p>}
+        {loading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
-        {!isLoading && !error && group && (
+        {!loading && !error && group && (
           <>
             <h2 className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">Members</h2>
             <ul className="flex flex-col gap-3">

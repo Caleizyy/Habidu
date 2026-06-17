@@ -31,17 +31,14 @@ export function GroupCreateDialog({ onCreated }: Props) {
   }
 
   async function handleCreate() {
-    if (!groupName.trim()) {
+    const name = groupName.trim();
+    if (!name) {
       setNameError('Group name is required.');
-      return;
-    }
-    if (groupName.trim().length > 60) {
-      setNameError('Group name must be 60 characters or fewer.');
       return;
     }
     setSubmitting(true);
     try {
-      const group = await createGroup(groupName.trim());
+      const group = await createGroup(name);
       handleOpenChange(false);
       onCreated(group);
     } catch (err) {
