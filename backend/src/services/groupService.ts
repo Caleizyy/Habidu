@@ -18,8 +18,10 @@ function mapGroup(group: PopulatedGroup) {
     name: group.name,
     owner: group.owner.sub,
     members: group.members.map((m) => ({
+      _id: m._id,
       sub: m.sub,
-      name: `${m.firstName} ${m.lastName}`,
+      firstName: m.firstName,
+      lastName: m.lastName,
       email: m.email,
       avatar: m.avatar,
     })),
@@ -44,11 +46,20 @@ export async function create(name: string, user: IUser) {
     _id: group._id,
     name: group.name,
     owner: user.sub,
-    members: [{ sub: user.sub, name: `${user.firstName} ${user.lastName}`, email: user.email, avatar: user.avatar }],
+    members: [
+      {
+        _id: user._id,
+        sub: user.sub,
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        avatar: user.avatar,
+      },
+    ],
   };
 }
 
-export async function invite(groupId: string, inviteeSub: string, inviter: IUser) {
+export async function invite(groupId: string, email: string, inviter: IUser) {
   const group = await groupRepository.findById(groupId);
   if (!group) throw new Error('Group not found');
 
@@ -57,7 +68,7 @@ export async function invite(groupId: string, inviteeSub: string, inviter: IUser
     throw new Error('Only the group owner can invite members');
   }
 
-  const invitee = await userRepository.getBySub(inviteeSub);
+  const invitee = await userRepository.getByEmail(email);
   if (!invitee) throw new Error('User not found');
 
   const inviteeId = invitee._id as Types.ObjectId;

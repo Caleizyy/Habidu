@@ -38,23 +38,26 @@ export function GroupDetailPage() {
           <>
             <h2 className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">Members</h2>
             <ul className="flex flex-col gap-3">
-              {group.members.map((member) => (
-                <li key={member.sub} className="flex items-center gap-3">
-                  <Avatar>
-                    <AvatarImage src={member.avatar} alt={member.name} />
-                    <AvatarFallback>{initials(member.name)}</AvatarFallback>
-                  </Avatar>
-                  <div>
-                    <p className="text-sm font-medium">
-                      {member.name}
-                      {member.sub === group.owner && (
-                        <span className="text-muted-foreground ml-1.5 text-xs">(owner)</span>
-                      )}
-                    </p>
-                    <p className="text-muted-foreground text-xs">{member.email}</p>
-                  </div>
-                </li>
-              ))}
+              {group.members.map((member) => {
+                const name = `${member.firstName} ${member.lastName}`;
+                return (
+                  <li key={member.sub} className="flex items-center gap-3">
+                    <Avatar>
+                      <AvatarImage src={member.avatar} alt={name} />
+                      <AvatarFallback>{initials(name)}</AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <p className="text-sm font-medium">
+                        {name}
+                        {member.sub === group.owner && (
+                          <span className="text-muted-foreground ml-1.5 text-xs">(owner)</span>
+                        )}
+                      </p>
+                      <p className="text-muted-foreground text-xs">{member.email}</p>
+                    </div>
+                  </li>
+                );
+              })}
             </ul>
           </>
         )}

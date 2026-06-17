@@ -6,7 +6,7 @@ import { Input } from '@/components/ui/Input';
 import { friendsApi } from '@/api/friends';
 import { inviteMember } from '@/api/group';
 import { Group } from '@/types/group';
-import { User } from '@/types/index';
+import { Friend } from '@/types/index';
 import { GroupInviteItem } from './GroupInviteItem';
 
 interface Props {
@@ -15,7 +15,7 @@ interface Props {
 
 export function GroupInviteDialog({ group }: Props) {
   const [open, setOpen] = useState(false);
-  const [allUsers, setAllUsers] = useState<User[]>([]);
+  const [friends, setFriends] = useState<Friend[]>([]);
   const [usersLoading, setUsersLoading] = useState(false);
   const [inviting, setInviting] = useState<string | null>(null);
   const [search, setSearch] = useState('');
@@ -23,21 +23,21 @@ export function GroupInviteDialog({ group }: Props) {
   function handleOpenChange(nextOpen: boolean) {
     setOpen(nextOpen);
     if (!nextOpen) setSearch('');
-    if (nextOpen && allUsers.length === 0) {
+    if (nextOpen && friends.length === 0) {
       setUsersLoading(true);
       friendsApi
         .getFriends()
-        .then(setAllUsers)
+        .then(setFriends)
         .catch(console.error)
         .finally(() => setUsersLoading(false));
     }
   }
 
-  async function handleInvite(sub: string) {
-    setInviting(sub);
+  async function handleInvite(email: string) {
+    setInviting(email);
     try {
-      await inviteMember(group._id, sub);
-      setAllUsers((prev) => prev.filter((u) => u.sub !== sub));
+      await inviteMember(group._id, email);
+      setFriends((prev) => prev.filter((u) => u.email !== email));
     } catch (err) {
       console.error(err);
     } finally {
@@ -45,11 +45,13 @@ export function GroupInviteDialog({ group }: Props) {
     }
   }
 
-  const memberSubs = new Set(group.members.map((m) => m.sub));
-  const invitableUsers = allUsers.filter((u) => !memberSubs.has(u.sub));
-  const q = search.toLowerCase();
+  const memberEmails = new Set(group.members.map((m) => m.email));
+  const invitableUsers = friends.filter((friend) => !memberEmails.has(friend.email));
+  const query = search.toLowerCase();
   const visibleUsers = invitableUsers.filter(
-    (u) => u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+    (friend) =>
+      `${friend.firstName} ${friend.lastName}`.toLowerCase().includes(query) ||
+      friend.email.toLowerCase().includes(query)
   );
 
   return (
@@ -64,7 +66,7 @@ export function GroupInviteDialog({ group }: Props) {
         <DialogHeader>
           <DialogTitle>Invite to {group.name}</DialogTitle>
         </DialogHeader>
-        <Input placeholder="Search by name or email" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Input placeholder="Search by email" value={search} onChange={(e) => setSearch(e.target.value)} />
         {usersLoading && <p>Loading...</p>}
         {!usersLoading && invitableUsers.length === 0 && (
           <p className="text-muted-foreground text-sm">No friends available to invite.</p>
@@ -76,10 +78,10 @@ export function GroupInviteDialog({ group }: Props) {
           <ul className="flex flex-col gap-2">
             {visibleUsers.map((u) => (
               <GroupInviteItem
-                key={u.sub}
+                key={u._id}
                 user={u}
-                inviting={inviting === u.sub}
-                onInvite={() => handleInvite(u.sub)}
+                inviting={inviting === u.email}
+                onInvite={() => handleInvite(u.email)}
               />
             ))}
           </ul>

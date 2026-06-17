@@ -46,7 +46,7 @@ export const getGroup = async (req: Request<{ id: string }>, res: Response) => {
 export const inviteMember = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const user = res.locals.user as IUser;
-    await groupService.invite(req.params.id, req.body.sub, user);
+    await groupService.invite(req.params.id, req.body.email, user);
     return res.status(201).json({ message: 'Invite sent' });
   } catch (error) {
     const msg = error instanceof Error ? error.message : '';
