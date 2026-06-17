@@ -29,6 +29,7 @@ export function GroupDetailPage() {
   return (
     <PageLayout
       title={group?.name ?? 'Group'}
+      back="/groups"
       actions={isOwner && group ? <GroupInviteDialog group={group} /> : undefined}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-4">
