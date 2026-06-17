@@ -61,6 +61,18 @@ export function LogRow({
   }, []);
 
   React.useEffect(() => {
+    const handleScroll = () => {
+      setShowBadge(false);
+      if (hoverTimerRef.current) {
+        clearTimeout(hoverTimerRef.current);
+        hoverTimerRef.current = null;
+      }
+    };
+    window.addEventListener('scroll', handleScroll, { capture: true, passive: true });
+    return () => window.removeEventListener('scroll', handleScroll, { capture: true });
+  }, []);
+
+  React.useEffect(() => {
     // Only reset draft if value changed externally (e.g., via undo)
     if (value !== prevValueRef.current) {
       setDraft(String(value));
@@ -85,7 +97,7 @@ export function LogRow({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Status circle - with Pop Up on hover */}
+      {/* Status circle */}
       <div
         ref={circleRef}
         className={`flex shrink-0 items-center justify-center rounded-full transition-all ${
