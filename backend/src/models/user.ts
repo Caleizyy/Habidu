@@ -4,6 +4,7 @@ import { UserRole } from '../types/index';
 export interface IUser extends Document {
   firstName: string;
   lastName: string;
+  name: string;
   email: string;
   sub: string;
   role: UserRole;
@@ -19,7 +20,11 @@ const UserSchema = new Schema<IUser>(
     role: { type: String, enum: Object.values(UserRole), required: true },
     avatar: { type: String, required: false },
   },
-  { timestamps: true }
+  { timestamps: true, toJSON: { virtuals: true } }
 );
+
+UserSchema.virtual('name').get(function () {
+  return `${this.firstName} ${this.lastName}`;
+});
 
 export const User = model<IUser>('User', UserSchema);

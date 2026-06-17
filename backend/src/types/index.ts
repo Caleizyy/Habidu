@@ -91,3 +91,22 @@ export interface User {
   email: string;
   avatar?: string;
 }
+
+export enum GroupRequestStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Rejected = 'rejected',
+}
+
+export interface CreateGroupBody {
+  name: string;
+  owner: Types.ObjectId;
+  members: Types.ObjectId[];
+}
+
+export interface CreateGroupRequestData {
+  group: Types.ObjectId;
+  inviter: Types.ObjectId;
+  invitee: Types.ObjectId;
+  status: GroupRequestStatus;
+}

@@ -30,12 +30,15 @@ export async function createGroup(name: string): Promise<Group> {
   return handleResponse<Group>(response);
 }
 
-export async function inviteMember(groupId: string, sub: string): Promise<Group> {
+export async function inviteMember(groupId: string, sub: string): Promise<void> {
   const response = await fetch(`${API_BASE_URL}/groups/${groupId}/invite`, {
     method: 'POST',
     credentials: 'include',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ sub }),
   });
-  return handleResponse<Group>(response);
+  if (!response.ok) {
+    const error = await response.json().catch(() => ({}));
+    throw new Error(error.error || 'Request failed');
+  }
 }

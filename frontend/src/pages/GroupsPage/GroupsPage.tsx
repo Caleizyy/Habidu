@@ -1,13 +1,9 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { PlusIcon } from 'lucide-react';
 import { PageLayout } from '@/components/layout/PageLayout';
-import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
-import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog';
-import { Input } from '@/components/ui/Input';
-import { Label } from '@/components/ui/Label';
-import { fetchGroups, createGroup } from '@/api/group';
+import { GroupCreateDialog } from '@/components/groups/GroupCreateDialog';
+import { fetchGroups } from '@/api/group';
 import { Group } from '@/types/group';
 
 export function GroupsPage() {
@@ -16,11 +12,6 @@ export function GroupsPage() {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  const [dialogOpen, setDialogOpen] = useState(false);
-  const [groupName, setGroupName] = useState('');
-  const [nameError, setNameError] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-
   useEffect(() => {
     fetchGroups()
       .then(setGroups)
@@ -28,72 +19,8 @@ export function GroupsPage() {
       .finally(() => setIsLoading(false));
   }, []);
 
-  function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
-    setGroupName(e.target.value);
-    if (nameError) setNameError('');
-  }
-
-  async function handleCreate() {
-    if (!groupName.trim()) {
-      setNameError('Group name is required.');
-      return;
-    }
-    setSubmitting(true);
-    try {
-      const group = await createGroup(groupName.trim());
-      setDialogOpen(false);
-      setGroupName('');
-      navigate(`/groups/${group._id}`);
-    } catch (err) {
-      setNameError(err instanceof Error ? err.message : 'Failed to create group.');
-    } finally {
-      setSubmitting(false);
-    }
-  }
-
-  function handleDialogOpenChange(open: boolean) {
-    setDialogOpen(open);
-    if (!open) {
-      setGroupName('');
-      setNameError('');
-    }
-  }
-
   return (
-    <PageLayout
-      title="Groups"
-      actions={
-        <Dialog open={dialogOpen} onOpenChange={handleDialogOpenChange}>
-          <DialogTrigger asChild>
-            <Button>
-              <PlusIcon />
-              Create group
-            </Button>
-          </DialogTrigger>
-          <DialogContent>
-            <DialogHeader>
-              <DialogTitle>Create group</DialogTitle>
-            </DialogHeader>
-            <div className="flex flex-col gap-1.5">
-              <Label htmlFor="group-name">Group name</Label>
-              <Input
-                id="group-name"
-                placeholder="My awesome group"
-                value={groupName}
-                onChange={handleNameChange}
-                aria-invalid={!!nameError}
-              />
-              {nameError && <p className="text-destructive text-sm">{nameError}</p>}
-            </div>
-            <DialogFooter>
-              <Button onClick={handleCreate} disabled={submitting}>
-                {submitting ? 'Creating…' : 'Create'}
-              </Button>
-            </DialogFooter>
-          </DialogContent>
-        </Dialog>
-      }
-    >
+    <PageLayout title="Groups" actions={<GroupCreateDialog onCreated={(group) => navigate(`/groups/${group._id}`)} />}>
       <div className="flex min-h-0 flex-1 flex-col gap-4">
         {isLoading && <p>Loading...</p>}
         {error && <p className="text-red-500">{error}</p>}
