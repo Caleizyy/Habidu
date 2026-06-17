@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 import { IUser } from '../models/user';
-import { GroupRequestStatus } from '../types';
+import { GroupRequestStatus, PopulatedUser } from '../types';
 import * as groupRepository from '../repositories/groupRepository';
 import * as groupRequestRepository from '../repositories/groupRequestRepository';
 import * as userRepository from '../repositories/userRepository';
@@ -8,8 +8,8 @@ import * as userRepository from '../repositories/userRepository';
 interface PopulatedGroup {
   _id: Types.ObjectId;
   name: string;
-  owner: IUser;
-  members: IUser[];
+  owner: PopulatedUser;
+  members: PopulatedUser[];
 }
 
 function mapGroup(group: PopulatedGroup) {
@@ -17,7 +17,12 @@ function mapGroup(group: PopulatedGroup) {
     _id: group._id,
     name: group.name,
     owner: group.owner.sub,
-    members: group.members.map((m) => ({ sub: m.sub, name: m.name, email: m.email, avatar: m.avatar })),
+    members: group.members.map((m) => ({
+      sub: m.sub,
+      name: `${m.firstName} ${m.lastName}`,
+      email: m.email,
+      avatar: m.avatar,
+    })),
   };
 }
 
@@ -39,7 +44,7 @@ export async function create(name: string, user: IUser) {
     _id: group._id,
     name: group.name,
     owner: user.sub,
-    members: [{ sub: user.sub, name: user.name, email: user.email, avatar: user.avatar }],
+    members: [{ sub: user.sub, name: `${user.firstName} ${user.lastName}`, email: user.email, avatar: user.avatar }],
   };
 }
 

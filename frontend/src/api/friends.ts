@@ -1,8 +1,8 @@
 import { client } from './client';
-import type { User } from '../types/index';
+import type { User, Friend } from '../types/index';
 
 export const friendsApi = {
-  getFriends: () => client.get<User[]>('/friends').then((r) => r.data),
+  getFriends: () => client.get<Friend[]>('/friends').then((r) => r.data),
   getRequestSearch: (query: string) =>
     client
       .get<User[]>(`/user/search?email=${encodeURIComponent(query)}`, { withCredentials: true })

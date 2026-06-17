@@ -29,3 +29,28 @@ export async function findAllPending(userId: Types.ObjectId) {
     status: FriendRequestStatus.Pending,
   });
 }
+
+export async function findRequests(userId: Types.ObjectId) {
+  return Friend.find({
+    recipientId: userId,
+    status: FriendRequestStatus.Pending,
+  })
+    .populate('requesterId', 'firstName lastName email avatar')
+    .populate('recipientId', 'firstName lastName email avatar');
+}
+
+export async function acceptRequest(requestId: Types.ObjectId) {
+  return Friend.findByIdAndUpdate(requestId, { $set: { status: FriendRequestStatus.Accepted } });
+}
+
+export async function declineRequest(requestId: Types.ObjectId) {
+  return Friend.findByIdAndUpdate(requestId, { $set: { status: FriendRequestStatus.Rejected } });
+}
+
+export async function removeFriend(requestId: Types.ObjectId) {
+  return Friend.findByIdAndDelete(requestId);
+}
+
+export async function findById(requestId: Types.ObjectId) {
+  return Friend.findById(requestId);
+}

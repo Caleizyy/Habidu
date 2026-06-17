@@ -110,3 +110,12 @@ export interface CreateGroupRequestData {
   invitee: Types.ObjectId;
   status: GroupRequestStatus;
 }
+
+export interface PopulatedUser {
+  _id: Types.ObjectId;
+  sub: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  avatar?: string;
+}
