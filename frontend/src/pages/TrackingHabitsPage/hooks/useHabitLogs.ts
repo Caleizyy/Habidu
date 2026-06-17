@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { monthKey, getTodayDate } from '@/utils/dateHelpers';
-import { calculateStreaks, calculateSectionStreaks } from '@/utils/streakHelpers';
+import { calculateStreaks } from '@/utils/habitStreakHelpers';
+import { calculateSectionStreaks } from '@/utils/sectionStreakHelpers';
 import { HabitFrequency } from '@/types/habit';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 import { useHabitsQuery } from './useHabitsQuery';
