@@ -23,9 +23,6 @@ export function FriendsPage() {
   return (
     <PageLayout title="Friends">
       <div className="flex h-screen flex-1 flex-col">
-        <div className="flex flex-row items-center justify-between">
-          <h1 className="mt-12 ml-12 flex justify-start text-6xl text-black">Friends</h1>
-        </div>
         <div className="mt-12 mr-12 ml-12 flex min-w-0 gap-8">
           {isLoading && <p className="flex justify-center truncate text-sm">Loading...</p>}
           {error && <p className="text-red-500">{error}</p>}
