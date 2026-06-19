@@ -2,7 +2,7 @@ import { Habit, HabitLog, HabitFrequency } from '@/types/habit';
 import { getTodayDate } from './dateHelpers';
 import { getPeriodKey, getCurrentPeriod, getMaxIterations } from './periodHelpers';
 import { computeStreakData } from './streakCalculator';
-import { StreakData } from '../types/streak';
+import { StreakData } from '@/types/streak';
 
 export type { StreakData };
 

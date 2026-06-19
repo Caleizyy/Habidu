@@ -1,6 +1,6 @@
 import { HabitFrequency } from '@/types/habit';
 import { getNextPeriod, getPreviousPeriod } from './periodHelpers';
-import { StreakData } from '../types/streak';
+import { StreakData } from '@/types/streak';
 
 export function computeStreakData(
   periods: string[],
