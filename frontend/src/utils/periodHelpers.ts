@@ -66,6 +66,9 @@ export function getPreviousPeriod(period: string, frequency: HabitFrequency): st
   return `${prevYear}-${String(prevMonth).padStart(2, '0')}`;
 }
 
+// TODO: Now the range is one year. The Streak caclutaion and fetching should be redone.
+// Now - A personal best older than 1 year won't appear.
+// So streaks and personal best should be stored to some extent.
 export function getMaxIterations(frequency: HabitFrequency): number {
   if (frequency === HabitFrequency.Daily) return 365;
   if (frequency === HabitFrequency.Weekly) return 52;
