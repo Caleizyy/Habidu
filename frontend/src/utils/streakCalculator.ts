@@ -15,10 +15,16 @@ export function computeStreakData(
 
   const earliestPeriod = periods[0];
 
-  // Current streak - scan backwards from today
+  // Current streak - scan backwards, skip incomplete current period
   let currentStreak = 0;
   let checkPeriod = currentPeriod;
 
+  // Skip current period if incomplete
+  if (!isComplete(checkPeriod)) {
+    checkPeriod = getPreviousPeriod(checkPeriod, frequency);
+  }
+
+  // Now count consecutive completed periods
   for (let i = 0; i < maxIterations; i++) {
     if (isComplete(checkPeriod)) {
       currentStreak++;
