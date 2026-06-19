@@ -6,7 +6,7 @@ export interface User {
   lastName: string;
   avatar?: string;
   bio?: string;
-  name?: string;
+  name: string;
 }
 export interface AuthContextType {
   user: User | null;

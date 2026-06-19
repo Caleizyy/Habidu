@@ -71,6 +71,10 @@ export function ProfilePage() {
     setIsEditing(false);
   };
 
+  if (!user) {
+    setError('Failed to load user');
+    return <div>Failed to load user</div>;
+  }
   return (
     <PageLayout title="Profile">
       <div className="flex flex-1 flex-col items-center px-6 py-12">
@@ -81,8 +85,8 @@ export function ProfilePage() {
             isEditing={isEditing}
             isLoading={isLoading}
             error={error}
-            name={user?.name ?? ''}
-            email={user?.email ?? ''}
+            name={user.name}
+            email={user.email}
             bio={bio ?? ''}
             displayName={displayName}
             onDisplayNameChange={setDisplayName}
