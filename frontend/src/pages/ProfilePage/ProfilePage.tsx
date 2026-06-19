@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { useNavigate } from 'react-router-dom';
 import { profileApi } from '@/api/profile';
 import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileDetails } from '@/components/profile/ProfileDetails';
@@ -9,20 +8,12 @@ import { PageLayout } from '@/components/layout/PageLayout';
 
 export function ProfilePage() {
   const { user, isAuthenticated, refreshUser } = useAuth();
-  const navigate = useNavigate();
   const [isEditing, setIsEditing] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [bio, setBio] = useState(user?.bio ?? '');
-  const [displayName, setDisplayName] = useState(user?.name ?? '');
+  const [displayName, setDisplayName] = useState(`${user?.firstName} ${user?.lastName}`);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
-
-  useEffect(() => {
-    if (!isAuthenticated) {
-      const timeout = setTimeout(() => navigate('/login'), 0);
-      return () => clearTimeout(timeout);
-    }
-  }, [isAuthenticated, navigate]);
 
   useEffect(() => {
     if (user) return;
@@ -74,7 +65,7 @@ export function ProfilePage() {
   };
 
   const handleCancel = () => {
-    setDisplayName(user?.name ?? '');
+    setDisplayName(`${user?.firstName} ${user?.lastName}`);
     setBio(user?.bio ?? '');
     setError(null);
     setIsEditing(false);
@@ -92,7 +83,7 @@ export function ProfilePage() {
             error={error}
             name={user?.name ?? ''}
             email={user?.email ?? ''}
-            bio={bio}
+            bio={bio ?? ''}
             displayName={displayName}
             onDisplayNameChange={setDisplayName}
             onBioChange={setBio}

@@ -68,9 +68,9 @@ export const updateProfile = async (req: Request, res: Response) => {
       bio: string;
     }> = {};
 
-    if (bio !== undefined) {
-      updateData.bio = bio;
-    }
+    updateData.firstName = firstName;
+    updateData.lastName = lastName;
+    if (bio !== undefined) updateData.bio = bio;
 
     const updated = await User.findOneAndUpdate(
       { sub: session.sub },

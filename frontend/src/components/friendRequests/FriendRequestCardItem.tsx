@@ -33,7 +33,9 @@ export default function FriendRequestItemCard({ friend }: { friend: User }) {
           </Avatar>
           <div className="mx-6 flex w-[40vh] min-w-0 flex-col gap-2 py-2">
             <Card className="flex items-center justify-center bg-gray-300 p-1">
-              <p className="truncate text-lg">{friend.name}</p>
+              <p className="truncate text-lg">
+                {friend.firstName} {friend.lastName}
+              </p>
             </Card>
             <Card className="flex items-center justify-center bg-gray-100 p-1">
               <p className="truncate text-lg">{friend.email}</p>

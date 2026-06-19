@@ -48,7 +48,7 @@ export function ProfileDetails({
         {/* Name field */}
         <div className="space-y-1">
           <Label htmlFor="name" className="text-muted-foreground flex items-center gap-2">
-            <User className="h-[20vh] w-[20vw]" /> Display Name
+            <User className="h-[10vh] w-[4vw]" />
           </Label>
           {isEditing ? (
             <div className="relative">
@@ -64,7 +64,7 @@ export function ProfileDetails({
               )}
             </div>
           ) : (
-            <p className="text-sm font-medium">{name ?? '—'}</p>
+            <p className="text-sm font-medium">{name}</p>
           )}
         </div>
 
@@ -73,7 +73,7 @@ export function ProfileDetails({
         {/* Email field (read-only) */}
         <div className="space-y-1">
           <Label className="text-muted-foreground flex items-center gap-2">
-            <Mail className="h-4 w-4" /> Email
+            <Mail className="h-[2vh] w-[1vw]" /> Email
           </Label>
           <p className="text-sm font-medium">{email ?? '—'}</p>
           <p className="text-muted-foreground text-xs">Email is managed by Google and cannot be changed here.</p>
