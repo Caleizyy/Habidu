@@ -119,3 +119,10 @@ export interface PopulatedUser {
   email: string;
   avatar?: string;
 }
+
+export interface PopulatedGroup {
+  _id: Types.ObjectId;
+  name: string;
+  owner: PopulatedUser;
+  members: PopulatedUser[];
+}

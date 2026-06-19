@@ -1,7 +1,7 @@
 import { Request, Response } from 'express';
 import { Types } from 'mongoose';
 import * as friendService from '../services/friendService';
-import * as authService from '../services/authService';
+import { IUser } from '../models/user';
 import { CreateFriendRequestBody } from '../types';
 
 export const sendFriendRequest = async (req: Request<unknown, unknown, CreateFriendRequestBody>, res: Response) => {
@@ -11,10 +11,7 @@ export const sendFriendRequest = async (req: Request<unknown, unknown, CreateFri
       return res.status(400).json({ error: 'Recipient email is required' });
     }
 
-    const requester = await authService.getBySub(res.locals.sub);
-    if (!requester) {
-      return res.status(401).json({ error: 'User not found' });
-    }
+    const requester = res.locals.user as IUser;
     await friendService.sendRequest(requester._id, recipientEmail);
     return res.status(201).json({ message: 'Friend request sent successfully' });
   } catch (error) {
@@ -25,13 +22,8 @@ export const sendFriendRequest = async (req: Request<unknown, unknown, CreateFri
 
 export const getFriends = async (req: Request, res: Response) => {
   try {
-    const user = await authService.getBySub(res.locals.sub);
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
-
+    const user = res.locals.user as IUser;
     const friends = await friendService.getFriends(user._id);
-
     return res.status(200).json(friends);
   } catch (error) {
     console.error('Error fetching friends:', error);
@@ -41,10 +33,7 @@ export const getFriends = async (req: Request, res: Response) => {
 
 export const findRequests = async (req: Request, res: Response) => {
   try {
-    const user = await authService.getBySub(res.locals.sub);
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
+    const user = res.locals.user as IUser;
     const requests = await friendService.findRequest(user._id);
     return res.status(200).json(requests);
   } catch (error) {
@@ -55,10 +44,7 @@ export const findRequests = async (req: Request, res: Response) => {
 
 export const acceptRequest = async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const user = await authService.getBySub(res.locals.sub);
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
+    const user = res.locals.user as IUser;
     console.log('Accepting request:', req.params.id);
     const accept = await friendService.acceptRequest(new Types.ObjectId(req.params.id), user._id);
     return res.status(200).json(accept);
@@ -70,10 +56,7 @@ export const acceptRequest = async (req: Request<{ id: string }>, res: Response)
 
 export const declineRequest = async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const user = await authService.getBySub(res.locals.sub);
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
+    const user = res.locals.user as IUser;
     const decline = await friendService.declineRequest(new Types.ObjectId(req.params.id), user._id);
     return res.status(200).json(decline);
   } catch (error) {
@@ -84,10 +67,7 @@ export const declineRequest = async (req: Request<{ id: string }>, res: Response
 
 export const removeFriend = async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const user = await authService.getBySub(res.locals.sub);
-    if (!user) {
-      return res.status(401).json({ error: 'User not found' });
-    }
+    const user = res.locals.user as IUser;
     const remove = await friendService.removeFriend(new Types.ObjectId(req.params.id), user._id);
     return res.status(200).json(remove);
   } catch (error) {

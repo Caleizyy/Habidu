@@ -7,6 +7,7 @@ import { fetchGroup } from '@/api/group';
 import { Group } from '@/types/group';
 import { useAuth } from '@/context/AuthContext';
 import { initials } from '@/utils/initials';
+import { errorMessage } from '@/utils/errorMessage';
 
 export function GroupDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -20,7 +21,7 @@ export function GroupDetailPage() {
     if (!id) return;
     fetchGroup(id)
       .then(setGroup)
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(errorMessage(err, 'Failed to load group.')))
       .finally(() => setLoading(false));
   }, [id]);
 
@@ -30,6 +31,7 @@ export function GroupDetailPage() {
     <PageLayout
       title={group?.name ?? 'Group'}
       back="/groups"
+      backLabel="Back to groups"
       actions={isOwner && group ? <GroupInviteDialog group={group} /> : undefined}
     >
       <div className="flex min-h-0 flex-1 flex-col gap-4">

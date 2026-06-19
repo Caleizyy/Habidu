@@ -7,6 +7,7 @@ import { fetchInviteableFriends, inviteMember } from '@/api/group';
 import { Group } from '@/types/group';
 import { Friend } from '@/types/index';
 import { GroupInviteItem } from './GroupInviteItem';
+import { errorMessage } from '@/utils/errorMessage';
 
 interface Props {
   group: Group;
@@ -15,36 +16,42 @@ interface Props {
 export function GroupInviteDialog({ group }: Props) {
   const [open, setOpen] = useState(false);
   const [friends, setFriends] = useState<Friend[]>([]);
-  const [pendingEmails, setPendingEmails] = useState<string[]>(group.pendingInvites);
   const [loading, setLoading] = useState(false);
+  const [fetchError, setFetchError] = useState('');
   const [inviting, setInviting] = useState<string | null>(null);
+  const [inviteError, setInviteError] = useState('');
   const [search, setSearch] = useState('');
 
   function handleOpenChange(nextOpen: boolean) {
     setOpen(nextOpen);
-    if (!nextOpen) setSearch('');
-    if (nextOpen && friends.length === 0) {
+    if (!nextOpen) {
+      setSearch('');
+      setInviteError('');
+      setFriends([]);
+      setFetchError('');
+    }
+    if (nextOpen) {
       setLoading(true);
       fetchInviteableFriends(group._id)
         .then(setFriends)
-        .catch(console.error)
+        .catch((err) => setFetchError(errorMessage(err, 'Failed to load friends.')))
         .finally(() => setLoading(false));
     }
   }
 
   async function handleInvite(email: string) {
     setInviting(email);
+    setInviteError('');
     try {
       await inviteMember(group._id, email);
-      setPendingEmails((prev) => [...prev, email]);
+      setFriends((prev) => prev.filter((f) => f.email !== email));
     } catch (err) {
-      console.error(err);
+      setInviteError(errorMessage(err, 'Failed to send invite.'));
     } finally {
       setInviting(null);
     }
   }
 
-  const pendingSet = new Set(pendingEmails);
   const query = search.toLowerCase();
   const visibleUsers = friends.filter(
     (friend) =>
@@ -64,9 +71,10 @@ export function GroupInviteDialog({ group }: Props) {
         <DialogHeader>
           <DialogTitle>Invite to {group.name}</DialogTitle>
         </DialogHeader>
-        <Input placeholder="Search by email" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <Input placeholder="Search by name or email" value={search} onChange={(e) => setSearch(e.target.value)} />
         {loading && <p>Loading...</p>}
-        {!loading && (
+        {fetchError && <p className="text-destructive text-sm">{fetchError}</p>}
+        {!loading && !fetchError && (
           <>
             {friends.length === 0 && <p className="text-muted-foreground text-sm">No friends available to invite.</p>}
             {friends.length > 0 && visibleUsers.length === 0 && (
@@ -78,7 +86,6 @@ export function GroupInviteDialog({ group }: Props) {
                   <GroupInviteItem
                     key={f._id}
                     friend={f}
-                    isPending={pendingSet.has(f.email)}
                     inviting={inviting === f.email}
                     onInvite={() => handleInvite(f.email)}
                   />
@@ -87,6 +94,7 @@ export function GroupInviteDialog({ group }: Props) {
             )}
           </>
         )}
+        {inviteError && <p className="text-destructive text-sm">{inviteError}</p>}
         <DialogFooter showCloseButton />
       </DialogContent>
     </Dialog>

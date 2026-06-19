@@ -6,11 +6,13 @@ export function PageLayout({
   children,
   actions,
   back,
+  backLabel = 'Go back',
 }: {
   title: string;
   children: React.ReactNode;
   actions?: React.ReactNode;
   back?: string;
+  backLabel?: string;
 }) {
   return (
     <div className="flex flex-1 flex-col px-12 pt-12">
@@ -20,7 +22,11 @@ export function PageLayout({
             <div className="mb-4 flex items-center justify-between gap-4">
               <div className="flex items-center gap-3">
                 {back && (
-                  <Link to={back} className="text-muted-foreground hover:text-foreground transition-colors">
+                  <Link
+                    to={back}
+                    aria-label={backLabel}
+                    className="text-muted-foreground hover:text-foreground transition-colors"
+                  >
                     <ArrowLeftIcon size={20} />
                   </Link>
                 )}

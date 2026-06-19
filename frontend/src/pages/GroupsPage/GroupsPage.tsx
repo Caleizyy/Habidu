@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { GroupCreateDialog } from '@/components/groups/GroupCreateDialog';
 import { fetchGroups } from '@/api/group';
 import { Group } from '@/types/group';
+import { errorMessage } from '@/utils/errorMessage';
 
 export function GroupsPage() {
   const navigate = useNavigate();
@@ -15,7 +16,7 @@ export function GroupsPage() {
   useEffect(() => {
     fetchGroups()
       .then(setGroups)
-      .catch((err) => setError(err.message))
+      .catch((err) => setError(errorMessage(err, 'Failed to load groups.')))
       .finally(() => setLoading(false));
   }, []);
 
@@ -30,7 +31,7 @@ export function GroupsPage() {
         {!loading && !error && groups.length > 0 && (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {groups.map((group) => (
-              <button key={group._id} className="text-left" onClick={() => navigate(`/groups/${group._id}`)}>
+              <Link key={group._id} to={`/groups/${group._id}`} aria-label={`Open group ${group.name}`}>
                 <Card className="hover:ring-primary/40 cursor-pointer transition-shadow">
                   <CardHeader>
                     <CardTitle>{group.name}</CardTitle>
@@ -41,7 +42,7 @@ export function GroupsPage() {
                     </p>
                   </CardContent>
                 </Card>
-              </button>
+              </Link>
             ))}
           </div>
         )}

@@ -4,8 +4,10 @@ import * as groupService from '../services/groupService';
 
 const ERROR_STATUS: Record<string, number> = {
   'Only the group owner can invite members': 403,
+  'Not a group member': 403,
   'Group not found': 404,
   'User not found': 404,
+  'Invitee is not a friend': 403,
   'User is already a member': 400,
   'Invite already sent': 400,
 };
@@ -34,10 +36,14 @@ export const createGroup = async (req: Request, res: Response) => {
 
 export const getGroup = async (req: Request<{ id: string }>, res: Response) => {
   try {
-    const group = await groupService.getById(req.params.id);
+    const user = res.locals.user as IUser;
+    const group = await groupService.getById(req.params.id, user);
     if (!group) return res.status(404).json({ error: 'Group not found' });
     return res.json(group);
   } catch (error) {
+    const msg = error instanceof Error ? error.message : '';
+    const status = ERROR_STATUS[msg];
+    if (status) return res.status(status).json({ error: msg });
     console.error('Error fetching group:', error);
     return res.status(500).json({ error: 'Failed to fetch group' });
   }

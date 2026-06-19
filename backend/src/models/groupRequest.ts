@@ -22,4 +22,9 @@ const GroupRequestSchema = new Schema<IGroupRequest>(
   { timestamps: true }
 );
 
+GroupRequestSchema.index(
+  { group: 1, invitee: 1 },
+  { unique: true, partialFilterExpression: { status: GroupRequestStatus.Pending } }
+);
+
 export const GroupRequest = model<IGroupRequest>('GroupRequest', GroupRequestSchema);

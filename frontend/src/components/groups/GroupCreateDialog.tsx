@@ -5,6 +5,7 @@ import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogT
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { createGroup } from '@/api/group';
+import { errorMessage } from '@/utils/errorMessage';
 import { Group } from '@/types/group';
 
 interface Props {
@@ -42,7 +43,7 @@ export function GroupCreateDialog({ onCreated }: Props) {
       handleOpenChange(false);
       onCreated(group);
     } catch (err) {
-      setNameError(err instanceof Error ? err.message : 'Failed to create group.');
+      setNameError(errorMessage(err, 'Failed to create group.'));
     } finally {
       setSubmitting(false);
     }
@@ -60,23 +61,31 @@ export function GroupCreateDialog({ onCreated }: Props) {
         <DialogHeader>
           <DialogTitle>Create group</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col gap-1.5">
-          <Label htmlFor="group-name">Group name</Label>
-          <Input
-            id="group-name"
-            placeholder="My awesome group"
-            value={groupName}
-            onChange={handleNameChange}
-            maxLength={60}
-            aria-invalid={!!nameError}
-          />
-          {nameError && <p className="text-destructive text-sm">{nameError}</p>}
-        </div>
-        <DialogFooter>
-          <Button onClick={handleCreate} disabled={submitting}>
-            {submitting ? 'Creating…' : 'Create'}
-          </Button>
-        </DialogFooter>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleCreate();
+          }}
+          className="flex flex-col gap-4"
+        >
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="group-name">Group name</Label>
+            <Input
+              id="group-name"
+              placeholder="My awesome group"
+              value={groupName}
+              onChange={handleNameChange}
+              maxLength={60}
+              aria-invalid={!!nameError}
+            />
+            {nameError && <p className="text-destructive text-sm">{nameError}</p>}
+          </div>
+          <DialogFooter>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? 'Creating…' : 'Create'}
+            </Button>
+          </DialogFooter>
+        </form>
       </DialogContent>
     </Dialog>
   );

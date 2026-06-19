@@ -1,15 +1,19 @@
 import { Types } from 'mongoose';
 import { Group } from '../models/group';
-import { CreateGroupBody } from '../types';
+import { CreateGroupBody, PopulatedGroup } from '../types';
 
 const MEMBER_FIELDS = 'sub firstName lastName email avatar';
 
-export function findByMember(userId: Types.ObjectId) {
-  return Group.find({ members: userId }).populate('owner', MEMBER_FIELDS).populate('members', MEMBER_FIELDS);
+export async function findByMember(userId: Types.ObjectId): Promise<PopulatedGroup[]> {
+  const docs = await Group.find({ members: userId })
+    .populate('owner', MEMBER_FIELDS)
+    .populate('members', MEMBER_FIELDS);
+  return docs as unknown as PopulatedGroup[];
 }
 
-export function findById(id: string) {
-  return Group.findById(id).populate('owner', MEMBER_FIELDS).populate('members', MEMBER_FIELDS);
+export async function findById(id: string): Promise<PopulatedGroup | null> {
+  const doc = await Group.findById(id).populate('owner', MEMBER_FIELDS).populate('members', MEMBER_FIELDS);
+  return doc as unknown as PopulatedGroup | null;
 }
 
 export function create(data: CreateGroupBody) {
