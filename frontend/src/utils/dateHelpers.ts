@@ -4,7 +4,7 @@ export function monthKey(dateStr: string): string {
 }
 
 // Convert a Date object to YYYY-MM-DD string format
-function dateToString(date: Date): string {
+export function dateToString(date: Date): string {
   const year = date.getFullYear();
   const month = String(date.getMonth() + 1).padStart(2, '0');
   const day = String(date.getDate()).padStart(2, '0');
