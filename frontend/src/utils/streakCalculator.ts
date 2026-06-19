@@ -33,7 +33,7 @@ export function computeStreakData(
   let streak = 0;
   let checkPeriod2 = earliestPeriod;
 
-  while (true) {
+  for (let i = 0; i < maxIterations; i++) {
     if (isComplete(checkPeriod2)) {
       streak++;
       personalBest = Math.max(personalBest, streak);
