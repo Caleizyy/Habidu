@@ -13,7 +13,9 @@ export function SectionStreakDisplay({ currentStreak, personalBest }: SectionStr
           <Flame className="h-5 w-5 fill-orange-500 text-orange-500" />
           <span className="text-base font-semibold text-neutral-700 dark:text-neutral-300">{currentStreak}</span>
         </div>
-        <span className="text-xs font-normal text-neutral-400 dark:text-neutral-500">Current streak</span>
+        <span className="hidden text-xs font-normal text-neutral-400 sm:block dark:text-neutral-500">
+          Current streak
+        </span>
       </div>
 
       <div className="flex flex-col items-center">
@@ -21,7 +23,9 @@ export function SectionStreakDisplay({ currentStreak, personalBest }: SectionStr
           <Star className="h-5 w-5 fill-amber-500 text-amber-500" />
           <span className="text-base font-semibold text-neutral-700 dark:text-neutral-300">{personalBest}</span>
         </div>
-        <span className="text-xs font-normal text-neutral-400 dark:text-neutral-500">Personal best</span>
+        <span className="hidden text-xs font-normal text-neutral-400 sm:block dark:text-neutral-500">
+          Personal best
+        </span>
       </div>
     </div>
   );
