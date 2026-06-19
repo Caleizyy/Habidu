@@ -53,6 +53,7 @@ export const sessionCheck = async (req: Request, res: Response) => {
       email: user.email,
       name: user.firstName + ' ' + user.lastName,
       avatar: user.avatar,
+      bio: user.bio,
     });
   } catch (error) {
     console.error(error);
