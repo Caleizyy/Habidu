@@ -17,10 +17,22 @@ export function calculateSectionStreaks(
 
   const today = getTodayDate();
 
-  const allPeriods = new Set<string>();
+  // Pre-aggregate logs by period for each habit
+  const logsByHabitAndPeriod = new Map<string, Map<string, number>>();
   habits.forEach((habit) => {
-    (logs[habit._id] ?? []).forEach((log) => {
-      allPeriods.add(getPeriodKey(log.date, frequency));
+    const habitLogs = logs[habit._id] ?? [];
+    const logsByPeriod = new Map<string, number>();
+    habitLogs.forEach((log) => {
+      const periodKey = getPeriodKey(log.date, frequency);
+      logsByPeriod.set(periodKey, (logsByPeriod.get(periodKey) ?? 0) + log.value);
+    });
+    logsByHabitAndPeriod.set(habit._id, logsByPeriod);
+  });
+
+  const allPeriods = new Set<string>();
+  logsByHabitAndPeriod.forEach((logsByPeriod) => {
+    logsByPeriod.forEach((_, period) => {
+      allPeriods.add(period);
     });
   });
 
@@ -30,9 +42,7 @@ export function calculateSectionStreaks(
 
   return computeStreakData(periods, currentPeriod, frequency, maxIterations, (period) =>
     habits.every((habit) => {
-      const periodValue = (logs[habit._id] ?? [])
-        .filter((l) => getPeriodKey(l.date, frequency) === period)
-        .reduce((sum, l) => sum + l.value, 0);
+      const periodValue = logsByHabitAndPeriod.get(habit._id)?.get(period) ?? 0;
       return periodValue >= habit.targetValue;
     })
   );
