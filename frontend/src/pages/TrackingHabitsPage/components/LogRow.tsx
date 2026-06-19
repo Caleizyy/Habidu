@@ -16,6 +16,8 @@ export interface LogRowProps {
   onEdit: (value: number) => void;
   // called when user clicks "Undo" to delete the log entry
   onUndo: () => void;
+  isPopupOpen?: boolean;
+  onPopupToggle?: () => void;
 }
 
 export function LogRow({
@@ -30,6 +32,8 @@ export function LogRow({
   onQuickLog,
   onEdit,
   onUndo,
+  isPopupOpen = false,
+  onPopupToggle,
 }: LogRowProps) {
   const [editing, setEditing] = React.useState(false);
   const [draft, setDraft] = React.useState(String(value));
@@ -44,8 +48,19 @@ export function LogRow({
     }, 1000); // 1 second delay
   };
 
+  const handleRowClick = (e: React.MouseEvent) => {
+    // Don't toggle if clicking on interactive elements
+    if ((e.target as HTMLElement).closest('button, input')) {
+      return;
+    }
+    onPopupToggle?.();
+  };
+
   const handleMouseLeave = () => {
     setShowBadge(false);
+    if (isPopupOpen) {
+      onPopupToggle?.();
+    }
     if (hoverTimerRef.current) {
       clearTimeout(hoverTimerRef.current);
       hoverTimerRef.current = null;
@@ -63,6 +78,9 @@ export function LogRow({
   React.useEffect(() => {
     const handleScroll = () => {
       setShowBadge(false);
+      if (isPopupOpen) {
+        onPopupToggle?.();
+      }
       if (hoverTimerRef.current) {
         clearTimeout(hoverTimerRef.current);
         hoverTimerRef.current = null;
@@ -70,7 +88,7 @@ export function LogRow({
     };
     window.addEventListener('scroll', handleScroll, { capture: true, passive: true });
     return () => window.removeEventListener('scroll', handleScroll, { capture: true });
-  }, []);
+  }, [isPopupOpen, onPopupToggle]);
 
   React.useEffect(() => {
     // Only reset draft if value changed externally (e.g., via undo)
@@ -94,6 +112,7 @@ export function LogRow({
   return (
     <div
       className={`flex w-full items-center gap-3 border-b border-neutral-100 px-4 text-left transition-colors last:border-b-0 dark:border-neutral-800 ${isCurrentPeriod ? 'bg-neutral-50 py-4 dark:bg-neutral-800/60' : 'py-3'} `}
+      onClick={handleRowClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
@@ -127,7 +146,7 @@ export function LogRow({
       <HabitStreakPopUp
         currentStreak={currentStreak}
         personalBest={personalBest}
-        visible={showBadge}
+        visible={showBadge || isPopupOpen}
         triggerRef={circleRef}
       />
 

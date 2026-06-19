@@ -33,6 +33,7 @@ export function MonthlyHabitsSection({
   const [expandedPastMonth, setExpandedPastMonth] = React.useState<string | null>(null);
   const [pastMonthsOpen, setPastMonthsOpen] = React.useState(false);
   const [pastMonthsPage, setPastMonthsPage] = React.useState(1);
+  const [openPopupKey, setOpenPopupKey] = React.useState<string | null>(null);
 
   return (
     <>
@@ -52,21 +53,26 @@ export function MonthlyHabitsSection({
                 This Month · {row.label}
               </span>
             </div>
-            {habits.map((habit) => (
-              <LogRow
-                key={habit._id}
-                periodLabel={habit.name}
-                value={getDisplayValueForMonth(habit._id, row.monthKey)}
-                target={habit.targetValue}
-                unit={habit.targetUnit}
-                isCurrentPeriod={true}
-                currentStreak={habit.currentStreak || 0}
-                personalBest={habit.personalBest || 0}
-                onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
-                onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
-                onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
-              />
-            ))}
+            {habits.map((habit) => {
+              const popupKey = `${habit._id}-${row.monthKey}`;
+              return (
+                <LogRow
+                  key={habit._id}
+                  periodLabel={habit.name}
+                  value={getDisplayValueForMonth(habit._id, row.monthKey)}
+                  target={habit.targetValue}
+                  unit={habit.targetUnit}
+                  isCurrentPeriod={true}
+                  currentStreak={habit.currentStreak || 0}
+                  personalBest={habit.personalBest || 0}
+                  onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
+                  onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
+                  onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
+                  isPopupOpen={openPopupKey === popupKey}
+                  onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                />
+              );
+            })}
           </div>
         ))}
 
@@ -119,21 +125,26 @@ export function MonthlyHabitsSection({
                       setExpandedPastMonth(isRowExpanded ? null : row.monthKey);
                     }}
                   >
-                    {habits.map((habit) => (
-                      <LogRow
-                        key={`${row.monthKey}-${habit._id}`}
-                        periodLabel={habit.name}
-                        value={getDisplayValueForMonthKey(habit._id, row.monthKey)}
-                        target={habit.targetValue}
-                        unit={habit.targetUnit}
-                        isCurrentPeriod={false}
-                        currentStreak={habit.currentStreak || 0}
-                        personalBest={habit.personalBest || 0}
-                        onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
-                        onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
-                        onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
-                      />
-                    ))}
+                    {habits.map((habit) => {
+                      const popupKey = `${habit._id}-${row.monthKey}`;
+                      return (
+                        <LogRow
+                          key={`${row.monthKey}-${habit._id}`}
+                          periodLabel={habit.name}
+                          value={getDisplayValueForMonthKey(habit._id, row.monthKey)}
+                          target={habit.targetValue}
+                          unit={habit.targetUnit}
+                          isCurrentPeriod={false}
+                          currentStreak={habit.currentStreak || 0}
+                          personalBest={habit.personalBest || 0}
+                          onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
+                          onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
+                          onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
+                          isPopupOpen={openPopupKey === popupKey}
+                          onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                        />
+                      );
+                    })}
                   </PastPeriodRow>
                 );
               }}

@@ -34,6 +34,7 @@ export function DailyHabitsSection({
   const [expandedDailyDate, setExpandedDailyDate] = React.useState<string | null>(null);
   const [pastDaysOpen, setPastDaysOpen] = React.useState(false);
   const [pastDaysPage, setPastDaysPage] = React.useState(1);
+  const [openPopupKey, setOpenPopupKey] = React.useState<string | null>(null);
 
   return (
     <>
@@ -54,21 +55,26 @@ export function DailyHabitsSection({
                 Today · {row.label}
               </span>
             </div>
-            {habits.map((habit) => (
-              <LogRow
-                key={habit._id}
-                periodLabel={habit.name}
-                value={getDisplayValue(habit._id, row.date)}
-                target={habit.targetValue}
-                unit={habit.targetUnit}
-                isCurrentPeriod={true}
-                currentStreak={habit.currentStreak || 0}
-                personalBest={habit.personalBest || 0}
-                onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
-                onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
-                onUndo={() => undoLog(habit._id, row.date)}
-              />
-            ))}
+            {habits.map((habit) => {
+              const popupKey = `${habit._id}-${row.date}`;
+              return (
+                <LogRow
+                  key={habit._id}
+                  periodLabel={habit.name}
+                  value={getDisplayValue(habit._id, row.date)}
+                  target={habit.targetValue}
+                  unit={habit.targetUnit}
+                  isCurrentPeriod={true}
+                  currentStreak={habit.currentStreak || 0}
+                  personalBest={habit.personalBest || 0}
+                  onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
+                  onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
+                  onUndo={() => undoLog(habit._id, row.date)}
+                  isPopupOpen={openPopupKey === popupKey}
+                  onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                />
+              );
+            })}
           </div>
         ))}
 
@@ -122,21 +128,26 @@ export function DailyHabitsSection({
                       setExpandedDailyDate(isRowExpanded ? null : row.date);
                     }}
                   >
-                    {habits.map((habit) => (
-                      <LogRow
-                        key={habit._id}
-                        periodLabel={habit.name}
-                        value={getDisplayValue(habit._id, row.date)}
-                        target={habit.targetValue}
-                        unit={habit.targetUnit}
-                        isCurrentPeriod={false}
-                        currentStreak={habit.currentStreak || 0}
-                        personalBest={habit.personalBest || 0}
-                        onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
-                        onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
-                        onUndo={() => undoLog(habit._id, row.date)}
-                      />
-                    ))}
+                    {habits.map((habit) => {
+                      const popupKey = `${habit._id}-${row.date}`;
+                      return (
+                        <LogRow
+                          key={habit._id}
+                          periodLabel={habit.name}
+                          value={getDisplayValue(habit._id, row.date)}
+                          target={habit.targetValue}
+                          unit={habit.targetUnit}
+                          isCurrentPeriod={false}
+                          currentStreak={habit.currentStreak || 0}
+                          personalBest={habit.personalBest || 0}
+                          onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
+                          onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
+                          onUndo={() => undoLog(habit._id, row.date)}
+                          isPopupOpen={openPopupKey === popupKey}
+                          onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                        />
+                      );
+                    })}
                   </PastPeriodRow>
                 );
               }}

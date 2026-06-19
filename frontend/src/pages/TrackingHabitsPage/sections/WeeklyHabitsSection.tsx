@@ -33,6 +33,7 @@ export function WeeklyHabitsSection({
   const [expandedPastWeek, setExpandedPastWeek] = React.useState<string | null>(null);
   const [pastWeeksOpen, setPastWeeksOpen] = React.useState(false);
   const [pastWeeksPage, setPastWeeksPage] = React.useState(1);
+  const [openPopupKey, setOpenPopupKey] = React.useState<string | null>(null);
 
   return (
     <>
@@ -52,21 +53,26 @@ export function WeeklyHabitsSection({
                 This Week · {row.label}
               </span>
             </div>
-            {habits.map((habit) => (
-              <LogRow
-                key={habit._id}
-                periodLabel={habit.name}
-                value={getDisplayValueForDates(habit._id, row.dates)}
-                target={habit.targetValue}
-                unit={habit.targetUnit}
-                isCurrentPeriod={true}
-                currentStreak={habit.currentStreak || 0}
-                personalBest={habit.personalBest || 0}
-                onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
-                onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
-                onUndo={() => undoWeeklyLog(habit._id, row.dates)}
-              />
-            ))}
+            {habits.map((habit) => {
+              const popupKey = `${habit._id}-${row.weekKey}`;
+              return (
+                <LogRow
+                  key={habit._id}
+                  periodLabel={habit.name}
+                  value={getDisplayValueForDates(habit._id, row.dates)}
+                  target={habit.targetValue}
+                  unit={habit.targetUnit}
+                  isCurrentPeriod={true}
+                  currentStreak={habit.currentStreak || 0}
+                  personalBest={habit.personalBest || 0}
+                  onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
+                  onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
+                  onUndo={() => undoWeeklyLog(habit._id, row.dates)}
+                  isPopupOpen={openPopupKey === popupKey}
+                  onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                />
+              );
+            })}
           </div>
         ))}
 
@@ -119,21 +125,26 @@ export function WeeklyHabitsSection({
                       setExpandedPastWeek(isRowExpanded ? null : row.weekKey);
                     }}
                   >
-                    {habits.map((habit) => (
-                      <LogRow
-                        key={`${row.weekKey}-${habit._id}`}
-                        periodLabel={habit.name}
-                        value={getDisplayValueForWeek(habit._id, row.dates)}
-                        target={habit.targetValue}
-                        unit={habit.targetUnit}
-                        isCurrentPeriod={false}
-                        currentStreak={habit.currentStreak || 0}
-                        personalBest={habit.personalBest || 0}
-                        onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
-                        onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
-                        onUndo={() => undoWeeklyLog(habit._id, row.dates)}
-                      />
-                    ))}
+                    {habits.map((habit) => {
+                      const popupKey = `${habit._id}-${row.weekKey}`;
+                      return (
+                        <LogRow
+                          key={`${row.weekKey}-${habit._id}`}
+                          periodLabel={habit.name}
+                          value={getDisplayValueForWeek(habit._id, row.dates)}
+                          target={habit.targetValue}
+                          unit={habit.targetUnit}
+                          isCurrentPeriod={false}
+                          currentStreak={habit.currentStreak || 0}
+                          personalBest={habit.personalBest || 0}
+                          onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
+                          onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
+                          onUndo={() => undoWeeklyLog(habit._id, row.dates)}
+                          isPopupOpen={openPopupKey === popupKey}
+                          onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                        />
+                      );
+                    })}
                   </PastPeriodRow>
                 );
               }}
