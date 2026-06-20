@@ -98,3 +98,11 @@ export interface PopulatedUser {
   email: string;
   avatar?: string;
 }
+
+export interface UpdateHabitBody {
+  name?: string;
+  category?: HabitCategory;
+  frequency?: HabitFrequency;
+  difficulty?: HabitDifficulty;
+  notes?: string;
+}
