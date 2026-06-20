@@ -9,7 +9,7 @@ export function PageLayout({
 }) {
   return (
     <div className="flex flex-1 flex-col px-12 pt-12">
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto w-full">
         <div className="rounded-2xl bg-white p-6 shadow-lg dark:border-neutral-800 dark:bg-neutral-900">
           {(title || actions) && (
             <div className="mb-4 flex items-center justify-between gap-4">

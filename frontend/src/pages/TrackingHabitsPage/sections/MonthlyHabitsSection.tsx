@@ -52,7 +52,7 @@ export function MonthlyHabitsSection({
                 target={habit.targetValue}
                 unit={habit.targetUnit}
                 isCurrentPeriod={true}
-                onQuickLog={() => addLog(habit._id, habit.targetValue, today)}
+                onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
                 onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
                 onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
               />
@@ -117,7 +117,7 @@ export function MonthlyHabitsSection({
                         target={habit.targetValue}
                         unit={habit.targetUnit}
                         isCurrentPeriod={false}
-                        onQuickLog={() => addLog(habit._id, habit.targetValue, `${row.monthKey}-01`)}
+                        onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
                         onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
                         onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
                       />

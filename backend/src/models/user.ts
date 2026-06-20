@@ -7,7 +7,8 @@ export interface IUser extends Document {
   email: string;
   sub: string;
   role: UserRole;
-  picture?: string;
+  avatar?: string;
+  bio?: string;
 }
 
 const UserSchema = new Schema<IUser>(
@@ -17,7 +18,8 @@ const UserSchema = new Schema<IUser>(
     email: { type: String, required: true },
     sub: { type: String, required: true, unique: true },
     role: { type: String, enum: Object.values(UserRole), required: true },
-    picture: { type: String, required: false },
+    avatar: { type: String, required: false },
+    bio: { type: String },
   },
   { timestamps: true }
 );

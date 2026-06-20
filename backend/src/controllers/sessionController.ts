@@ -52,7 +52,8 @@ export const sessionCheck = async (req: Request, res: Response) => {
       sub: session.sub,
       email: user.email,
       name: user.firstName + ' ' + user.lastName,
-      avatar: user.picture,
+      avatar: user.avatar,
+      bio: user.bio,
     });
   } catch (error) {
     console.error(error);

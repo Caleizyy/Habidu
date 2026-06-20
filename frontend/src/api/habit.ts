@@ -4,7 +4,9 @@ import { normalizeDateString } from '@/utils/dateHelpers';
 const API_BASE_URL = import.meta.env.VITE_BASE_URL || 'http://localhost:5000/api';
 
 export async function fetchHabits(): Promise<Habit[]> {
-  const response = await fetch(`${API_BASE_URL}/habits`);
+  const response = await fetch(`${API_BASE_URL}/habits`, {
+    credentials: 'include',
+  });
   if (!response.ok) {
     try {
       const error = await response.json();
@@ -118,6 +120,7 @@ export async function createHabit(habit: {
 }) {
   const response = await fetch(`${API_BASE_URL}/habits`, {
     method: 'POST',
+    credentials: 'include',
     headers: {
       'Content-Type': 'application/json',
     },
