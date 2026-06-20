@@ -1,4 +1,4 @@
-import { CreateHabitBody, HabitQueryFilter } from '../types';
+import { CreateHabitBody, HabitQueryFilter, UpdateHabitBody } from '../types';
 import * as habitRepository from '../repositories/habitRepository';
 
 export function create(data: CreateHabitBody) {
@@ -7,4 +7,12 @@ export function create(data: CreateHabitBody) {
 
 export function find(filter: HabitQueryFilter) {
   return habitRepository.find(filter);
+}
+
+export function updateById(id: string, filter: UpdateHabitBody) {
+  return habitRepository.updateById(id, filter);
+}
+
+export function deleteById(id: string) {
+  return habitRepository.deleteById(id);
 }
