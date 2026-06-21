@@ -24,15 +24,15 @@ import { ROUTES } from '../../constants/Routes.constants';
 
 const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarProps) => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, refreshUser, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
     navigate(ROUTES.PROFILE);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate(ROUTES.HOME);
   };
 
@@ -81,9 +81,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarP
                   </DropdownMenuItem>
                 </DropdownMenuContent>
               </DropdownMenu>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </div>
         </nav>
 

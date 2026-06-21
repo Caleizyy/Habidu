@@ -1,8 +1,8 @@
 import * as sessionRepo from '../repositories/sessionRepository';
 import { CreateSessionBody } from '../types';
 
-export function create(data: CreateSessionBody) {
-  return sessionRepo.create(data);
+export function upsert(data: CreateSessionBody) {
+  return sessionRepo.upsert(data);
 }
 
 export function getSessionById(id: string) {
@@ -11,4 +11,8 @@ export function getSessionById(id: string) {
 
 export function updateSession(id: string, expiryDate: Date) {
   return sessionRepo.updateSession(id, expiryDate);
+}
+
+export function deleteBySessionId(id: string) {
+  return sessionRepo.deleteBySessionId(id);
 }

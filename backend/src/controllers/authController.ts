@@ -1,11 +1,9 @@
 import { Request, Response } from 'express';
-import { UserRole } from '../types/index';
 import * as authService from '../services/authService';
 import * as sessionService from '../services/sessionService';
 import * as refreshService from '../services/refreshService';
-import type { CreateRefreshTokenBody, CreateUserBody } from '../types/index';
+import { UserRole, CreateRefreshTokenBody, CreateUserBody, CreateSessionBody } from '../types';
 import crypto from 'crypto';
-import { CreateSessionBody } from '../types';
 import { google } from 'googleapis';
 
 export const googleAuth = async (req: Request<unknown, unknown, { code: string }>, res: Response) => {
@@ -31,11 +29,15 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
       return res.status(401).json({ message: 'Invalid token payload' });
     }
 
-    const user = await authService.getBySub(payload.sub);
-
     if (!payload.email || !payload.given_name || !payload.family_name) {
       return res.status(400).json({ message: 'Missing required user information' });
     }
+
+    if (!tokens.access_token || !tokens.refresh_token || !tokens.expiry_date) {
+      return res.status(500).json({ message: 'Token corrupted' });
+    }
+
+    const user = await authService.getBySub(payload.sub);
 
     if (!user) {
       const createUser: CreateUserBody = {
@@ -50,29 +52,20 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
       await authService.create(createUser);
     }
 
-    if (!tokens.access_token || !tokens.refresh_token || !tokens.expiry_date) {
-      return res.status(500).json({
-        message: 'Token corrupted',
-      });
-    }
     const sessionId = crypto.randomUUID();
-    const accessToken = tokens.access_token;
-    const expirationDate = new Date(tokens.expiry_date!);
     const sessionBody: CreateSessionBody = {
-      sessionId: sessionId,
+      sessionId,
       sub: payload.sub,
-      accessToken: accessToken,
-      tokenExpiresAt: expirationDate,
+      accessToken: tokens.access_token,
+      tokenExpiresAt: new Date(tokens.expiry_date),
     };
-
-    await sessionService.create(sessionBody);
 
     const refreshTokenBody: CreateRefreshTokenBody = {
       sub: payload.sub,
       refreshToken: tokens.refresh_token,
     };
 
-    await refreshService.create(refreshTokenBody);
+    await Promise.all([sessionService.upsert(sessionBody), refreshService.upsert(refreshTokenBody)]);
 
     res.cookie('session', sessionId, {
       httpOnly: true,
@@ -82,14 +75,9 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
       maxAge: tokens.expiry_date - Date.now(),
     });
 
-    return res.status(201).json({
-      message: 'User authenticated successfully',
-      user: user,
-    });
+    return res.status(201).json({ message: 'User authenticated successfully', user });
   } catch (error) {
-    console.log('Failed to fetch user data:', (error as Error).message);
-    return res.status(500).json({
-      message: 'User authentication or fetching failed',
-    });
+    console.error('Failed to fetch user data:', error);
+    return res.status(500).json({ message: 'User authentication or fetching failed' });
   }
 };

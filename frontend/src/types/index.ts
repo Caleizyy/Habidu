@@ -13,7 +13,7 @@ export interface AuthContextType {
   isAuthenticated: boolean;
   refreshUser: () => Promise<void>;
   signin: () => void;
-  logout: () => void;
+  logout: () => Promise<void>;
 }
 export enum FriendRequestStatus {
   Pending = 'pending',

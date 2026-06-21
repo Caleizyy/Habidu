@@ -23,9 +23,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   });
 
   const logout = async () => {
-    // TODO: Call logout API endpoint to clear auth tokens/session when auth is implemented
-    // await refreshUser();
-    // setIsAuthenticated(false);
+    try {
+      await authApi.logout();
+    } finally {
+      setUser(null);
+      setIsAuthenticated(false);
+    }
   };
 
   const refreshUser = async () => {

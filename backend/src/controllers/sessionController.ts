@@ -3,6 +3,31 @@ import * as sessionService from '../services/sessionService';
 import * as authService from '../services/authService';
 import * as refreshService from '../services/refreshService';
 
+const COOKIE_OPTIONS = { httpOnly: true, secure: true, sameSite: 'lax' as const, path: '/' };
+
+export const logout = async (req: Request, res: Response) => {
+  const sessionId = req.cookies?.session;
+  res.clearCookie('session', COOKIE_OPTIONS);
+
+  try {
+    if (!sessionId) {
+      return res.status(200).json({ message: 'Logged out' });
+    }
+
+    const session = await sessionService.getSessionById(sessionId);
+    if (!session) {
+      return res.status(200).json({ message: 'Logged out' });
+    }
+
+    await Promise.all([sessionService.deleteBySessionId(sessionId), refreshService.deleteBySub(session.sub)]);
+
+    return res.status(200).json({ message: 'Logged out' });
+  } catch (error) {
+    console.error('Error during logout:', error);
+    return res.status(500).json({ error: 'Logout failed' });
+  }
+};
+
 export const sessionCheck = async (req: Request, res: Response) => {
   try {
     const sessionId = req.cookies?.session;
@@ -40,10 +65,7 @@ export const sessionCheck = async (req: Request, res: Response) => {
       }
 
       res.cookie('session', sessionId, {
-        httpOnly: true,
-        secure: true,
-        sameSite: 'lax',
-        path: '/',
+        ...COOKIE_OPTIONS,
         maxAge: (newTokens.expiry_date - Date.now()) / 1000,
       });
     }
