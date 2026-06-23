@@ -22,11 +22,11 @@ export function ProfileHeader({ user, isEditing, onEditClick }: ProfileHeaderPro
 
   return (
     <>
-      <div className="flex items-center justify-between">
+      <div className="flex items-center justify-between gap-2">
         {!isEditing && (
-          <Button variant="outline" onClick={onEditClick} className="h-[5vh] w-[7vw]">
-            <Pencil className="mr-2 h-[1vh] w-[1vw]" />
-            Edit Profile
+          <Button variant="outline" onClick={onEditClick} className="h-9 shrink-0 px-4">
+            <Pencil className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Edit Profile</span>
           </Button>
         )}
       </div>
