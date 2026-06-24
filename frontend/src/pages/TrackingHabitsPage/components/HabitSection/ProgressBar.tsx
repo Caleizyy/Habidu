@@ -5,7 +5,7 @@ export interface ProgressBarProps {
   showLabels?: boolean; // if false, labels go in header instead
 }
 
-export function ProgressBar({ cells, showLabels = false }: ProgressBarProps) {
+const ProgressBar = ({ cells, showLabels = false }: ProgressBarProps) => {
   return (
     <>
       {/* Labels header (only if showLabels is true) */}
@@ -57,4 +57,6 @@ export function ProgressBar({ cells, showLabels = false }: ProgressBarProps) {
       </div>
     </>
   );
-}
+};
+
+export default ProgressBar;

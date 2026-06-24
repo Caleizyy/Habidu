@@ -20,6 +20,17 @@ const buttonVariants = cva(
     variants: {
       variant: {
         default: cn('bg-primary text-primary-foreground', '[a]:hover:bg-primary/80'),
+        success: cn(
+          'bg-green-600 text-white font-semibold',
+          'hover:bg-green-500',
+          'focus-visible:border-green-500 focus-visible:ring-green-200'
+        ),
+        'success-over': cn(
+          'bg-secondary text-secondary-foreground font-semibold',
+          'hover:brightness-95',
+          'border-2 border-green-300 dark:border-green-800',
+          'focus-visible:border-green-300 dark:focus-visible:border-green-800 focus-visible:ring-green-300/20'
+        ),
         outline: cn(
           'border-border bg-background',
           'hover:bg-muted hover:text-foreground',
@@ -28,7 +39,7 @@ const buttonVariants = cva(
         ),
         secondary: cn(
           'bg-secondary text-secondary-foreground',
-          'hover:bg-secondary/80',
+          'hover:brightness-95',
           'aria-expanded:bg-secondary aria-expanded:text-secondary-foreground'
         ),
         ghost: cn(
