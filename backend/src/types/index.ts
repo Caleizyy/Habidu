@@ -125,3 +125,11 @@ export interface CreateNotificationBody {
   message: string;
   pageRef: string;
 }
+
+export interface UpdateHabitBody {
+  name?: string;
+  category?: HabitCategory;
+  frequency?: HabitFrequency;
+  difficulty?: HabitDifficulty;
+  notes?: string;
+}
