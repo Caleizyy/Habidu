@@ -106,3 +106,8 @@ export interface UpdateHabitBody {
   difficulty?: HabitDifficulty;
   notes?: string;
 }
+
+export interface HabitByIdFilter {
+  _id: string;
+  createdBy: string;
+}
