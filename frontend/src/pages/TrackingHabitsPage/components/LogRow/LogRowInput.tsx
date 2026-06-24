@@ -12,7 +12,6 @@ const LogRowInput = ({ draftValue, unit, onChange, onBlur }: LogRowInputProps) =
     <div className="flex items-center gap-1">
       <Input
         type="number"
-        autoFocus
         value={draftValue}
         onChange={(e) => onChange(parseFloat(e.target.value))}
         onBlur={onBlur}

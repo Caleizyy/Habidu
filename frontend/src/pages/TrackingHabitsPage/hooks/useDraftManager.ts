@@ -29,6 +29,11 @@ export function useDraftManager() {
     setDrafts((prev) => {
       const habitDrafts = { ...prev[habitId] };
       delete habitDrafts[date];
+      // If habit has no more drafts, remove habitId entirely
+      if (Object.keys(habitDrafts).length === 0) {
+        const { [habitId]: _, ...rest } = prev;
+        return rest;
+      }
       return { ...prev, [habitId]: habitDrafts };
     });
   }, []);
