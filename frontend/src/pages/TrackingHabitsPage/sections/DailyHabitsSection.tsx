@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
 import { HabitSection } from '../components';
-import { LogRow as LogRowNew } from '../components/LogRow/LogRowNew';
+import { LogRow } from '../components/LogRow/LogRow';
 
 export interface DailyHabitsSectionProps {
   habits: Habit[];
@@ -55,23 +55,8 @@ export function DailyHabitsSection({
               const popupKey = `${habit._id}-${row.date}`;
               return (
                 <>
-                  {/* <LogRow
+                  <LogRow
                     key={habit._id}
-                    periodLabel={habit.name}
-                    value={getDisplayValue(habit._id, row.date)}
-                    target={habit.targetValue}
-                    unit={habit.targetUnit}
-                    isCurrentPeriod={true}
-                    currentStreak={habit.currentStreak || 0}
-                    personalBest={habit.personalBest || 0}
-                    onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
-                    onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
-                    onUndo={() => undoLog(habit._id, row.date)}
-                    isPopupOpen={openPopupKey === popupKey}
-                    onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
-                  /> */}
-                  <LogRowNew
-                    key={habit._id + 1}
                     periodLabel={habit.name}
                     value={getDisplayValue(habit._id, row.date)}
                     target={habit.targetValue}

@@ -1,9 +1,10 @@
 import { useState, useRef, useEffect } from 'react';
 import { HabitStreakPopUp } from '../HabitStreakPopUp';
-import { Input } from '@/components/ui/Input';
 import LogRowProgress from './LogRowProgress';
-import { Button } from '@/components/ui/Button';
 import LogRowActions from './LogRowActions';
+import LogRowStatus from './LogRowStatus';
+import LogRowPeriodLabel from './LogRowLabel';
+import LogRowInput from './LogRowInput';
 
 export interface LogRowProps {
   periodLabel: string;
@@ -39,7 +40,6 @@ export function LogRow({
   isPopupOpen = false,
   onPopupToggle,
 }: LogRowProps) {
-  const [editing, setEditing] = useState(false);
   const [draftValue, setDraftValue] = useState<number>(value);
   const prevValueRef = useRef(value);
   const [showBadge, setShowBadge] = useState(false);
@@ -71,7 +71,7 @@ export function LogRow({
     }
     if (hoverTimerRef.current) {
       clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.currentconfirmEdit = null;
+      hoverTimerRef.current = null;
     }
   };
 
@@ -102,7 +102,6 @@ export function LogRow({
     // Only reset draft if value changed externally (e.g., via undo)
     if (value !== prevValueRef.current) {
       setDraftValue(value);
-      setEditing(false);
       prevValueRef.current = value;
     }
   }, [value]);
@@ -120,33 +119,10 @@ export function LogRow({
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
-      {/* Status circle */}
-      <div
-        ref={circleRef}
-        className={`flex shrink-0 items-center justify-center rounded-full transition-all ${
-          isCompleted
-            ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400'
-            : 'bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500'
-        } ${isCurrentPeriod ? 'h-9 w-9' : 'h-7 w-7'}`}
-      >
-        {isCompleted ? (
-          <svg className={isCurrentPeriod ? 'h-5 w-5' : 'h-4 w-4'} viewBox="0 0 16 16" fill="none">
-            <path
-              d="M3 8l3.5 3.5L13 5"
-              stroke="currentColor"
-              strokeWidth="1.8"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-            />
-          </svg>
-        ) : (
-          <span style={{ fontSize: isCurrentPeriod ? 10 : 9, fontFamily: 'monospace', fontWeight: 600 }}>
-            {Math.round(ratio * 100)}%
-          </span>
-        )}
+      <div ref={circleRef} className="flex shrink-0">
+        <LogRowStatus isCompleted={isCompleted} isCurrentPeriod={isCurrentPeriod} ratio={ratio} />
       </div>
 
-      {/* Streak Pop Up */}
       <HabitStreakPopUp
         currentStreak={currentStreak}
         personalBest={personalBest}
@@ -154,36 +130,13 @@ export function LogRow({
         triggerRef={circleRef}
       />
 
-      {/* Period label */}
-      <div className="flex max-w-20 flex-col gap-0.5">
-        <span
-          className={`font-semibold text-neutral-800 dark:text-neutral-200 ${isCurrentPeriod ? 'text-base' : 'text-sm'}`}
-        >
-          {periodLabel}
-        </span>
-        {periodSublabel && <span className="text-xs text-neutral-400 dark:text-neutral-500">{periodSublabel}</span>}
-      </div>
+      <LogRowPeriodLabel periodLabel={periodLabel} periodSublabel={periodSublabel} isCurrentPeriod={isCurrentPeriod} />
 
       <LogRowProgress progress={taskProgress} />
 
-      {/* Value / edit / badge */}
       <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
-        {/* Editable value */}
-        <div className="flex items-center gap-1">
-          <Input
-            type="number"
-            autoFocus
-            value={draftValue}
-            onChange={(e) => {
-              setDraftValue(parseFloat(e.target.value));
-            }}
-            onBlur={confirmEdit}
-            className="w-14 rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs text-neutral-800 outline-none focus:border-green-500 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
-          />
-          <span className="text-xs text-neutral-400 dark:text-neutral-500">{unit}</span>
-        </div>
+        <LogRowInput draftValue={draftValue} unit={unit} onChange={setDraftValue} onBlur={confirmEdit} />
 
-        {/* Status badge */}
         <LogRowActions
           isCompleted={isCompleted}
           isOver={isOver}
@@ -196,29 +149,3 @@ export function LogRow({
     </div>
   );
 }
-
-// interface LogInputProps {
-//   draftValue: string;
-//   onChange: (e: string) => void;
-//   unit: string;
-//   commitEdit: () => void;
-// }
-
-// const LogInput = ({ draftValue, onChange, unit, commitEdit }: LogInputProps) => {
-//   const handleDraftChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-//     onChange(e.target.value);
-//   };
-
-//   return (
-//     <div className="flex items-center gap-1">
-//       <Input
-//         autoFocus
-//         value={draftValue}
-//         onChange={handleDraftChange}
-//         onBlur={commitEdit}
-//         className="w-14 rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs text-neutral-800 outline-none focus:border-green-500 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
-//       />
-//       <span className="text-xs text-neutral-400 dark:text-neutral-500">{unit}</span>
-//     </div>
-//   );
-// };
