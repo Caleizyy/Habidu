@@ -45,19 +45,20 @@ export function WeeklyHabitsSection({
             </div>
             {habits.map((habit) => {
               return (
-                <LogRow
-                  key={habit._id}
-                  periodLabel={habit.name}
-                  value={getDisplayValueForDates(habit._id, row.dates)}
-                  target={habit.targetValue}
-                  unit={habit.targetUnit}
-                  isCurrentPeriod={true}
-                  currentStreak={habit.currentStreak || 0}
-                  personalBest={habit.personalBest || 0}
-                  onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
-                  onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
-                  onUndo={() => undoWeeklyLog(habit._id, row.dates)}
-                />
+                <div key={habit._id}>
+                  <LogRow
+                    periodLabel={habit.name}
+                    value={getDisplayValueForDates(habit._id, row.dates)}
+                    target={habit.targetValue}
+                    unit={habit.targetUnit}
+                    isCurrentPeriod={true}
+                    currentStreak={habit.currentStreak || 0}
+                    personalBest={habit.personalBest || 0}
+                    onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
+                    onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
+                    onUndo={() => undoWeeklyLog(habit._id, row.dates)}
+                  />
+                </div>
               );
             })}
           </div>

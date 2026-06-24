@@ -54,9 +54,8 @@ export function DailyHabitsSection({
             {habits.map((habit) => {
               const popupKey = `${habit._id}-${row.date}`;
               return (
-                <>
+                <div key={habit._id}>
                   <LogRow
-                    key={habit._id}
                     periodLabel={habit.name}
                     value={getDisplayValue(habit._id, row.date)}
                     target={habit.targetValue}
@@ -70,7 +69,7 @@ export function DailyHabitsSection({
                     isPopupOpen={openPopupKey === popupKey}
                     onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
                   />
-                </>
+                </div>
               );
             })}
           </div>
