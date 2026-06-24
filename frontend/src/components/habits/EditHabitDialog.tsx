@@ -126,7 +126,7 @@ export function EditHabitDialog({ onHabitUpdated, habit }: Readonly<EditHabitDia
             type="number"
             className="mb-2"
             value={targetValue}
-            onChange={(e) => setTargetValue(parseFloat(e.target.value))}
+            onChange={(e) => setTargetValue(parseFloat(e.target.value) || 0)}
           />
           {submitted && !targetValue && <p className="text-sm text-red-500">Target value is required.</p>}
         </div>
