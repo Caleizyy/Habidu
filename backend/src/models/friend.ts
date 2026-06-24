@@ -9,8 +9,8 @@ export interface IFriend extends Document {
 
 const FriendSchema = new Schema<IFriend>(
   {
-    recipientId: { type: Schema.Types.ObjectId, required: true },
-    requesterId: { type: Schema.Types.ObjectId, required: true },
+    recipientId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
+    requesterId: { type: Schema.Types.ObjectId, ref: 'User', required: true },
     status: { type: String, enum: Object.values(FriendRequestStatus), required: true },
   },
   { timestamps: true }
