@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
-import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
-import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
+import { LogRow, HabitSection } from '../components';
 
 export interface MonthlyHabitsSectionProps {
   habits: Habit[];
@@ -23,16 +22,11 @@ export function MonthlyHabitsSection({
   rangeLabel,
   monthlyRowLabels,
   getDisplayValueForMonth,
-  getDisplayValueForMonthKey,
   editMonthlyLog,
   undoMonthlyLog,
   sectionStreak,
   sectionPersonalBest,
 }: MonthlyHabitsSectionProps) {
-  const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
-  const [expandedPastMonth, setExpandedPastMonth] = React.useState<string | null>(null);
-  const [pastMonthsOpen, setPastMonthsOpen] = React.useState(false);
-  const [pastMonthsPage, setPastMonthsPage] = React.useState(1);
   const [openPopupKey, setOpenPopupKey] = React.useState<string | null>(null);
 
   return (
@@ -77,7 +71,7 @@ export function MonthlyHabitsSection({
         ))}
 
         {/* PAST MONTHS section */}
-        {monthlyRowLabels.slice(1).length > 0 && (
+        {/* {monthlyRowLabels.slice(1).length > 0 && (
           <>
             <button
               onClick={() => {
@@ -103,7 +97,7 @@ export function MonthlyHabitsSection({
                 />
               </svg>
             </button>
-            <PastPeriodsPaginationList
+            {/* <PastPeriodsPaginationList
               items={monthlyRowLabels.slice(1)}
               itemsPerPage={ITEMS_PER_PAGE}
               currentPage={pastMonthsPage}
@@ -148,9 +142,9 @@ export function MonthlyHabitsSection({
                   </PastPeriodRow>
                 );
               }}
-            />
-          </>
-        )}
+            /> */}
+        {/* </> */}
+        {/* )} */}
       </HabitSection>
     </>
   );

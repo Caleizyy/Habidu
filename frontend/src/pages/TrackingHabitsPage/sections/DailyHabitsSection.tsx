@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
-import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
-import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
+import { LogRow, HabitSection } from '../components';
+import { LogRow as LogRowNew } from '../components/LogRow/LogRowNew';
 
 export interface DailyHabitsSectionProps {
   habits: Habit[];
@@ -30,10 +30,6 @@ export function DailyHabitsSection({
   sectionStreak,
   sectionPersonalBest,
 }: DailyHabitsSectionProps) {
-  const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
-  const [expandedDailyDate, setExpandedDailyDate] = React.useState<string | null>(null);
-  const [pastDaysOpen, setPastDaysOpen] = React.useState(false);
-  const [pastDaysPage, setPastDaysPage] = React.useState(1);
   const [openPopupKey, setOpenPopupKey] = React.useState<string | null>(null);
 
   return (
@@ -58,27 +54,44 @@ export function DailyHabitsSection({
             {habits.map((habit) => {
               const popupKey = `${habit._id}-${row.date}`;
               return (
-                <LogRow
-                  key={habit._id}
-                  periodLabel={habit.name}
-                  value={getDisplayValue(habit._id, row.date)}
-                  target={habit.targetValue}
-                  unit={habit.targetUnit}
-                  isCurrentPeriod={true}
-                  currentStreak={habit.currentStreak || 0}
-                  personalBest={habit.personalBest || 0}
-                  onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
-                  onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
-                  onUndo={() => undoLog(habit._id, row.date)}
-                  isPopupOpen={openPopupKey === popupKey}
-                  onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
-                />
+                <>
+                  {/* <LogRow
+                    key={habit._id}
+                    periodLabel={habit.name}
+                    value={getDisplayValue(habit._id, row.date)}
+                    target={habit.targetValue}
+                    unit={habit.targetUnit}
+                    isCurrentPeriod={true}
+                    currentStreak={habit.currentStreak || 0}
+                    personalBest={habit.personalBest || 0}
+                    onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
+                    onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
+                    onUndo={() => undoLog(habit._id, row.date)}
+                    isPopupOpen={openPopupKey === popupKey}
+                    onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                  /> */}
+                  <LogRowNew
+                    key={habit._id + 1}
+                    periodLabel={habit.name}
+                    value={getDisplayValue(habit._id, row.date)}
+                    target={habit.targetValue}
+                    unit={habit.targetUnit}
+                    isCurrentPeriod={true}
+                    currentStreak={habit.currentStreak || 0}
+                    personalBest={habit.personalBest || 0}
+                    onQuickLog={() => addLog(habit._id, habit.targetValue, row.date)}
+                    onEdit={(newVal) => editLog(habit._id, row.date, newVal)}
+                    onUndo={() => undoLog(habit._id, row.date)}
+                    isPopupOpen={openPopupKey === popupKey}
+                    onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                  />
+                </>
               );
             })}
           </div>
         ))}
 
-        {/* PAST section */}
+        {/* PAST section
         {dailyRowLabels.slice(0, -1).length > 0 && (
           <>
             <button
@@ -105,7 +118,7 @@ export function DailyHabitsSection({
                 />
               </svg>
             </button>
-            <PastPeriodsPaginationList
+            {/* <PastPeriodsPaginationList
               items={dailyRowLabels.slice(0, -1).reverse()}
               itemsPerPage={ITEMS_PER_PAGE}
               currentPage={pastDaysPage}
@@ -151,9 +164,10 @@ export function DailyHabitsSection({
                   </PastPeriodRow>
                 );
               }}
-            />
-          </>
-        )}
+            /> */}
+        {/* </> */}
+        {/* ) */}
+        {/* } */}
       </HabitSection>
     </>
   );

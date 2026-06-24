@@ -1,6 +1,9 @@
 import { useState, useRef, useEffect } from 'react';
-import { HabitStreakPopUp } from './HabitStreakPopUp';
+import { HabitStreakPopUp } from '../HabitStreakPopUp';
 import { Input } from '@/components/ui/Input';
+import LogRowProgress from './LogRowProgress';
+import { Button } from '@/components/ui/Button';
+import LogRowActions from './LogRowActions';
 
 export interface LogRowProps {
   periodLabel: string;
@@ -57,6 +60,10 @@ export function LogRow({
     onPopupToggle?.();
   };
 
+  const confirmEdit = () => {
+    onEdit(draftValue);
+  };
+
   const handleMouseLeave = () => {
     setShowBadge(false);
     if (isPopupOpen) {
@@ -64,7 +71,7 @@ export function LogRow({
     }
     if (hoverTimerRef.current) {
       clearTimeout(hoverTimerRef.current);
-      hoverTimerRef.current = null;
+      hoverTimerRef.currentconfirmEdit = null;
     }
   };
 
@@ -100,13 +107,15 @@ export function LogRow({
     }
   }, [value]);
 
-  const completed = value >= target && target > 0;
-  const over = value > target;
+  const taskProgress = (value / target) * 100;
+
+  const isCompleted = value >= target && target > 0;
+  const isOver = value > target;
   const ratio = target === 0 ? 0 : Math.min(value / target, 1);
 
   return (
     <div
-      className={`flex w-full items-center gap-3 border-b border-neutral-100 px-4 text-left transition-colors last:border-b-0 dark:border-neutral-800 ${isCurrentPeriod ? 'bg-neutral-50 py-4 dark:bg-neutral-800/60' : 'py-3'} `}
+      className={`items-left flex w-full items-center gap-3 border-b border-neutral-100 px-4 text-left transition-colors last:border-b-0 dark:border-neutral-800 ${isCurrentPeriod ? 'bg-neutral-50 py-4 dark:bg-neutral-800/60' : 'py-3'} `}
       onClick={handleRowClick}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
@@ -115,12 +124,12 @@ export function LogRow({
       <div
         ref={circleRef}
         className={`flex shrink-0 items-center justify-center rounded-full transition-all ${
-          completed
+          isCompleted
             ? 'bg-green-100 text-green-600 dark:bg-green-900/40 dark:text-green-400'
             : 'bg-neutral-100 text-neutral-400 dark:bg-neutral-800 dark:text-neutral-500'
         } ${isCurrentPeriod ? 'h-9 w-9' : 'h-7 w-7'}`}
       >
-        {completed ? (
+        {isCompleted ? (
           <svg className={isCurrentPeriod ? 'h-5 w-5' : 'h-4 w-4'} viewBox="0 0 16 16" fill="none">
             <path
               d="M3 8l3.5 3.5L13 5"
@@ -146,7 +155,7 @@ export function LogRow({
       />
 
       {/* Period label */}
-      <div className="flex flex-col gap-0.5">
+      <div className="flex max-w-20 flex-col gap-0.5">
         <span
           className={`font-semibold text-neutral-800 dark:text-neutral-200 ${isCurrentPeriod ? 'text-base' : 'text-sm'}`}
         >
@@ -155,20 +164,12 @@ export function LogRow({
         {periodSublabel && <span className="text-xs text-neutral-400 dark:text-neutral-500">{periodSublabel}</span>}
       </div>
 
-      {/* Progress bar */}
-      <div className="mx-2 h-1.5 flex-1 overflow-hidden rounded-full bg-neutral-200 dark:bg-neutral-700">
-        <div
-          className={`h-full rounded-full transition-all duration-300 ${
-            over ? 'bg-green-300 dark:bg-green-800' : completed ? 'bg-green-500' : 'bg-amber-300'
-          }`}
-          style={{ width: `${ratio * 100}%` }}
-        />
-      </div>
+      <LogRowProgress progress={taskProgress} />
 
       {/* Value / edit / badge */}
       <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
         {/* Editable value */}
-        <div className="flex min-w-20 items-center gap-1">
+        <div className="flex items-center gap-1">
           <Input
             type="number"
             autoFocus
@@ -176,36 +177,48 @@ export function LogRow({
             onChange={(e) => {
               setDraftValue(parseFloat(e.target.value));
             }}
-            // onBlur={commitEdit}
+            onBlur={confirmEdit}
             className="w-14 rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs text-neutral-800 outline-none focus:border-green-500 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
           />
           <span className="text-xs text-neutral-400 dark:text-neutral-500">{unit}</span>
         </div>
 
-        {/* Log / Undo buttons */}
-        {completed ? (
-          <button
-            onClick={() => {
-              setEditing(false);
-              onUndo();
-            }}
-            className={`cursor-pointer rounded-full font-medium transition-colors ${
-              isCurrentPeriod
-                ? 'bg-green-50 px-3 py-1.5 text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50'
-                : 'bg-green-50 px-2.5 py-1 text-xs text-green-600 hover:bg-green-100 dark:bg-green-900/30 dark:text-green-400 dark:hover:bg-green-900/50'
-            }`}
-          >
-            {over ? `+${Math.round(value - target)} ${unit}` : 'Undo'}
-          </button>
-        ) : (
-          <button
-            onClick={onQuickLog}
-            className={`cursor-pointer rounded-full bg-neutral-900 font-medium text-white transition-colors hover:bg-neutral-800 dark:bg-white dark:text-neutral-900 dark:hover:bg-neutral-100 ${isCurrentPeriod ? 'px-3 py-1.5 text-sm' : 'px-2.5 py-1 text-xs'}`}
-          >
-            Log
-          </button>
-        )}
+        {/* Status badge */}
+        <LogRowActions
+          isCompleted={isCompleted}
+          isOver={isOver}
+          quickLog={onQuickLog}
+          undoLog={onUndo}
+          value={value - target}
+          unit={unit}
+        />
       </div>
     </div>
   );
 }
+
+// interface LogInputProps {
+//   draftValue: string;
+//   onChange: (e: string) => void;
+//   unit: string;
+//   commitEdit: () => void;
+// }
+
+// const LogInput = ({ draftValue, onChange, unit, commitEdit }: LogInputProps) => {
+//   const handleDraftChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+//     onChange(e.target.value);
+//   };
+
+//   return (
+//     <div className="flex items-center gap-1">
+//       <Input
+//         autoFocus
+//         value={draftValue}
+//         onChange={handleDraftChange}
+//         onBlur={commitEdit}
+//         className="w-14 rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs text-neutral-800 outline-none focus:border-green-500 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
+//       />
+//       <span className="text-xs text-neutral-400 dark:text-neutral-500">{unit}</span>
+//     </div>
+//   );
+// };

@@ -1,7 +1,7 @@
-import * as React from 'react';
+// import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
-import { PastPeriodRow, LogRow, HabitSection, PastPeriodsPaginationList } from '../components';
-import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
+import { LogRow, HabitSection } from '../components';
+// import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 
 export interface WeeklyHabitsSectionProps {
   habits: Habit[];
@@ -23,17 +23,17 @@ export function WeeklyHabitsSection({
   rangeLabel,
   weeklyRowLabels,
   getDisplayValueForDates,
-  getDisplayValueForWeek,
+  // getDisplayValueForWeek,
   editWeeklyLog,
   undoWeeklyLog,
   sectionStreak,
   sectionPersonalBest,
 }: WeeklyHabitsSectionProps) {
-  const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
-  const [expandedPastWeek, setExpandedPastWeek] = React.useState<string | null>(null);
-  const [pastWeeksOpen, setPastWeeksOpen] = React.useState(false);
-  const [pastWeeksPage, setPastWeeksPage] = React.useState(1);
-  const [openPopupKey, setOpenPopupKey] = React.useState<string | null>(null);
+  // const ITEMS_PER_PAGE = HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE;
+  // const [expandedPastWeek, setExpandedPastWeek] = React.useState<string | null>(null);
+  // const [pastWeeksOpen, setPastWeeksOpen] = React.useState(false);
+  // const [pastWeeksPage, setPastWeeksPage] = React.useState(1);
+  // const [openPopupKey, setOpenPopupKey] = React.useState<string | null>(null);
 
   return (
     <>
@@ -68,8 +68,8 @@ export function WeeklyHabitsSection({
                   onQuickLog={() => editWeeklyLog(habit._id, row.dates, habit.targetValue)}
                   onEdit={(newVal) => editWeeklyLog(habit._id, row.dates, newVal)}
                   onUndo={() => undoWeeklyLog(habit._id, row.dates)}
-                  isPopupOpen={openPopupKey === popupKey}
-                  onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
+                  // isPopupOpen={openPopupKey === popupKey}
+                  // onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
                 />
               );
             })}
@@ -77,7 +77,7 @@ export function WeeklyHabitsSection({
         ))}
 
         {/* PAST WEEKS section */}
-        {weeklyRowLabels.slice(1).length > 0 && (
+        {/* {weeklyRowLabels.slice(1).length > 0 && (
           <>
             <button
               onClick={() => {
@@ -103,7 +103,7 @@ export function WeeklyHabitsSection({
                 />
               </svg>
             </button>
-            <PastPeriodsPaginationList
+            {/* <PastPeriodsPaginationList
               items={weeklyRowLabels.slice(1)}
               itemsPerPage={ITEMS_PER_PAGE}
               currentPage={pastWeeksPage}
@@ -148,9 +148,9 @@ export function WeeklyHabitsSection({
                   </PastPeriodRow>
                 );
               }}
-            />
-          </>
-        )}
+            /> */}
+        {/* </> */}
+        {/* )} */}
       </HabitSection>
     </>
   );

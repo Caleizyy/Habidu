@@ -21,7 +21,7 @@ export function TrackingHabitsPage(): React.ReactNode {
   const DAILY_ROW_LABELS = getDailyRowLabels(TODAY);
   const WEEKLY_ROW_LABELS = getLast4Weeks(TODAY);
   const MONTHLY_ROW_LABELS = getLast5Months(TODAY);
-  const DAILY_DATES = getFullWeek(TODAY);
+  const DAILY_DATES = getFullWeek();
   const MONTHLY_KEYS = MONTHLY_ROW_LABELS.map((m) => m.monthKey);
 
   // Calculate which day is today in the daily bar chart (Monday=0 to Sunday=6)

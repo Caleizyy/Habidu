@@ -57,8 +57,8 @@ export function getSundayOfWeek(dateStr: string): string {
 }
 
 // Get an array of dates for the full week (Mon-Sun) containing today
-export function getFullWeek(today?: string): string[] {
-  const todayDate = today || getTodayDate();
+export function getFullWeek(): string[] {
+  const todayDate = getTodayDate();
   const monday = getMondayOfWeek(todayDate);
   const dates: string[] = [];
   const d = new Date(monday + 'T00:00:00');
