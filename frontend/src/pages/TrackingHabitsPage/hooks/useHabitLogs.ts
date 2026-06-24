@@ -179,34 +179,6 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
       .reduce((s, l) => s + l.value, 0);
   }
 
-  function getDisplayValueForWeek(habitId: string, dates: string[]): number {
-    const draftKey = `WEEK:${dates[0]}`;
-    const draftValue = draftManager.drafts[habitId]?.[draftKey];
-    if (draftValue !== undefined) return draftValue;
-    return sumForDates(habitId, dates);
-  }
-
-  function getDisplayValueForMonthKey(habitId: string, mKey: string): number {
-    const draftKey = `MONTH:${mKey}`;
-    const draftValue = draftManager.drafts[habitId]?.[draftKey];
-    if (draftValue !== undefined) return draftValue;
-    return sumForMonth(habitId, mKey);
-  }
-
-  // Sum helpers
-  function sumForDates(habitId: string, dates: string[]): number {
-    const set = new Set(dates);
-    return (logs[habitId] ?? [])
-      .filter((l) => set.has(l.date) && !(l._id in draftManager.deletedLogIds))
-      .reduce((s, l) => s + l.value, 0);
-  }
-
-  function sumForMonth(habitId: string, mKey: string): number {
-    return (logs[habitId] ?? [])
-      .filter((l) => monthKey(l.date) === mKey && !(l._id in draftManager.deletedLogIds))
-      .reduce((s, l) => s + l.value, 0);
-  }
-
   // Streaks computed so that they match the values the user currently sees.
   const effectiveLogs = React.useMemo(
     () => buildEffectiveLogs(habitsQuery.data ?? [], logs, draftManager.drafts, draftManager.deletedLogIds),
@@ -344,8 +316,6 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     getDisplayValue,
     getDisplayValueForDates,
     getDisplayValueForMonth,
-    getDisplayValueForWeek,
-    getDisplayValueForMonthKey,
     saveDrafts,
     hasUnsavedChanges: draftManager.hasUnsavedChanges,
     ITEMS_PER_PAGE: HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE,

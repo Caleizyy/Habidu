@@ -8,7 +8,6 @@ export interface MonthlyHabitsSectionProps {
   rangeLabel: string;
   monthlyRowLabels: Array<{ monthKey: string; label: string }>;
   getDisplayValueForMonth: (habitId: string, monthKey: string) => number;
-  getDisplayValueForMonthKey: (habitId: string, monthKey: string) => number;
   addLog: (habitId: string, value: number, date: string) => void;
   editMonthlyLog: (habitId: string, monthKey: string, value: number) => void;
   undoMonthlyLog: (habitId: string, monthKey: string) => void;
@@ -69,82 +68,6 @@ export function MonthlyHabitsSection({
             })}
           </div>
         ))}
-
-        {/* PAST MONTHS section */}
-        {/* {monthlyRowLabels.slice(1).length > 0 && (
-          <>
-            <button
-              onClick={() => {
-                setPastMonthsOpen(!pastMonthsOpen);
-                setPastMonthsPage(1); // Reset to first page when toggling
-              }}
-              className="hover:bg-neutral-150 flex w-full items-center gap-2 border-b border-neutral-200 bg-neutral-100 px-4 py-2 transition-colors dark:border-neutral-700 dark:bg-neutral-800/80 dark:hover:bg-neutral-800"
-            >
-              <span className="text-xs font-semibold tracking-wide text-neutral-500 uppercase dark:text-neutral-400">
-                Past months
-              </span>
-              <svg
-                className={`ml-auto h-4 w-4 text-neutral-400 transition-transform ${pastMonthsOpen ? 'rotate-180' : ''}`}
-                viewBox="0 0 16 16"
-                fill="none"
-              >
-                <path
-                  d="M4 6l4 4 4-4"
-                  stroke="currentColor"
-                  strokeWidth="1.5"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                />
-              </svg>
-            </button>
-            {/* <PastPeriodsPaginationList
-              items={monthlyRowLabels.slice(1)}
-              itemsPerPage={ITEMS_PER_PAGE}
-              currentPage={pastMonthsPage}
-              onPageChange={setPastMonthsPage}
-              isOpen={pastMonthsOpen}
-              renderItem={(row) => {
-                const isRowExpanded = expandedPastMonth === row.monthKey;
-
-                return (
-                  <PastPeriodRow
-                    key={`past-month-${row.monthKey}`}
-                    periodLabel={row.label}
-                    habits={habits.map((habit) => ({
-                      value: getDisplayValueForMonthKey(habit._id, row.monthKey),
-                      target: habit.targetValue,
-                    }))}
-                    isExpanded={isRowExpanded}
-                    onToggle={() => {
-                      setExpandedPastMonth(isRowExpanded ? null : row.monthKey);
-                    }}
-                  >
-                    {habits.map((habit) => {
-                      const popupKey = `${habit._id}-${row.monthKey}`;
-                      return (
-                        <LogRow
-                          key={`${row.monthKey}-${habit._id}`}
-                          periodLabel={habit.name}
-                          value={getDisplayValueForMonthKey(habit._id, row.monthKey)}
-                          target={habit.targetValue}
-                          unit={habit.targetUnit}
-                          isCurrentPeriod={false}
-                          currentStreak={habit.currentStreak || 0}
-                          personalBest={habit.personalBest || 0}
-                          onQuickLog={() => editMonthlyLog(habit._id, row.monthKey, habit.targetValue)}
-                          onEdit={(newVal) => editMonthlyLog(habit._id, row.monthKey, newVal)}
-                          onUndo={() => undoMonthlyLog(habit._id, row.monthKey)}
-                          isPopupOpen={openPopupKey === popupKey}
-                          onPopupToggle={() => setOpenPopupKey(openPopupKey === popupKey ? null : popupKey)}
-                        />
-                      );
-                    })}
-                  </PastPeriodRow>
-                );
-              }}
-            /> */}
-        {/* </> */}
-        {/* )} */}
       </HabitSection>
     </>
   );

@@ -152,7 +152,6 @@ export function TrackingHabitsPage(): React.ReactNode {
         rangeLabel={weeklyRangeLabel}
         weeklyRowLabels={WEEKLY_ROW_LABELS}
         getDisplayValueForDates={hookState.getDisplayValueForDates}
-        getDisplayValueForWeek={hookState.getDisplayValueForWeek}
         addLog={hookState.addLog}
         editWeeklyLog={hookState.editWeeklyLog}
         undoWeeklyLog={hookState.undoWeeklyLog}
@@ -168,7 +167,6 @@ export function TrackingHabitsPage(): React.ReactNode {
         rangeLabel={monthlyRangeLabel}
         monthlyRowLabels={MONTHLY_ROW_LABELS}
         getDisplayValueForMonth={hookState.getDisplayValueForMonth}
-        getDisplayValueForMonthKey={hookState.getDisplayValueForMonthKey}
         addLog={hookState.addLog}
         editMonthlyLog={hookState.editMonthlyLog}
         undoMonthlyLog={hookState.undoMonthlyLog}
