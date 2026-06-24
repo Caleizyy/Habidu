@@ -105,6 +105,8 @@ export interface UpdateHabitBody {
   frequency?: HabitFrequency;
   difficulty?: HabitDifficulty;
   notes?: string;
+  targetUnit?: string;
+  targetValue?: number;
 }
 
 export interface HabitByIdFilter {
