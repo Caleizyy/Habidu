@@ -6,13 +6,15 @@ interface LogRowPeriodLabelProps {
 
 const LogRowPeriodLabel = ({ periodLabel, periodSublabel, isCurrentPeriod }: LogRowPeriodLabelProps) => {
   return (
-    <div className="flex max-w-20 flex-col gap-0.5">
+    <div className="flex w-28 shrink-0 flex-col gap-0.5">
       <span
-        className={`font-semibold text-neutral-800 dark:text-neutral-200 ${isCurrentPeriod ? 'text-base' : 'text-sm'}`}
+        className={`truncate font-semibold text-neutral-800 dark:text-neutral-200 ${isCurrentPeriod ? 'text-base' : 'text-sm'}`}
       >
         {periodLabel}
       </span>
-      {periodSublabel && <span className="text-xs text-neutral-400 dark:text-neutral-500">{periodSublabel}</span>}
+      {periodSublabel && (
+        <span className="truncate text-xs text-neutral-400 dark:text-neutral-500">{periodSublabel}</span>
+      )}
     </div>
   );
 };

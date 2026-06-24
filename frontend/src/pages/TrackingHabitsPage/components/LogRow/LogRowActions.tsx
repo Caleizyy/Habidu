@@ -10,15 +10,27 @@ interface LogRowActionsProps {
 }
 
 const LogRowActions = ({ isCompleted, isOver, value, unit, undoLog, quickLog }: LogRowActionsProps) => {
-  if (isCompleted && !isOver) {
-    return <Button onClick={undoLog}>Undo</Button>;
-  }
+  const renderButton = () => {
+    if (isCompleted && !isOver) {
+      return (
+        <Button className="w-full" onClick={undoLog}>
+          Undo
+        </Button>
+      );
+    }
 
-  if (isOver) {
-    return <Button variant={'outline'} onClick={undoLog}>{`+${value} ${unit}`}</Button>;
-  }
+    if (isOver) {
+      return <Button className="w-full" variant={'outline'} onClick={undoLog}>{`+${value} ${unit}`}</Button>;
+    }
 
-  return <Button onClick={quickLog}>Log</Button>;
+    return (
+      <Button className="w-full" onClick={quickLog}>
+        Log
+      </Button>
+    );
+  };
+
+  return <div className="flex w-20 shrink-0 justify-end">{renderButton()}</div>;
 };
 
 export default LogRowActions;

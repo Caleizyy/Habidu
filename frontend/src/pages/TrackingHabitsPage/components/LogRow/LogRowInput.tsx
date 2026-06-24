@@ -18,7 +18,7 @@ const LogRowInput = ({ draftValue, unit, onChange, onBlur }: LogRowInputProps) =
         onBlur={onBlur}
         className="w-14 rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs text-neutral-800 outline-none focus:border-green-500 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
       />
-      <span className="text-xs text-neutral-400 dark:text-neutral-500">{unit}</span>
+      <span className="w-10 truncate text-xs text-neutral-400 dark:text-neutral-500">{unit}</span>
     </div>
   );
 };
