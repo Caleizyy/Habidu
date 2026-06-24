@@ -27,7 +27,7 @@ export const updateOne = async (req: Request<{ id: string }, object, UpdateHabit
   const id = req.params.id;
   const data = req.body;
   const userHabit = await habitService.findById({ _id: id, createdBy: res.locals.sub });
-  if (!userHabit) return res.status(304).json({ error: 'Incorrect user credentials' });
+  if (!userHabit) return res.status(403).json({ error: 'Incorrect user credentials' });
   try {
     const updatedHabit = await habitService.updateById(id, data);
     return res.status(200).json(updatedHabit);
@@ -40,7 +40,7 @@ export const updateOne = async (req: Request<{ id: string }, object, UpdateHabit
 export const deleteOne = async (req: Request<{ id: string }>, res: Response) => {
   const id = req.params.id;
   const userHabit = await habitService.findById({ _id: id, createdBy: res.locals.sub });
-  if (!userHabit) return res.status(304).json({ error: 'Incorrect user credentials' });
+  if (!userHabit) return res.status(403).json({ error: 'Incorrect user credentials' });
   try {
     await habitService.deleteById(id);
     return res.sendStatus(204);
