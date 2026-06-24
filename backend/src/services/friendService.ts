@@ -1,6 +1,7 @@
 import { FriendRequestStatus, PopulatedUser } from '../types';
 import * as friendRepository from '../repositories/friendRepository';
 import * as userRepository from '../repositories/userRepository';
+import * as notificationService from '../services/notificationService';
 import { Types } from 'mongoose';
 
 export async function sendRequest(requesterId: Types.ObjectId, recipientEmail: string) {
@@ -20,7 +21,14 @@ export async function sendRequest(requesterId: Types.ObjectId, recipientEmail: s
     throw new Error('A pending friend request already exists from the requester to the recipient');
   }
   const status = FriendRequestStatus.Pending;
-  return friendRepository.create({ recipientId: recipient._id, requesterId, status });
+  const result = await friendRepository.create({ recipientId: recipient._id, requesterId, status });
+  await notificationService.createNotification({
+    recipientId: recipient._id,
+    message: 'You received a new friend request!',
+    pageRef: '/requests',
+    actorRef: requesterId,
+  });
+  return result;
 }
 
 export async function getFriends(userId: Types.ObjectId) {
@@ -54,7 +62,14 @@ export async function acceptRequest(requestId: Types.ObjectId, userId: Types.Obj
   if (!request.recipientId.equals(userId)) {
     throw new Error('Unidentified user attempted to accept friend request');
   }
-  return friendRepository.acceptRequest(requestId);
+  const result = await friendRepository.acceptRequest(requestId);
+  await notificationService.createNotification({
+    recipientId: request.requesterId,
+    message: 'Your friends request got accepted!',
+    pageRef: '/requests',
+    actorRef: request.recipientId,
+  });
+  return result;
 }
 
 export async function declineRequest(requestId: Types.ObjectId, userId: Types.ObjectId) {

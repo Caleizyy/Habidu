@@ -99,6 +99,33 @@ export interface PopulatedUser {
   avatar?: string;
 }
 
+export enum NotificationReadStatus {
+  Read = 'read',
+  Unread = 'unread',
+}
+export interface Notification {
+  actorRef: Types.ObjectId;
+  recipientId: Types.ObjectId;
+  message: string;
+  status: NotificationReadStatus;
+  pageRef: string;
+}
+
+export interface CreateNotificationData {
+  recipientId: Types.ObjectId;
+  actorRef: Types.ObjectId;
+  message: string;
+  pageRef: string;
+  status: NotificationReadStatus;
+}
+
+export interface CreateNotificationBody {
+  recipientId: Types.ObjectId;
+  actorRef: Types.ObjectId;
+  message: string;
+  pageRef: string;
+}
+
 export interface UpdateHabitBody {
   name?: string;
   category?: HabitCategory;
