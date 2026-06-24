@@ -5,7 +5,7 @@ export interface PeriodColumnHeadersProps {
   highlightIndex: number;
 }
 
-export function PeriodColumnHeaders({ cells, highlightIndex }: PeriodColumnHeadersProps) {
+const PeriodColumnHeaders = ({ cells, highlightIndex }: PeriodColumnHeadersProps) => {
   return (
     <div className="flex items-start gap-3 p-4 pb-2">
       <div className="w-44 shrink-0 text-sm text-neutral-700 dark:text-neutral-300" />
@@ -29,4 +29,6 @@ export function PeriodColumnHeaders({ cells, highlightIndex }: PeriodColumnHeade
       <div className="w-24" />
     </div>
   );
-}
+};
+
+export default PeriodColumnHeaders;

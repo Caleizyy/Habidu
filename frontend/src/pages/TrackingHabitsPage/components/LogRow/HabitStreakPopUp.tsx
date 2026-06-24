@@ -9,7 +9,7 @@ export interface HabitStreakPopUpProps {
   triggerRef: React.RefObject<HTMLDivElement | null>;
 }
 
-export function HabitStreakPopUp({ currentStreak, personalBest, visible, triggerRef }: HabitStreakPopUpProps) {
+function HabitStreakPopUp({ currentStreak, personalBest, visible, triggerRef }: HabitStreakPopUpProps) {
   const [tooltipPosition, setTooltipPosition] = React.useState({ top: 0, left: 0 });
 
   React.useEffect(() => {
@@ -53,3 +53,5 @@ export function HabitStreakPopUp({ currentStreak, personalBest, visible, trigger
     document.body
   );
 }
+
+export default HabitStreakPopUp;

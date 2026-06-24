@@ -1,6 +1,6 @@
 import { Habit, PeriodCell } from '@/types/habit';
-import { PeriodColumnHeaders } from './PeriodColumnHeaders';
-import { HabitProgressRow } from './HabitProgressRow';
+import PeriodColumnHeaders from './PeriodColumnHeaders';
+import HabitProgressRow from './HabitProgressRow';
 
 export interface HabitBarsGridProps {
   habits: Habit[];
@@ -8,7 +8,7 @@ export interface HabitBarsGridProps {
   highlightIndex: number;
 }
 
-export function HabitBarsGrid({ habits, barCellsMap, highlightIndex }: HabitBarsGridProps) {
+const HabitBarsGrid = ({ habits, barCellsMap, highlightIndex }: HabitBarsGridProps) => {
   const firstHabitCells = habits.length > 0 ? (barCellsMap[habits[0]._id] ?? []) : [];
 
   return (
@@ -22,4 +22,6 @@ export function HabitBarsGrid({ habits, barCellsMap, highlightIndex }: HabitBars
       </div>
     </div>
   );
-}
+};
+
+export default HabitBarsGrid;

@@ -1,4 +1,4 @@
-import { SectionStreakDisplay } from './SectionStreakDisplay';
+import SectionStreakDisplay from './SectionStreakDisplay';
 
 export interface SectionHeaderProps {
   title: string;
@@ -9,14 +9,14 @@ export interface SectionHeaderProps {
   sectionPersonalBest: number;
 }
 
-export function SectionHeader({
+const SectionHeader = ({
   title,
   rangeLabel,
   open,
   onToggle,
   sectionStreak,
   sectionPersonalBest,
-}: SectionHeaderProps) {
+}: SectionHeaderProps) => {
   return (
     <button
       onClick={onToggle}
@@ -38,4 +38,6 @@ export function SectionHeader({
       </svg>
     </button>
   );
-}
+};
+
+export default SectionHeader;

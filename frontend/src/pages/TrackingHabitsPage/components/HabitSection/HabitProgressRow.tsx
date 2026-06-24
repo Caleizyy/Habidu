@@ -1,12 +1,12 @@
 import { Habit, PeriodCell } from '@/types/habit';
-import { ProgressBar } from './ProgressBar';
+import ProgressBar from './ProgressBar';
 
 export interface HabitProgressRowProps {
   habit: Habit;
   cells: PeriodCell[];
 }
 
-export function HabitProgressRow({ habit, cells }: HabitProgressRowProps) {
+const HabitProgressRow = ({ habit, cells }: HabitProgressRowProps) => {
   const total = Math.round(cells.reduce((s, c) => s + c.value, 0));
   const target = Math.round(cells.reduce((s, c) => s + c.target, 0));
 
@@ -24,4 +24,6 @@ export function HabitProgressRow({ habit, cells }: HabitProgressRowProps) {
       </span>
     </div>
   );
-}
+};
+
+export default HabitProgressRow;

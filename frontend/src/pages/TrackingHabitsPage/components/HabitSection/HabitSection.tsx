@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { Habit, PeriodCell } from '@/types/habit';
-import { SectionHeader } from './SectionHeader';
-import { HabitBarsGrid } from './HabitBarsGrid';
+import SectionHeader from './SectionHeader';
+import HabitBarsGrid from './HabitBarsGrid';
 
 export interface HabitSectionProps {
   title: string;
@@ -14,7 +14,7 @@ export interface HabitSectionProps {
   sectionPersonalBest?: number;
 }
 
-export function HabitSection({
+const HabitSection = ({
   title,
   rangeLabel,
   habits,
@@ -23,7 +23,7 @@ export function HabitSection({
   highlightIndex = 0,
   sectionStreak = 0,
   sectionPersonalBest = 0,
-}: HabitSectionProps) {
+}: HabitSectionProps) => {
   const [open, setOpen] = React.useState(true);
 
   return (
@@ -45,4 +45,6 @@ export function HabitSection({
       </div>
     </div>
   );
-}
+};
+
+export { HabitSection };

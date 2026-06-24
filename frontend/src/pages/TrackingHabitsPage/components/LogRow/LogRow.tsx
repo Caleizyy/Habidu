@@ -1,5 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
-import { HabitStreakPopUp } from '../HabitSection/HabitStreakPopUp';
+import HabitStreakPopUp from './HabitStreakPopUp';
 import LogRowProgress from './LogRowProgress';
 import LogRowActions from './LogRowActions';
 import LogRowStatus from './LogRowStatus';

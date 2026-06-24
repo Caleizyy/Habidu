@@ -5,7 +5,7 @@ export interface SectionStreakDisplayProps {
   personalBest: number;
 }
 
-export function SectionStreakDisplay({ currentStreak, personalBest }: SectionStreakDisplayProps) {
+const SectionStreakDisplay = ({ currentStreak, personalBest }: SectionStreakDisplayProps) => {
   return (
     <div className="flex items-center gap-6">
       <div className="flex flex-col items-center">
@@ -29,4 +29,6 @@ export function SectionStreakDisplay({ currentStreak, personalBest }: SectionStr
       </div>
     </div>
   );
-}
+};
+
+export default SectionStreakDisplay;
