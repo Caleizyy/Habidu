@@ -20,11 +20,11 @@ const LogRowActions = ({ isCompleted, isOver, value, unit, undoLog, quickLog }: 
     }
 
     if (isOver) {
-      return <Button className="w-full" variant={'outline'} onClick={undoLog}>{`+${value} ${unit}`}</Button>;
+      return <Button className="w-full" variant="success-over" onClick={undoLog}>{`+${value} ${unit}`}</Button>;
     }
 
     return (
-      <Button className="w-full" onClick={quickLog}>
+      <Button className="w-full" variant="success" onClick={quickLog}>
         Log
       </Button>
     );

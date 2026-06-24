@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { HabitFrequency, PeriodCell } from '@/types/habit';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { Button } from '@/components/ui/Button';
 import { buildDailyCells, buildWeeklyCells, buildMonthlyCells } from '@/utils/habitHelpers';
 import {
   getTodayDate,
@@ -110,22 +111,17 @@ export function TrackingHabitsPage(): React.ReactNode {
     <PageLayout
       title="Tracking Habits"
       actions={
-        <button
+        <Button
           onClick={hookState.saveDrafts}
           disabled={!hookState.hasUnsavedChanges || hookState.isSaving}
-          className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-colors ${
-            hookState.hasUnsavedChanges
-              ? hookState.isSaving
-                ? 'cursor-wait bg-green-400 text-white dark:bg-green-700'
-                : 'bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700'
-              : 'invisible'
-          }`}
+          variant="success"
+          className={hookState.hasUnsavedChanges ? '' : 'invisible'}
         >
           {hookState.isSaving && (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
           )}
           Save Changes
-        </button>
+        </Button>
       }
     >
       <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
