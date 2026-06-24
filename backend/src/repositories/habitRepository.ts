@@ -14,7 +14,8 @@ export async function findById(filter: HabitByIdFilter) {
 }
 
 export async function updateById(_id: string, data: UpdateHabitBody) {
-  return Habit.updateOne({ _id }, { $set: data });
+  const response = await Habit.updateOne({ _id }, { $set: data });
+  return response.acknowledged;
 }
 
 export async function deleteById(_id: string) {
