@@ -144,7 +144,7 @@ export async function updateHabit(habit: {
   targetValue?: number;
   targetUnit?: string;
 }) {
-  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits/${habit.id}`, {
+  const response = await fetch(`${API_BASE_URL}/habits/${habit.id}`, {
     method: 'PATCH',
     credentials: 'include',
     headers: {
@@ -160,7 +160,7 @@ export async function updateHabit(habit: {
 }
 
 export async function deleteHabit(id: string) {
-  const response = await fetch(`${import.meta.env.VITE_BASE_URL}/habits/${id}`, {
+  const response = await fetch(`${API_BASE_URL}/habits/${id}`, {
     method: 'DELETE',
     credentials: 'include',
   });
