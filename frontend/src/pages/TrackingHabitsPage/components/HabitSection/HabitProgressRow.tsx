@@ -1,5 +1,5 @@
 import { Habit, PeriodCell } from '@/types/habit';
-import { ProgressBar } from '../ProgressBar';
+import { ProgressBar } from './ProgressBar';
 
 export interface HabitProgressRowProps {
   habit: Habit;
