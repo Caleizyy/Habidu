@@ -18,8 +18,8 @@ export function DeleteHabitDialog({ onHabitDeleted, id }: Readonly<DeleteHabitDi
   async function handleSubmit() {
     setError(null);
     try {
-      setOpen(false);
       await deleteHabitMutation.mutateAsync(id);
+      setOpen(false);
       onHabitDeleted();
     } catch (e) {
       console.log('caught', e);

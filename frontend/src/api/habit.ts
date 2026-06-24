@@ -167,4 +167,5 @@ export async function deleteHabit(id: string) {
   if (!response.ok) {
     throw new Error('Failed to delete habit');
   }
+  return true;
 }

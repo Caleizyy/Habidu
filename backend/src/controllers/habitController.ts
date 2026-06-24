@@ -43,7 +43,7 @@ export const deleteOne = async (req: Request<{ id: string }>, res: Response) => 
   if (!userHabit) return res.status(304).json({ error: 'Incorrect user credentials' });
   try {
     await habitService.deleteById(id);
-    return res.status(204);
+    return res.sendStatus(204);
   } catch (error) {
     console.error('Error deleting habit:', error);
     return res.status(500).json({ error: 'Failed to delete habit' });
