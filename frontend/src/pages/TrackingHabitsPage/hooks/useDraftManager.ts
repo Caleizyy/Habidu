@@ -18,19 +18,6 @@ export function useDraftManager() {
     }));
   }, []);
 
-  const undoLog = React.useCallback((habitId: string, date: string, isDraft: boolean) => {
-    if (isDraft) {
-      setDrafts((prev) => {
-        const habitDrafts = { ...prev[habitId] };
-        delete habitDrafts[date];
-        return { ...prev, [habitId]: habitDrafts };
-      });
-    } else {
-      // Mark for deletion (caller will identify the log ID)
-      // This will be called after identifying the log ID
-    }
-  }, []);
-
   const markLogForDeletion = React.useCallback((logId: string, habitId: string) => {
     setDeletedLogIds((prev) => ({
       ...prev,
@@ -63,7 +50,6 @@ export function useDraftManager() {
     deletedLogIds,
     addLog,
     editLog,
-    undoLog,
     markLogForDeletion,
     undoDraft,
     clearAllDrafts,
