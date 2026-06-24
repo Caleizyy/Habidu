@@ -13,7 +13,7 @@ const LogRowActions = ({ isCompleted, isOver, value, unit, undoLog, quickLog }: 
   const renderButton = () => {
     if (isCompleted && !isOver) {
       return (
-        <Button className="w-full" onClick={undoLog}>
+        <Button className="w-full" variant="secondary" onClick={undoLog}>
           Undo
         </Button>
       );
