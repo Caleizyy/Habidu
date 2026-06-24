@@ -2,7 +2,7 @@ import * as React from 'react';
 import { monthKey, getTodayDate } from '@/utils/dateHelpers';
 import { calculateStreaks } from '@/utils/habitStreakHelpers';
 import { calculateSectionStreaks } from '@/utils/sectionStreakHelpers';
-import { buildEffectiveLogs } from '@/utils/effectiveLogsHelpers';
+import { buildDisplayedLogs } from '@/utils/displayedLogsHelpers';
 import { HabitFrequency } from '@/types/habit';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 import { useHabitsQuery } from './useHabitsQuery';
@@ -180,15 +180,15 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
   }
 
   // Streaks computed so that they match the values the user currently sees.
-  const effectiveLogs = React.useMemo(
-    () => buildEffectiveLogs(habitsQuery.data ?? [], logs, draftManager.drafts, draftManager.deletedLogIds),
+  const displayedLogs = React.useMemo(
+    () => buildDisplayedLogs(habitsQuery.data ?? [], logs, draftManager.drafts, draftManager.deletedLogIds),
     [habitsQuery.data, logs, draftManager.drafts, draftManager.deletedLogIds]
   );
 
   // Calculate streaks for all habits when logs or drafts change
   const habitsWithStreaks = React.useMemo(() => {
     return (habitsQuery.data ?? []).map((habit) => {
-      const habitLogs = effectiveLogs[habit._id] ?? [];
+      const habitLogs = displayedLogs[habit._id] ?? [];
       const streaks = calculateStreaks(habit, habitLogs);
       return {
         ...habit,
@@ -196,7 +196,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
         personalBest: streaks.personalBest,
       };
     });
-  }, [habitsQuery.data, effectiveLogs]);
+  }, [habitsQuery.data, displayedLogs]);
 
   // Calculate section streaks (only increase if ALL habits in section are complete)
   const sectionStreaks = React.useMemo(() => {
@@ -205,11 +205,11 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     const monthlyHabits = habitsWithStreaks.filter((h) => h.frequency === HabitFrequency.Monthly);
 
     return {
-      daily: calculateSectionStreaks(dailyHabits, effectiveLogs, HabitFrequency.Daily),
-      weekly: calculateSectionStreaks(weeklyHabits, effectiveLogs, HabitFrequency.Weekly),
-      monthly: calculateSectionStreaks(monthlyHabits, effectiveLogs, HabitFrequency.Monthly),
+      daily: calculateSectionStreaks(dailyHabits, displayedLogs, HabitFrequency.Daily),
+      weekly: calculateSectionStreaks(weeklyHabits, displayedLogs, HabitFrequency.Weekly),
+      monthly: calculateSectionStreaks(monthlyHabits, displayedLogs, HabitFrequency.Monthly),
     };
-  }, [habitsWithStreaks, effectiveLogs]);
+  }, [habitsWithStreaks, displayedLogs]);
 
   // Save drafts with minimum loading time
   const saveDrafts = React.useCallback(async () => {
