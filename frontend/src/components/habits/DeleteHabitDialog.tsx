@@ -57,7 +57,6 @@ export function DeleteHabitDialog({ onHabitDeleted, id }: Readonly<DeleteHabitDi
             )}
           </div>
           <div className="flex w-full justify-center">
-            {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
               <Button className="h-10 w-30 bg-gray-200 text-black" onClick={() => setOpen(!open)}>
                 Cancel

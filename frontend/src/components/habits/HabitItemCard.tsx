@@ -1,7 +1,7 @@
 import { Card } from '@/components/ui/Card';
 import { Habit } from '@/types/habit';
 import { EditHabitDialog } from './EditHabitDialog';
-import { DeleteHabitDialog } from './DeleteConfirmModal';
+import { DeleteHabitDialog } from './DeleteHabitDialog';
 import { Dispatch, SetStateAction } from 'react';
 
 export default function HabitItemCard({
