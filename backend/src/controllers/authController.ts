@@ -3,6 +3,7 @@ import * as authService from '../services/authService';
 import * as sessionService from '../services/sessionService';
 import * as refreshService from '../services/refreshService';
 import { UserRole, CreateRefreshTokenBody, CreateUserBody, CreateSessionBody } from '../types';
+import { COOKIE_OPTIONS } from '../utils/cookieOptions';
 import crypto from 'crypto';
 import { google } from 'googleapis';
 
@@ -68,10 +69,7 @@ export const googleAuth = async (req: Request<unknown, unknown, { code: string }
     await Promise.all([sessionService.upsert(sessionBody), refreshService.upsert(refreshTokenBody)]);
 
     res.cookie('session', sessionId, {
-      httpOnly: true,
-      secure: true,
-      sameSite: 'lax',
-      path: '/',
+      ...COOKIE_OPTIONS,
       maxAge: tokens.expiry_date - Date.now(),
     });
 

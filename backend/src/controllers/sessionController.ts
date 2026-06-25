@@ -2,8 +2,7 @@ import { Request, Response } from 'express';
 import * as sessionService from '../services/sessionService';
 import * as authService from '../services/authService';
 import * as refreshService from '../services/refreshService';
-
-const COOKIE_OPTIONS = { httpOnly: true, secure: true, sameSite: 'lax' as const, path: '/' };
+import { COOKIE_OPTIONS } from '../utils/cookieOptions';
 
 export const logout = async (req: Request, res: Response) => {
   const sessionId = req.cookies?.session;
@@ -66,7 +65,7 @@ export const sessionCheck = async (req: Request, res: Response) => {
 
       res.cookie('session', sessionId, {
         ...COOKIE_OPTIONS,
-        maxAge: (newTokens.expiry_date - Date.now()) / 1000,
+        maxAge: newTokens.expiry_date - Date.now(),
       });
     }
 
