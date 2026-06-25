@@ -1,3 +1,4 @@
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/Input';
 
 interface LogRowInputProps {
@@ -8,11 +9,42 @@ interface LogRowInputProps {
 }
 
 const LogRowInput = ({ draftValue, unit, onChange, onBlur }: LogRowInputProps) => {
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseFloat(e.target.value);
-    if (!isNaN(value) && value >= 0) {
-      onChange(value);
+  const [inputText, setInputText] = useState<string>(String(draftValue));
+  const [isFocused, setIsFocused] = useState(false);
+
+  useEffect(() => {
+    if (!isFocused) {
+      setInputText(String(draftValue));
     }
+  }, [draftValue, isFocused]);
+
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const text = e.target.value;
+    setInputText(text);
+
+    if (text === '') {
+      // Empty field as 0 for draft
+      onChange(0);
+    } else {
+      const value = parseFloat(text);
+      if (!isNaN(value) && value >= 0) {
+        onChange(value);
+      }
+    }
+  };
+
+  const handleFocus = () => {
+    setIsFocused(true);
+  };
+
+  const handleBlur = () => {
+    setIsFocused(false);
+    // Empty or invalid input changes to "0"
+    if (inputText === '' || isNaN(parseFloat(inputText)) || parseFloat(inputText) < 0) {
+      setInputText('0');
+      onChange(0);
+    }
+    onBlur();
   };
 
   return (
@@ -20,9 +52,10 @@ const LogRowInput = ({ draftValue, unit, onChange, onBlur }: LogRowInputProps) =
       <Input
         type="number"
         min="0"
-        value={draftValue}
+        value={inputText}
         onChange={handleChange}
-        onBlur={onBlur}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
         className="w-17 rounded border border-neutral-300 bg-white px-1.5 py-0.5 text-xs text-neutral-800 outline-none focus:border-green-500 dark:border-neutral-600 dark:bg-neutral-900 dark:text-neutral-200"
       />
       <span className="w-10 truncate text-xs text-neutral-400 dark:text-neutral-500">{unit}</span>
