@@ -1,8 +1,7 @@
 import { PageLayout } from '@/components/layout/PageLayout';
 
 const teamMembers = [
-  { name: 'Jonas', color: '#FF6B6B' },
-  { name: 'Karolis', color: '#4ECDC4' },
+  { name: 'Karolis', color: '#FF6B6B' },
   { name: 'Ąžuolas', color: '#45B7D1' },
   { name: 'Salvijus', color: '#FFA07A' },
   { name: 'Pavel', color: '#98D8C8' },
@@ -39,6 +38,10 @@ export function AboutPage() {
             ))}
           </p>
         </section>
+
+        <p className="mt-3">
+          Our Mentor: <b>Jonas</b>
+        </p>
 
         <section className="mt-12">
           <p>
