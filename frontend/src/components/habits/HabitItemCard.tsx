@@ -2,12 +2,8 @@ import { Card } from '@/components/ui/Card';
 import { Habit } from '@/types/habit';
 import { EditHabitDialog } from './EditHabitDialog';
 import { DeleteHabitDialog } from './DeleteHabitDialog';
-import { Dispatch, SetStateAction } from 'react';
 
-export default function HabitItemCard({
-  habit,
-  setRefreshKey,
-}: Readonly<{ habit: Habit; setRefreshKey: Dispatch<SetStateAction<number>> }>) {
+export default function HabitItemCard({ habit }: Readonly<{ habit: Habit }>) {
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -27,8 +23,8 @@ export default function HabitItemCard({
             </Card>
           </div>
           <div className="flex flex-col gap-2">
-            <EditHabitDialog onHabitUpdated={() => setRefreshKey((prev) => prev + 1)} habit={habit} />
-            <DeleteHabitDialog onHabitDeleted={() => setRefreshKey((prev) => prev + 1)} id={habit._id} />
+            <EditHabitDialog habit={habit} />
+            <DeleteHabitDialog id={habit._id} />
           </div>
         </div>
       </Card>

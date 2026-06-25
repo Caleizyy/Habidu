@@ -9,11 +9,7 @@ import { frequencyOptions, difficultyOptions, categoryOptions } from './selectCh
 import { useState } from 'react';
 import { useCreateHabitMutation } from '@/hooks/useCreateHabitMutation';
 
-interface AddHabitDialogProps {
-  onHabitCreated: () => void;
-}
-
-export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
+export function AddHabitDialog() {
   const [name, setName] = useState('');
   const [frequency, setFrequency] = useState('');
   const [difficulty, setDifficulty] = useState('');
@@ -56,7 +52,6 @@ export function AddHabitDialog({ onHabitCreated }: AddHabitDialogProps) {
       });
       resetForm();
       setOpen(false);
-      onHabitCreated();
     } catch {
       setError('Something went wrong. Please try again.');
     }

@@ -5,11 +5,10 @@ import { useState } from 'react';
 import { useDeleteHabitMutation } from '@/hooks/useDeleteHabitMutation';
 
 interface DeleteHabitDialogProps {
-  onHabitDeleted: () => void;
   id: string;
 }
 
-export function DeleteHabitDialog({ onHabitDeleted, id }: Readonly<DeleteHabitDialogProps>) {
+export function DeleteHabitDialog({ id }: Readonly<DeleteHabitDialogProps>) {
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -20,7 +19,6 @@ export function DeleteHabitDialog({ onHabitDeleted, id }: Readonly<DeleteHabitDi
     try {
       await deleteHabitMutation.mutateAsync(id);
       setOpen(false);
-      onHabitDeleted();
     } catch (e) {
       console.log('caught', e);
       setError('Something went wrong. Please try again.');

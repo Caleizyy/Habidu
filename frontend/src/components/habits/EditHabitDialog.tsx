@@ -11,11 +11,10 @@ import { useUpdateHabitMutation } from '@/hooks/useUpdateHabitMutation';
 import { Habit } from '@/types/habit';
 
 interface EditHabitDialogProps {
-  onHabitUpdated: () => void;
   habit: Habit;
 }
 
-export function EditHabitDialog({ onHabitUpdated, habit }: Readonly<EditHabitDialogProps>) {
+export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
   const [name, setName] = useState<string>(habit.name);
   const [frequency, setFrequency] = useState<string>(habit.frequency);
   const [difficulty, setDifficulty] = useState<string>(habit.difficulty);
@@ -59,7 +58,6 @@ export function EditHabitDialog({ onHabitUpdated, habit }: Readonly<EditHabitDia
       });
       resetForm();
       setOpen(false);
-      onHabitUpdated();
     } catch {
       setError('Something went wrong. Please try again.');
     }
