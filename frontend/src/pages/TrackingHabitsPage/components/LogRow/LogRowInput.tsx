@@ -7,6 +7,15 @@ interface LogRowInputProps {
   onChange: (value: number) => void;
 }
 
+const parseLogValue = (text: string): number | null => {
+  if (text === '') return null;
+
+  const value = parseFloat(text);
+  if (isNaN(value) || value < 0) return null;
+
+  return value;
+};
+
 const LogRowInput = ({ draftValue, unit, onChange }: LogRowInputProps) => {
   const [inputText, setInputText] = useState<string>(String(draftValue));
   const [isFocused, setIsFocused] = useState(false);
@@ -21,13 +30,11 @@ const LogRowInput = ({ draftValue, unit, onChange }: LogRowInputProps) => {
     const text = e.target.value;
     setInputText(text);
 
-    if (text === '') {
-      onChange(0);
+    const value = parseLogValue(text);
+    if (value !== null) {
+      onChange(value);
     } else {
-      const value = parseFloat(text);
-      if (!isNaN(value) && value >= 0) {
-        onChange(value);
-      }
+      onChange(0);
     }
   };
 
@@ -38,7 +45,8 @@ const LogRowInput = ({ draftValue, unit, onChange }: LogRowInputProps) => {
   const handleBlur = () => {
     setIsFocused(false);
 
-    if (inputText === '' || isNaN(parseFloat(inputText)) || parseFloat(inputText) < 0) {
+    const value = parseLogValue(inputText);
+    if (value === null) {
       setInputText('0');
       onChange(0);
     }
