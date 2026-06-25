@@ -4,8 +4,6 @@ import {
   Trees,
   Zap,
   CalendarDays,
-  Trophy,
-  Medal,
   SquareCheckBig,
   CirclePile,
   Users,
