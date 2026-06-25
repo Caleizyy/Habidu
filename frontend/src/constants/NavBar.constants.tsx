@@ -102,8 +102,8 @@ export const DEFAULT_AUTH = {
 export const APP_LOGO = {
   url: ROUTES.HOME,
   src: logo,
-  alt: 'Habit Tracker',
-  title: 'Habit Tracker',
+  alt: 'Habidu',
+  title: 'Habidu',
 };
 
 export const APP_MENU: MenuItem[] = [
@@ -123,30 +123,6 @@ export const APP_MENU: MenuItem[] = [
         description: 'Track your habits',
         url: ROUTES.TRACKING,
         icon: <NotebookTabs className="size-5" />,
-      },
-      {
-        title: 'Calendar',
-        description: 'Plan your habit completion schedule',
-        url: ROUTES.CALENDAR,
-        icon: <CalendarDays className="size-5" />,
-      },
-    ],
-  },
-  {
-    title: 'Progress',
-    url: '#',
-    items: [
-      {
-        title: 'Leaderboards',
-        description: 'Compete with friends on the leaderboard',
-        url: ROUTES.LEADERBOARDS,
-        icon: <Medal className="size-5" />,
-      },
-      {
-        title: 'Achievements',
-        description: 'Unlock badges and earn milestones',
-        url: ROUTES.ACHIEVEMENTS,
-        icon: <Trophy className="size-5" />,
       },
     ],
   },
