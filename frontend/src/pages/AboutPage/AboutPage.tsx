@@ -1,5 +1,4 @@
 import { PageLayout } from '@/components/layout/PageLayout';
-import './AboutPage.css';
 
 const teamMembers = [
   { name: 'Jonas', color: '#FF6B6B' },
@@ -14,9 +13,9 @@ const teamMembers = [
 export function AboutPage() {
   return (
     <PageLayout title="About">
-      <div className="about-container">
-        <section className="about-intro">
-          <h2>
+      <div className="mx-auto max-w-3xl p-8 text-lg leading-relaxed">
+        <section>
+          <h2 className="mb-6 text-4xl">
             What is <b>Habidu?</b>
           </h2>
           <p>
@@ -30,18 +29,18 @@ export function AboutPage() {
           </p>
         </section>
 
-        <section className="team-section">
-          <h2>Meet our Team</h2>
-          <p className="team-list">
+        <section>
+          <h2 className="mb-6 text-4xl">Meet our Team</h2>
+          <p className="flex flex-wrap gap-6">
             {teamMembers.map((member) => (
-              <span key={member.name} className="team-name" style={{ color: member.color }}>
+              <span key={member.name} className="font-semibold" style={{ color: member.color }}>
                 {member.name}
               </span>
             ))}
           </p>
         </section>
 
-        <section className="closing">
+        <section className="mt-8">
           <p>
             We hope <b>Habidu</b> will help you build habits and have a blast doing it!
           </p>
