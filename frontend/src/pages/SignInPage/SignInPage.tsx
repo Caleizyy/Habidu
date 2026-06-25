@@ -1,10 +1,10 @@
 import { SignInProps } from '@/components/navbar/types';
 import { Button } from '@/components/ui/Button';
-import { DEFAULT_AUTH, DEFAULT_LOGO } from '@/constants/NavBar.constants';
+import { DEFAULT_AUTH, APP_LOGO } from '@/constants/NavBar.constants';
 import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 
-export function SignInPage({ logo = DEFAULT_LOGO, auth = DEFAULT_AUTH }: SignInProps): React.ReactNode {
+export function SignInPage({ logo = APP_LOGO, auth = DEFAULT_AUTH }: SignInProps): React.ReactNode {
   const { signin } = useAuth();
   return (
     <div className="bg-brand-bg flex min-h-screen flex-col items-center justify-center gap-8">
