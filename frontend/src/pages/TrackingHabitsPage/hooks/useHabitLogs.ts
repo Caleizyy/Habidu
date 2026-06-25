@@ -1,5 +1,9 @@
 import * as React from 'react';
 import { monthKey, getTodayDate } from '@/utils/dateHelpers';
+import { calculateStreaks } from '@/utils/habitStreakHelpers';
+import { calculateSectionStreaks } from '@/utils/sectionStreakHelpers';
+import { buildDisplayedLogs } from '@/utils/displayedLogsHelpers';
+import { HabitFrequency } from '@/types/habit';
 import { HABIT_TRACKING_CONSTANTS } from '@/constants/HabitTracking.constants';
 import { useHabitsQuery } from './useHabitsQuery';
 import { useAllHabitLogsQuery } from './useAllHabitLogsQuery';
@@ -175,33 +179,37 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
       .reduce((s, l) => s + l.value, 0);
   }
 
-  function getDisplayValueForWeek(habitId: string, dates: string[]): number {
-    const draftKey = `WEEK:${dates[0]}`;
-    const draftValue = draftManager.drafts[habitId]?.[draftKey];
-    if (draftValue !== undefined) return draftValue;
-    return sumForDates(habitId, dates);
-  }
+  // Streaks computed so that they match the values the user currently sees.
+  const displayedLogs = React.useMemo(
+    () => buildDisplayedLogs(habitsQuery.data ?? [], logs, draftManager.drafts, draftManager.deletedLogIds),
+    [habitsQuery.data, logs, draftManager.drafts, draftManager.deletedLogIds]
+  );
 
-  function getDisplayValueForMonthKey(habitId: string, mKey: string): number {
-    const draftKey = `MONTH:${mKey}`;
-    const draftValue = draftManager.drafts[habitId]?.[draftKey];
-    if (draftValue !== undefined) return draftValue;
-    return sumForMonth(habitId, mKey);
-  }
+  // Calculate streaks for all habits when logs or drafts change
+  const habitsWithStreaks = React.useMemo(() => {
+    return (habitsQuery.data ?? []).map((habit) => {
+      const habitLogs = displayedLogs[habit._id] ?? [];
+      const streaks = calculateStreaks(habit, habitLogs);
+      return {
+        ...habit,
+        currentStreak: streaks.currentStreak,
+        personalBest: streaks.personalBest,
+      };
+    });
+  }, [habitsQuery.data, displayedLogs]);
 
-  // Sum helpers
-  function sumForDates(habitId: string, dates: string[]): number {
-    const set = new Set(dates);
-    return (logs[habitId] ?? [])
-      .filter((l) => set.has(l.date) && !(l._id in draftManager.deletedLogIds))
-      .reduce((s, l) => s + l.value, 0);
-  }
+  // Calculate section streaks (only increase if ALL habits in section are complete)
+  const sectionStreaks = React.useMemo(() => {
+    const dailyHabits = habitsWithStreaks.filter((h) => h.frequency === HabitFrequency.Daily);
+    const weeklyHabits = habitsWithStreaks.filter((h) => h.frequency === HabitFrequency.Weekly);
+    const monthlyHabits = habitsWithStreaks.filter((h) => h.frequency === HabitFrequency.Monthly);
 
-  function sumForMonth(habitId: string, mKey: string): number {
-    return (logs[habitId] ?? [])
-      .filter((l) => monthKey(l.date) === mKey && !(l._id in draftManager.deletedLogIds))
-      .reduce((s, l) => s + l.value, 0);
-  }
+    return {
+      daily: calculateSectionStreaks(dailyHabits, displayedLogs, HabitFrequency.Daily),
+      weekly: calculateSectionStreaks(weeklyHabits, displayedLogs, HabitFrequency.Weekly),
+      monthly: calculateSectionStreaks(monthlyHabits, displayedLogs, HabitFrequency.Monthly),
+    };
+  }, [habitsWithStreaks, displayedLogs]);
 
   // Save drafts with minimum loading time
   const saveDrafts = React.useCallback(async () => {
@@ -289,7 +297,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
   }, [draftManager, logs, mutations.batchSaveMutation, WEEKLY_ROW_LABELS]);
 
   return {
-    habits: habitsQuery.data ?? [],
+    habits: habitsWithStreaks,
     logs,
     drafts: draftManager.drafts,
     deletedLogIds: draftManager.deletedLogIds,
@@ -297,6 +305,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     isSaving: mutations.isSaving,
     savingLogIds: new Set<string>(),
     error,
+    sectionStreaks,
     addLog,
     editLog,
     editWeeklyLog,
@@ -307,8 +316,6 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
     getDisplayValue,
     getDisplayValueForDates,
     getDisplayValueForMonth,
-    getDisplayValueForWeek,
-    getDisplayValueForMonthKey,
     saveDrafts,
     hasUnsavedChanges: draftManager.hasUnsavedChanges,
     ITEMS_PER_PAGE: HABIT_TRACKING_CONSTANTS.ITEMS_PER_PAGE,

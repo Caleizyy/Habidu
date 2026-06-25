@@ -28,6 +28,8 @@ export interface Habit {
   targetValue: number;
   targetUnit: string;
   notes?: string;
+  currentStreak?: number;
+  personalBest?: number;
 }
 
 export interface HabitLog {

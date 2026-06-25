@@ -2,8 +2,10 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card';
 import { Input } from '@/components/ui/Input';
 import { Label } from '@/components/ui/Label';
 import { Separator } from '@/components/ui/Separator';
-import { Mail, User } from 'lucide-react';
+import { Mail } from 'lucide-react';
 import { AlertCircle, Loader2 } from 'lucide-react';
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
+import { User } from '@/types/index';
 
 interface ProfileDetailsProps {
   isEditing: boolean;
@@ -13,6 +15,7 @@ interface ProfileDetailsProps {
   email: string;
   bio: string;
   displayName: string;
+  user: User | null;
   onDisplayNameChange: (value: string) => void;
   onBioChange: (value: string) => void;
 }
@@ -25,6 +28,7 @@ export function ProfileDetails({
   email,
   bio,
   displayName,
+  user,
   onDisplayNameChange,
   onBioChange,
 }: ProfileDetailsProps) {
@@ -39,6 +43,12 @@ export function ProfileDetails({
       </div>
     );
   }
+  if (!user) return null;
+  const initials = user.name
+    .split(' ')
+    .map((n) => n[0])
+    .join('')
+    .toUpperCase();
   return (
     <Card>
       <CardHeader>
@@ -46,10 +56,11 @@ export function ProfileDetails({
       </CardHeader>
       <CardContent className="space-y-4">
         {/* Name field */}
-        <div className="space-y-1">
-          <Label htmlFor="name" className="text-muted-foreground flex items-center gap-2">
-            <User className="h-[10vh] w-[4vw]" />
-          </Label>
+        <div className="flex items-center gap-4">
+          <Avatar className="h-24 w-24 text-2xl">
+            <AvatarImage src={user?.avatar} alt={user?.name} />
+            <AvatarFallback>{initials}</AvatarFallback>
+          </Avatar>
           {isEditing ? (
             <div className="relative">
               <Input
@@ -64,7 +75,7 @@ export function ProfileDetails({
               )}
             </div>
           ) : (
-            <p className="text-sm font-medium">{name}</p>
+            <p className="text-2xl font-semibold">{name}</p>
           )}
         </div>
 

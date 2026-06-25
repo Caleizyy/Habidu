@@ -18,19 +18,6 @@ export function useDraftManager() {
     }));
   }, []);
 
-  const undoLog = React.useCallback((habitId: string, date: string, isDraft: boolean) => {
-    if (isDraft) {
-      setDrafts((prev) => {
-        const habitDrafts = { ...prev[habitId] };
-        delete habitDrafts[date];
-        return { ...prev, [habitId]: habitDrafts };
-      });
-    } else {
-      // Mark for deletion (caller will identify the log ID)
-      // This will be called after identifying the log ID
-    }
-  }, []);
-
   const markLogForDeletion = React.useCallback((logId: string, habitId: string) => {
     setDeletedLogIds((prev) => ({
       ...prev,
@@ -42,6 +29,11 @@ export function useDraftManager() {
     setDrafts((prev) => {
       const habitDrafts = { ...prev[habitId] };
       delete habitDrafts[date];
+      // If habit has no more drafts, remove habitId entirely
+      if (Object.keys(habitDrafts).length === 0) {
+        const { [habitId]: _, ...rest } = prev;
+        return rest;
+      }
       return { ...prev, [habitId]: habitDrafts };
     });
   }, []);
@@ -63,7 +55,6 @@ export function useDraftManager() {
     deletedLogIds,
     addLog,
     editLog,
-    undoLog,
     markLogForDeletion,
     undoDraft,
     clearAllDrafts,

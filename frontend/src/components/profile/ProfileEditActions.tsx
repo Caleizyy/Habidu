@@ -19,13 +19,17 @@ export function ProfileEditActions({ isSaving, error, onSave, onCancel }: Profil
         </div>
       )}
       <div className="flex gap-3">
-        <Button onClick={onSave} disabled={isSaving} className="h-[4vh] w-[8vw]">
-          <Check className="mr-2 h-[2vh] w-[2vw]" />
-          {isSaving ? 'Saving...' : 'Save Changes'}
+        <Button onClick={onSave} disabled={isSaving} className="h-9 px-4">
+          <Check className="h-4 w-4 sm:mr-2" />
+          {isSaving ? (
+            <span className="hidden sm:inline">Saving...</span>
+          ) : (
+            <span className="hidden sm:inline">Save Changes</span>
+          )}
         </Button>
-        <Button variant="outline" onClick={onCancel} disabled={isSaving} className="h-[4vh] w-[5vw]">
-          <X className="mr-2 h-4 w-4" />
-          Cancel
+        <Button variant="outline" onClick={onCancel} disabled={isSaving} className="h-9 px-4">
+          <X className="h-4 w-4 sm:mr-2" />
+          <span className="hidden sm:inline">Cancel</span>
         </Button>
       </div>
     </div>

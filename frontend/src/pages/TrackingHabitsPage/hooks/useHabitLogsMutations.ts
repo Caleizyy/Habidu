@@ -94,11 +94,9 @@ export function useHabitLogsMutations() {
       // Filter out temporary IDs - only delete real server IDs
       const realLogsToDelete = params.logsToDelete.filter(({ logId }) => !logId.startsWith('temp-'));
 
-      const deletionPromises = realLogsToDelete.map(({ habitId, logId }) => deleteLog(habitId, logId));
+      await Promise.all(realLogsToDelete.map(({ habitId, logId }) => deleteLog(habitId, logId)));
 
-      const creationPromises = params.updates.map(({ habitId, date, value }) => upsertLog(habitId, date, value));
-
-      await Promise.all([...deletionPromises, ...creationPromises]);
+      await Promise.all(params.updates.map(({ habitId, date, value }) => upsertLog(habitId, date, value)));
 
       // Return the updates so we can use them in onSuccess
       return {

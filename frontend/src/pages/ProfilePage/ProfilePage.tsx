@@ -1,10 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { profileApi } from '@/api/profile';
-import { ProfileHeader } from '@/components/profile/ProfileHeader';
 import { ProfileDetails } from '@/components/profile/ProfileDetails';
 import { ProfileEditActions } from '@/components/profile/ProfileEditActions';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { Button } from '@/components/ui/Button';
+import { Pencil } from 'lucide-react';
 
 export function ProfilePage() {
   const { user, isAuthenticated, refreshUser } = useAuth();
@@ -76,11 +77,19 @@ export function ProfilePage() {
     return <div>Failed to load user</div>;
   }
   return (
-    <PageLayout title="Profile">
+    <PageLayout
+      title="Profile"
+      actions={
+        !isEditing && (
+          <Button variant="outline" onClick={handleEdit} className="h-9 shrink-0 px-4">
+            <Pencil className="h-4 w-4 sm:mr-2" />
+            <span className="hidden sm:inline">Edit Profile</span>
+          </Button>
+        )
+      }
+    >
       <div className="flex flex-1 flex-col items-center px-6 py-12">
         <div className="w-full max-w-2xl space-y-6">
-          <ProfileHeader user={user} isEditing={isEditing} onEditClick={handleEdit} />
-
           <ProfileDetails
             isEditing={isEditing}
             isLoading={isLoading}
@@ -89,6 +98,7 @@ export function ProfilePage() {
             email={user.email}
             bio={bio ?? ''}
             displayName={displayName}
+            user={user}
             onDisplayNameChange={setDisplayName}
             onBioChange={setBio}
           />

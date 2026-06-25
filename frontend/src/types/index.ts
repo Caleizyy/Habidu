@@ -57,3 +57,17 @@ export interface Profile {
   avatar?: string;
   bio?: string;
 }
+
+export interface AppNotification {
+  _id: string;
+  recipientId: string;
+  actorRef: {
+    _id: string;
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+  };
+  message: string;
+  pageRef: string;
+  status: string;
+}
