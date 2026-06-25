@@ -29,7 +29,7 @@ export function AboutPage() {
           </p>
         </section>
 
-        <section>
+        <section className="mt-12">
           <h2 className="mb-6 text-4xl">Meet our Team</h2>
           <p className="flex flex-wrap gap-6">
             {teamMembers.map((member) => (
@@ -40,7 +40,7 @@ export function AboutPage() {
           </p>
         </section>
 
-        <section className="mt-8">
+        <section className="mt-12">
           <p>
             We hope <b>Habidu</b> will help you build habits and have a blast doing it!
           </p>
