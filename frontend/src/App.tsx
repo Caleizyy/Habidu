@@ -9,13 +9,10 @@ import {
   TrackingHabitsPage,
   ProfilePage,
   FriendsPage,
-  AchievementsPage,
-  CalendarPage,
   RequestsPage,
   GroupsPage,
   GroupDetailPage,
   AboutPage,
-  LeaderboardsPage,
   SignInPage,
   NotFoundPage,
 } from './pages';
@@ -32,9 +29,6 @@ function App() {
             <Route path={ROUTES.HOME} element={<HomePage />} />
             <Route path={ROUTES.HABITS} element={<HabitsPage />} />
             <Route path={ROUTES.TRACKING} element={<TrackingHabitsPage />} />
-            <Route path={ROUTES.CALENDAR} element={<CalendarPage />} />
-            <Route path={ROUTES.LEADERBOARDS} element={<LeaderboardsPage />} />
-            <Route path={ROUTES.ACHIEVEMENTS} element={<AchievementsPage />} />
             <Route path={ROUTES.ABOUT} element={<AboutPage />} />
             <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
             <Route path={ROUTES.FRIENDS} element={<FriendsPage />} />

@@ -10,6 +10,7 @@ import { notFoundHandler, errorHandler } from './middleware';
 import friendRoutes from './routes/friendRoutes';
 import userRoutes from './routes/userRoutes';
 import profileRoutes from './routes/profileRoutes';
+import notificationRoutes from './routes/notificationRoutes';
 import habitRoutes from './routes/habitRoutes';
 import groupRoutes from './routes/groupRoutes';
 
@@ -44,6 +45,7 @@ apiRouter.use('/user', userRoutes);
 apiRouter.use('/groups', groupRoutes);
 apiRouter.use('/profile', profileRoutes);
 
+apiRouter.use('/notifications', notificationRoutes);
 app.use(morgan(process.env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 
 app.get('/', (req, res) => {

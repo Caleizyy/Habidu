@@ -4,6 +4,7 @@ import kittenImage from '../../assets/kitten.jpg';
 import { useState } from 'react';
 import { FriendRequest } from '@/types';
 import { friendRequestsApi } from '@/api/friendRequests';
+import { X, Check } from 'lucide-react';
 
 export default function AcceptRequestCardItem({
   request,
@@ -68,22 +69,28 @@ export default function AcceptRequestCardItem({
             <Card
               className={
                 clicked
-                  ? 'pointer-events-none flex items-center justify-center bg-gray-300 p-1 opacity-50'
-                  : 'flex cursor-pointer items-center justify-center bg-gray-100 p-1'
+                  ? 'pointer-events-none flex items-center justify-center rounded-lg bg-green-300 p-1 opacity-50 transition-all duration-200'
+                  : 'flex cursor-pointer items-center justify-center rounded-lg bg-green-200 px-4 py-2 transition-all duration-200 hover:-translate-y-1 hover:bg-green-400 hover:shadow-lg'
               }
               onClick={handleAccept}
             >
-              <p className="truncate text-lg">{requestAcceptText}</p>
+              <div className="flex items-center gap-2">
+                <Check />
+                <p className="truncate text-lg font-medium">{requestAcceptText}</p>
+              </div>
             </Card>
             <Card
               className={
                 clicked
-                  ? 'pointer-events-none flex items-center justify-center bg-gray-300 p-1 opacity-50'
-                  : 'flex cursor-pointer items-center justify-center bg-gray-100 p-1'
+                  ? 'pointer-events-none flex items-center justify-center rounded-lg bg-red-300 p-1 opacity-50 transition-all duration-200'
+                  : 'flex cursor-pointer items-center justify-center rounded-lg bg-red-200 px-4 py-2 transition-all duration-200 hover:-translate-y-1 hover:bg-red-400 hover:shadow-lg'
               }
               onClick={handleDeny}
             >
-              <p className="truncate text-lg">{requestDenyText}</p>
+              <div className="flex items-center gap-2">
+                <X />
+                <p className="truncate text-lg font-medium">{requestDenyText}</p>
+              </div>
             </Card>
           </div>
         </div>
