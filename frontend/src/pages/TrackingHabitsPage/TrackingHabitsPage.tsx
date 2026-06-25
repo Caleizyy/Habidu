@@ -1,6 +1,7 @@
 import * as React from 'react';
 import { HabitFrequency, PeriodCell } from '@/types/habit';
 import { PageLayout } from '@/components/layout/PageLayout';
+import { Button } from '@/components/ui/Button';
 import { buildDailyCells, buildWeeklyCells, buildMonthlyCells } from '@/utils/habitHelpers';
 import {
   getTodayDate,
@@ -21,7 +22,7 @@ export function TrackingHabitsPage(): React.ReactNode {
   const DAILY_ROW_LABELS = getDailyRowLabels(TODAY);
   const WEEKLY_ROW_LABELS = getLast4Weeks(TODAY);
   const MONTHLY_ROW_LABELS = getLast5Months(TODAY);
-  const DAILY_DATES = getFullWeek(TODAY);
+  const DAILY_DATES = getFullWeek();
   const MONTHLY_KEYS = MONTHLY_ROW_LABELS.map((m) => m.monthKey);
 
   // Calculate which day is today in the daily bar chart (Monday=0 to Sunday=6)
@@ -110,22 +111,17 @@ export function TrackingHabitsPage(): React.ReactNode {
     <PageLayout
       title="Tracking Habits"
       actions={
-        <button
+        <Button
           onClick={hookState.saveDrafts}
           disabled={!hookState.hasUnsavedChanges || hookState.isSaving}
-          className={`flex items-center gap-2 rounded-lg px-4 py-2 font-medium transition-colors ${
-            hookState.hasUnsavedChanges
-              ? hookState.isSaving
-                ? 'cursor-wait bg-green-400 text-white dark:bg-green-700'
-                : 'bg-green-500 text-white hover:bg-green-600 dark:bg-green-600 dark:hover:bg-green-700'
-              : 'invisible'
-          }`}
+          variant="success"
+          className={hookState.hasUnsavedChanges ? '' : 'invisible'}
         >
           {hookState.isSaving && (
             <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
           )}
           Save Changes
-        </button>
+        </Button>
       }
     >
       <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
@@ -140,6 +136,8 @@ export function TrackingHabitsPage(): React.ReactNode {
         editLog={hookState.editLog}
         undoLog={hookState.undoLog}
         dailyHighlightIndex={dailyHighlightIndex}
+        sectionStreak={hookState.sectionStreaks.daily.currentStreak}
+        sectionPersonalBest={hookState.sectionStreaks.daily.personalBest}
       />
 
       <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
@@ -150,10 +148,11 @@ export function TrackingHabitsPage(): React.ReactNode {
         rangeLabel={weeklyRangeLabel}
         weeklyRowLabels={WEEKLY_ROW_LABELS}
         getDisplayValueForDates={hookState.getDisplayValueForDates}
-        getDisplayValueForWeek={hookState.getDisplayValueForWeek}
         addLog={hookState.addLog}
         editWeeklyLog={hookState.editWeeklyLog}
         undoWeeklyLog={hookState.undoWeeklyLog}
+        sectionStreak={hookState.sectionStreaks.weekly.currentStreak}
+        sectionPersonalBest={hookState.sectionStreaks.weekly.personalBest}
       />
 
       <hr className="my-4 border-neutral-200 dark:border-neutral-700" />
@@ -164,10 +163,11 @@ export function TrackingHabitsPage(): React.ReactNode {
         rangeLabel={monthlyRangeLabel}
         monthlyRowLabels={MONTHLY_ROW_LABELS}
         getDisplayValueForMonth={hookState.getDisplayValueForMonth}
-        getDisplayValueForMonthKey={hookState.getDisplayValueForMonthKey}
         addLog={hookState.addLog}
         editMonthlyLog={hookState.editMonthlyLog}
         undoMonthlyLog={hookState.undoMonthlyLog}
+        sectionStreak={hookState.sectionStreaks.monthly.currentStreak}
+        sectionPersonalBest={hookState.sectionStreaks.monthly.personalBest}
       />
     </PageLayout>
   );
