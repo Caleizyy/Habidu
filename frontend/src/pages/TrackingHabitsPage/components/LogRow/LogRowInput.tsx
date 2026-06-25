@@ -5,10 +5,9 @@ interface LogRowInputProps {
   draftValue: number;
   unit: string;
   onChange: (value: number) => void;
-  onBlur: () => void;
 }
 
-const LogRowInput = ({ draftValue, unit, onChange, onBlur }: LogRowInputProps) => {
+const LogRowInput = ({ draftValue, unit, onChange }: LogRowInputProps) => {
   const [inputText, setInputText] = useState<string>(String(draftValue));
   const [isFocused, setIsFocused] = useState(false);
 
@@ -23,7 +22,6 @@ const LogRowInput = ({ draftValue, unit, onChange, onBlur }: LogRowInputProps) =
     setInputText(text);
 
     if (text === '') {
-      // Empty field as 0 for draft
       onChange(0);
     } else {
       const value = parseFloat(text);
@@ -39,12 +37,11 @@ const LogRowInput = ({ draftValue, unit, onChange, onBlur }: LogRowInputProps) =
 
   const handleBlur = () => {
     setIsFocused(false);
-    // Empty or invalid input changes to "0"
+
     if (inputText === '' || isNaN(parseFloat(inputText)) || parseFloat(inputText) < 0) {
       setInputText('0');
       onChange(0);
     }
-    onBlur();
   };
 
   return (

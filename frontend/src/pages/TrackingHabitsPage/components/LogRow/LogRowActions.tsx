@@ -25,12 +25,12 @@ const LogRowActions = ({ isCompleted, isOver, value, unit, undoLog, quickLog }: 
 
     return (
       <Button className="w-full" variant="success" onClick={quickLog}>
-        Log
+        Quick Log
       </Button>
     );
   };
 
-  return <div className="flex w-20 shrink-0 justify-end">{renderButton()}</div>;
+  return <div className="flex w-28 shrink-0 justify-end">{renderButton()}</div>;
 };
 
 export default LogRowActions;
