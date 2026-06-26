@@ -133,3 +133,39 @@ export async function createHabit(habit: {
   const data = await response.json();
   return data;
 }
+
+export async function updateHabit(habit: {
+  id: string;
+  name?: string;
+  frequency?: string;
+  difficulty?: string;
+  category?: string;
+  notes?: string;
+  targetValue?: number;
+  targetUnit?: string;
+}) {
+  const response = await fetch(`${API_BASE_URL}/habits/${habit.id}`, {
+    method: 'PATCH',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify(habit),
+  });
+  if (!response.ok) {
+    throw new Error('Failed to update habit');
+  }
+  const data = await response.json();
+  return data;
+}
+
+export async function deleteHabit(id: string) {
+  const response = await fetch(`${API_BASE_URL}/habits/${id}`, {
+    method: 'DELETE',
+    credentials: 'include',
+  });
+  if (!response.ok) {
+    throw new Error('Failed to delete habit');
+  }
+  return true;
+}
