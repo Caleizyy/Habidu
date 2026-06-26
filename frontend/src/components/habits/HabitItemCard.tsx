@@ -1,7 +1,9 @@
 import { Card } from '@/components/ui/Card';
 import { Habit } from '@/types/habit';
+import { EditHabitDialog } from './EditHabitDialog';
+import { DeleteHabitDialog } from './DeleteHabitDialog';
 
-export default function HabitItemCard({ habit }: { habit: Habit }) {
+export default function HabitItemCard({ habit }: Readonly<{ habit: Habit }>) {
   return (
     <div className="w-full">
       <Card className="w-full">
@@ -19,6 +21,10 @@ export default function HabitItemCard({ habit }: { habit: Habit }) {
             <Card className="flex-1 items-center justify-center bg-yellow-300 px-3 py-1">
               <p className="text-center text-sm">{habit.difficulty}</p>
             </Card>
+          </div>
+          <div className="flex flex-col gap-2">
+            <EditHabitDialog habit={habit} />
+            <DeleteHabitDialog id={habit._id} />
           </div>
         </div>
       </Card>
