@@ -1,6 +1,6 @@
 import { SignInProps } from '@/components/navbar/types';
 import { Button } from '@/components/ui/Button';
-import { DEFAULT_AUTH, APP_LOGO } from '@/constants/NavBar.constants';
+import { DEFAULT_AUTH, APP_LOGO } from '@/constants';
 import { useAuth } from '@/context/AuthContext';
 import * as React from 'react';
 

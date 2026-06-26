@@ -11,8 +11,10 @@ import {
   NotebookTabs,
 } from 'lucide-react';
 import { MenuItem } from '../components/navbar';
-import logo from '../assets/logoipsum-411.png';
 import { ROUTES } from './Routes.constants';
+import { APP_LOGO, APP_NAME } from './App.constants';
+
+export { APP_LOGO, APP_NAME };
 
 export const DEFAULT_LOGO = {
   url: 'https://www.shadcnblocks.com',
@@ -95,13 +97,6 @@ export const DEFAULT_MENU: MenuItem[] = [
 
 export const DEFAULT_AUTH = {
   signin: { title: 'Sign in', url: ROUTES.SIGNIN },
-};
-
-export const APP_LOGO = {
-  url: ROUTES.HOME,
-  src: logo,
-  alt: 'Habidu',
-  title: 'Habidu',
 };
 
 export const APP_MENU: MenuItem[] = [
