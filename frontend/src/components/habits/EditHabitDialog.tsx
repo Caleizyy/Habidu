@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/Button';
-import { PlusIcon } from 'lucide-react';
+import { EditIcon } from 'lucide-react';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/Dialog';
 import { Textarea } from '@/components/ui/Textarea';
 import { Field, FieldDescription, FieldLabel } from '@/components/ui/Field';
@@ -7,30 +7,35 @@ import { Input } from '@/components/ui/Input';
 import { HabitSelect } from './HabitSelect';
 import { frequencyOptions, difficultyOptions, categoryOptions } from './selectChoices.constants';
 import { useState } from 'react';
-import { useCreateHabitMutation } from '@/hooks/useCreateHabitMutation';
+import { useUpdateHabitMutation } from '@/hooks/useUpdateHabitMutation';
+import { Habit } from '@/types/habit';
 
-export function AddHabitDialog() {
-  const [name, setName] = useState('');
-  const [frequency, setFrequency] = useState('');
-  const [difficulty, setDifficulty] = useState('');
-  const [category, setCategory] = useState('');
-  const [targetValue, setTargetValue] = useState('');
-  const [targetUnit, setTargetUnit] = useState('');
-  const [notes, setNotes] = useState('');
+interface EditHabitDialogProps {
+  habit: Habit;
+}
+
+export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
+  const [name, setName] = useState<string>(habit.name);
+  const [frequency, setFrequency] = useState<string>(habit.frequency);
+  const [difficulty, setDifficulty] = useState<string>(habit.difficulty);
+  const [category, setCategory] = useState<string>(habit.category);
+  const [targetValue, setTargetValue] = useState<number>(habit.targetValue);
+  const [targetUnit, setTargetUnit] = useState<string>(habit.targetUnit);
+  const [notes, setNotes] = useState<string>(habit.notes);
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const createHabitMutation = useCreateHabitMutation();
+  const updateHabitMutation = useUpdateHabitMutation();
 
   const resetForm = () => {
-    setName('');
-    setFrequency('');
-    setDifficulty('');
-    setCategory('');
-    setTargetValue('');
-    setTargetUnit('');
-    setNotes('');
+    setName(habit.name);
+    setFrequency(habit.frequency);
+    setDifficulty(habit.difficulty);
+    setCategory(habit.category);
+    setTargetValue(habit.targetValue);
+    setTargetUnit(habit.targetUnit);
+    setNotes(habit.notes);
     setSubmitted(false);
     setError(null);
   };
@@ -41,12 +46,13 @@ export function AddHabitDialog() {
 
     setError(null);
     try {
-      await createHabitMutation.mutateAsync({
+      await updateHabitMutation.mutateAsync({
+        id: habit._id,
         name: name,
         frequency: frequency,
         difficulty: difficulty,
         category: category,
-        targetValue: parseFloat(targetValue),
+        targetValue: targetValue,
         targetUnit: targetUnit,
         notes: notes,
       });
@@ -62,19 +68,17 @@ export function AddHabitDialog() {
       open={open}
       onOpenChange={(isOpen) => {
         setOpen(isOpen);
-        if (!isOpen) {
-          resetForm();
-        }
+        resetForm();
       }}
     >
       <DialogTrigger asChild onClick={() => setOpen(true)}>
-        <Button className="flex h-[5vh] w-[6vw] flex-row bg-gray-200">
-          <PlusIcon className="size-8 text-black" />
+        <Button className="flex h-[5vh] w-[6vw] flex-row bg-white">
+          <EditIcon className="size-8 bg-white text-black" />
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle className="text-black-200">Add a Habit</DialogTitle>
+          <DialogTitle className="text-black-200">Edit a Habit</DialogTitle>
         </DialogHeader>
         <div className="mb-8">
           <Input
@@ -120,7 +124,7 @@ export function AddHabitDialog() {
             type="number"
             className="mb-2"
             value={targetValue}
-            onChange={(e) => setTargetValue(e.target.value)}
+            onChange={(e) => setTargetValue(parseFloat(e.target.value) || 0)}
           />
           {submitted && !targetValue && <p className="text-sm text-red-500">Target value is required.</p>}
         </div>
@@ -152,9 +156,9 @@ export function AddHabitDialog() {
               <Button
                 className="h-10 w-30 bg-gray-200 text-black"
                 onClick={handleSubmit}
-                disabled={createHabitMutation.isPending}
+                disabled={updateHabitMutation.isPending}
               >
-                {createHabitMutation.isPending ? 'Adding...' : 'Add Habit'}
+                {updateHabitMutation.isPending ? 'Editing...' : 'Edit Habit'}
               </Button>
             )}
           </div>
