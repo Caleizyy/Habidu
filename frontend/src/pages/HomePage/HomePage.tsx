@@ -2,9 +2,10 @@ import { PageLayout } from '@/components/layout/PageLayout';
 import { useHomePageData } from './hooks/useHomePageData';
 import { StreaksCard } from './components/StreaksCard';
 import { ProgressCard } from './components/ProgressCard';
+import { FriendCountCard } from './components/FriendCountCard';
 
 export function HomePage() {
-  const { habits, sectionStreaks, stats, loading, error } = useHomePageData();
+  const { habits, sectionStreaks, stats, loading, error, friendCount } = useHomePageData();
 
   if (loading) {
     return (
@@ -35,9 +36,17 @@ export function HomePage() {
   if (habits.length === 0) {
     return (
       <PageLayout title="Home">
-        <div className="flex items-center justify-center py-12">
-          <div className="text-center">
-            <p className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">No habits yet..</p>
+        <div className="grid gap-8 lg:grid-cols-3">
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-center py-12">
+              <div className="text-center">
+                <p className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">No habits yet..</p>
+              </div>
+            </div>
+          </div>
+          <div className="lg:col-span-1">
+            <h2 className="mb-4 text-2xl text-neutral-900 dark:text-neutral-100">Community</h2>
+            <FriendCountCard friendCount={friendCount} />
           </div>
         </div>
       </PageLayout>
@@ -59,9 +68,9 @@ export function HomePage() {
           />
         </div>
 
-        <div className="lg:col-span-2">
+        <div className="lg:col-span-1">
           <h2 className="mb-4 text-2xl text-neutral-900 dark:text-neutral-100">Habit Progress</h2>
-          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+          <div className="flex flex-col gap-4">
             <ProgressCard title="Daily" completed={stats.completedDaily} total={stats.totalDaily} periodLabel="today" />
             <ProgressCard
               title="Weekly"
@@ -76,6 +85,11 @@ export function HomePage() {
               periodLabel="this month"
             />
           </div>
+        </div>
+
+        <div className="lg:col-span-1">
+          <h2 className="mb-4 text-2xl text-neutral-900 dark:text-neutral-100">Community</h2>
+          <FriendCountCard friendCount={friendCount} />
         </div>
       </div>
     </PageLayout>
