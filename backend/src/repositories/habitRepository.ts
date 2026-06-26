@@ -1,5 +1,5 @@
 import { Habit } from '../models/habit';
-import { CreateHabitBody, HabitQueryFilter } from '../types';
+import { CreateHabitBody, HabitQueryFilter, UpdateHabitBody, HabitByIdFilter } from '../types';
 
 export async function create(data: CreateHabitBody) {
   return Habit.create(data);
@@ -7,4 +7,17 @@ export async function create(data: CreateHabitBody) {
 
 export async function find(filter: HabitQueryFilter) {
   return Habit.find(filter);
+}
+
+export async function findById(filter: HabitByIdFilter) {
+  return Habit.find(filter);
+}
+
+export async function updateById(_id: string, data: UpdateHabitBody) {
+  const response = await Habit.updateOne({ _id }, { $set: data });
+  return response.acknowledged;
+}
+
+export async function deleteById(_id: string) {
+  return Habit.deleteOne({ _id });
 }
