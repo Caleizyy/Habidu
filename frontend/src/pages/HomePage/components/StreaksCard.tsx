@@ -52,14 +52,14 @@ export function StreaksCard({
                   key={streak.label}
                   className={`${index !== streaks.length - 1 ? 'border-b border-neutral-100 dark:border-neutral-800' : ''}`}
                 >
-                  <td className="py-3 text-sm font-medium text-neutral-900 dark:text-neutral-100">{streak.label}</td>
+                  <td className="text-sm text-neutral-900 dark:text-neutral-100">{streak.label}</td>
                   <td className="px-4 py-3 text-center">
-                    <span className="px-3 py-1 text-lg font-bold text-orange-600 dark:bg-orange-950/30 dark:text-orange-400">
+                    <span className="px-3 py-1 text-2xl font-bold text-orange-600 dark:bg-orange-950/30 dark:text-orange-400">
                       {streak.current}
                     </span>
                   </td>
                   <td className="px-4 py-3 text-center">
-                    <span className="px-3 py-1 text-lg font-bold text-amber-600 dark:bg-amber-950/30 dark:text-amber-400">
+                    <span className="px-3 py-1 text-2xl font-bold text-amber-600 dark:bg-amber-950/30 dark:text-amber-400">
                       {streak.best}
                     </span>
                   </td>
