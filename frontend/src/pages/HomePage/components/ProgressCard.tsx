@@ -21,7 +21,7 @@ export function ProgressCard({ title, completed, total, periodLabel }: ProgressC
       <CardContent className="space-y-4">
         <div className="space-y-2">
           <div className="flex items-center justify-between">
-            <span className="text-sm text-neutral-900 dark:text-neutral-100">Habits for {periodLabel}</span>
+            <span className="text-sm text-neutral-900 dark:text-neutral-100">Habits {periodLabel}:</span>
             <span
               className={`text-4xl font-bold ${
                 isComplete ? 'text-green-600 dark:text-green-400' : 'text-amber-600 dark:text-amber-400'
