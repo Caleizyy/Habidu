@@ -56,7 +56,6 @@ export function useHomePageData() {
     stats,
     loading: habitLogsData.loading,
     error: habitLogsData.error,
-    TODAY,
     friendCount,
   };
 }
