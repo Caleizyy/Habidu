@@ -1,14 +1,16 @@
 import express from 'express';
 import * as friendController from '../controllers/friendController';
-import { requireAuth } from '../middleware';
+import { requireAuth, requireUser } from '../middleware';
 
 const router = express.Router();
 
-router.post('/requests', requireAuth, friendController.sendFriendRequest);
-router.get('/', requireAuth, friendController.getFriends);
-router.get('/requests', requireAuth, friendController.findRequests);
-router.post('/:id/decline', requireAuth, friendController.declineRequest);
-router.post('/:id/accept', requireAuth, friendController.acceptRequest);
-router.delete('/:id', requireAuth, friendController.removeFriend);
+router.use(requireAuth, requireUser);
+
+router.post('/requests', friendController.sendFriendRequest);
+router.get('/', friendController.getFriends);
+router.get('/requests', friendController.findRequests);
+router.post('/:id/decline', friendController.declineRequest);
+router.post('/:id/accept', friendController.acceptRequest);
+router.delete('/:id', friendController.removeFriend);
 
 export default router;
