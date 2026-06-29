@@ -60,8 +60,9 @@ export function LogRow({
     onPopupToggle?.();
   };
 
-  const confirmEdit = () => {
-    onEdit(draftValue);
+  const handleDraftChange = (newValue: number) => {
+    setDraftValue(newValue);
+    onEdit(newValue);
   };
 
   const handleMouseLeave = () => {
@@ -135,7 +136,7 @@ export function LogRow({
       <LogRowProgress progress={taskProgress} />
 
       <div className="flex shrink-0 items-center gap-2" onClick={(e) => e.stopPropagation()}>
-        <LogRowInput draftValue={draftValue} unit={unit} onChange={setDraftValue} onBlur={confirmEdit} />
+        <LogRowInput draftValue={draftValue} unit={unit} onChange={handleDraftChange} />
 
         <LogRowActions
           isCompleted={isCompleted}
