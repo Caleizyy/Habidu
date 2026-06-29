@@ -12,6 +12,8 @@ import ufoImage from '../../../assets/ufo.png';
 import emptyInbox from '../../../assets/empty-inbox.png';
 import { useAuth } from '@/context/AuthContext';
 import { Loader2 } from 'lucide-react';
+import { toast } from 'sonner';
+import { toastError, toastSuccess } from '@/constants/ToastStyles.constants';
 
 async function fetchNotifications(
   setIsLoading: React.Dispatch<React.SetStateAction<boolean>>,
@@ -150,9 +152,15 @@ export default function NotificationDropdown() {
               <Button
                 className="mt-2 mb-2 transition-all hover:scale-105 hover:bg-gray-800"
                 onClick={() =>
-                  notificationsApi.markAllAsRead().then(() => {
-                    setNotifications([]);
-                  })
+                  notificationsApi
+                    .markAllAsRead()
+                    .then(() => {
+                      setNotifications([]);
+                      toast.success('All notifications marked as read!', toastSuccess);
+                    })
+                    .catch(() =>
+                      toast.error('We were unable to mark your notifications as read. Please try again', toastError)
+                    )
                 }
               >
                 Mark all as read

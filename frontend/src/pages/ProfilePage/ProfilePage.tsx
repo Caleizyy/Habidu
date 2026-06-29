@@ -6,6 +6,8 @@ import { ProfileEditActions } from '@/components/profile/ProfileEditActions';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Button } from '@/components/ui/Button';
 import { Pencil } from 'lucide-react';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 export function ProfilePage() {
   const { user, isAuthenticated, refreshUser } = useAuth();
@@ -58,8 +60,10 @@ export function ProfilePage() {
       await profileApi.updateProfile({ name: displayName.trim(), bio });
       await refreshUser();
       setIsEditing(false);
+      toast.success('Your profile was saved successfully!', toastSuccess);
     } catch {
       setError('Failed to save changes. Please try again.');
+      toast.error('We were unable to save your profile changes. Please try again', toastError);
     } finally {
       setIsSaving(false);
     }

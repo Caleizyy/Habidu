@@ -9,6 +9,8 @@ import { frequencyOptions, difficultyOptions, categoryOptions } from './selectCh
 import { useState } from 'react';
 import { useUpdateHabitMutation } from '@/hooks/useUpdateHabitMutation';
 import { Habit } from '@/types/habit';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 interface EditHabitDialogProps {
   habit: Habit;
@@ -58,8 +60,10 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
       });
       resetForm();
       setOpen(false);
+      toast.success('You habit was edited successfully!', toastSuccess);
     } catch {
       setError('Something went wrong. Please try again.');
+      toast.error('We were unable to edit your habit. Please try again', toastError);
     }
   }
 

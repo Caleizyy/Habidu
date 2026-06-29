@@ -8,6 +8,8 @@ import { HabitSelect } from './HabitSelect';
 import { frequencyOptions, difficultyOptions, categoryOptions } from './selectChoices.constants';
 import { useState } from 'react';
 import { useCreateHabitMutation } from '@/hooks/useCreateHabitMutation';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 export function AddHabitDialog() {
   const [name, setName] = useState('');
@@ -52,8 +54,10 @@ export function AddHabitDialog() {
       });
       resetForm();
       setOpen(false);
+      toast.success('You habit was created successfully!', toastSuccess);
     } catch {
       setError('Something went wrong. Please try again.');
+      toast.error('We were unable to create your habit. Please try again', toastError);
     }
   }
 

@@ -15,6 +15,8 @@ import { useHabitLogs } from './hooks/useHabitLogs';
 import { DailyHabitsSection } from './sections/DailyHabitsSection';
 import { WeeklyHabitsSection } from './sections/WeeklyHabitsSection';
 import { MonthlyHabitsSection } from './sections/MonthlyHabitsSection';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 export function TrackingHabitsPage(): React.ReactNode {
   // Calculate dynamic date values
@@ -43,6 +45,15 @@ export function TrackingHabitsPage(): React.ReactNode {
 
   // Use habit logs hook
   const hookState = useHabitLogs(WEEKLY_ROW_LABELS);
+
+  const handleSaveChanges = async () => {
+    try {
+      await hookState.saveDrafts();
+      toast.success('Your changes were saved successfully!', toastSuccess);
+    } catch {
+      toast.error('Failed to save changes. Please try again.', toastError);
+    }
+  };
 
   // Build bar cells for visualizations
   const dailyBarCells: Record<string, PeriodCell[]> = {};
@@ -112,7 +123,7 @@ export function TrackingHabitsPage(): React.ReactNode {
       title="Tracking Habits"
       actions={
         <Button
-          onClick={hookState.saveDrafts}
+          onClick={handleSaveChanges}
           disabled={!hookState.hasUnsavedChanges || hookState.isSaving}
           variant="success"
           className={hookState.hasUnsavedChanges ? '' : 'invisible'}

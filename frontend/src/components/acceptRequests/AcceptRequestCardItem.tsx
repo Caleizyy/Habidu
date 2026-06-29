@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { FriendRequest } from '@/types';
 import { friendRequestsApi } from '@/api/friendRequests';
 import { X, Check } from 'lucide-react';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 export default function AcceptRequestCardItem({
   request,
@@ -25,10 +27,12 @@ export default function AcceptRequestCardItem({
         setClicked(true);
         setRequestAcceptText('Request accepted');
         setRequestDenyText('Request accepted');
+        toast.success('Your friend request was accepted successfully!', toastSuccess);
       })
       .catch((error: Error) => {
         setRequestAcceptText('Request failed');
         setRequestDenyText('Request failed');
+        toast.error('We were unable to accept your friend request. Please try again', toastError);
       });
   }
 
@@ -40,10 +44,12 @@ export default function AcceptRequestCardItem({
         setClicked(true);
         setRequestDenyText('Request denied');
         setRequestAcceptText('Request denied');
+        toast.success('Friend request denied', toastSuccess);
       })
       .catch((error: Error) => {
         setRequestAcceptText('Request failed');
         setRequestDenyText('Request failed');
+        toast.error('We were unable to deny your friend request. Please try again', toastError);
       });
   }
 

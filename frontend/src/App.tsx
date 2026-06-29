@@ -17,6 +17,7 @@ import {
   NotFoundPage,
 } from './pages';
 import { useAuth } from './context/AuthContext';
+import { Toaster } from 'sonner';
 
 function App() {
   const { isAuthenticated } = useAuth();
@@ -41,6 +42,7 @@ function App() {
       ) : (
         <SignInPage />
       )}
+      <Toaster />
     </BrowserRouter>
   );
 }

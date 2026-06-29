@@ -4,6 +4,8 @@ import { AvatarFallback, Avatar, AvatarImage } from '../ui/Avatar';
 import kittenImage from '../../assets/kitten.jpg';
 import { useState } from 'react';
 import { friendsApi } from '@/api/friends';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 export default function FriendRequestItemCard({ friend }: { friend: User }) {
   const [requestText, setRequestText] = useState('Send friend request');
@@ -16,10 +18,12 @@ export default function FriendRequestItemCard({ friend }: { friend: User }) {
       .sendFriendRequest(friend.email)
       .then(() => {
         setRequestText('Friend request sent!');
+        toast.success('Your friend request was sent successfully!', toastSuccess);
       })
       .catch((error: Error) => {
         // TODO: add proper error communication when that is implemented
         setRequestText('Request failed');
+        toast.error('We were unable to send your friend request. Please try again', toastError);
       });
   }
 

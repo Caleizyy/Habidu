@@ -5,6 +5,8 @@ import kittenImage from '../../assets/kitten.jpg';
 import { useState } from 'react';
 import { friendRequestsApi } from '@/api/friendRequests';
 import { X } from 'lucide-react';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 export default function FriendsItemCard({ friend, onFriendRemoved }: { friend: Friend; onFriendRemoved: () => void }) {
   const [requestText, setRequestText] = useState('Remove friend');
@@ -18,10 +20,12 @@ export default function FriendsItemCard({ friend, onFriendRemoved }: { friend: F
       .then(() => {
         onFriendRemoved();
         setRequestText('Friend removed!');
+        toast.success('Friend removed', toastSuccess);
       })
       .catch((error: Error) => {
         // TODO: add proper error communication when that is implemented
         setRequestText('Request failed');
+        toast.error('We were to remove your friend. Please try again', toastError);
       });
   }
 

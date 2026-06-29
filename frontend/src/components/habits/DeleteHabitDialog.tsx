@@ -3,6 +3,8 @@ import { TrashIcon, X } from 'lucide-react';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/Dialog';
 import { useState } from 'react';
 import { useDeleteHabitMutation } from '@/hooks/useDeleteHabitMutation';
+import { toast } from 'sonner';
+import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 interface DeleteHabitDialogProps {
   id: string;
@@ -19,9 +21,11 @@ export function DeleteHabitDialog({ id }: Readonly<DeleteHabitDialogProps>) {
     try {
       await deleteHabitMutation.mutateAsync(id);
       setOpen(false);
+      toast.success('You habit was deleted successfully!', toastSuccess);
     } catch (e) {
       console.log('caught', e);
       setError('Something went wrong. Please try again.');
+      toast.error('We were unable to delete your habit. Please try again', toastError);
     }
   }
 
