@@ -81,7 +81,11 @@ export function ProfilePage() {
       title="Profile"
       actions={
         !isEditing && (
-          <Button variant="outline" onClick={handleEdit} className="h-9 shrink-0 px-4">
+          <Button
+            variant="outline"
+            onClick={handleEdit}
+            className="h-9 shrink-0 px-4 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-200 hover:shadow-lg"
+          >
             <Pencil className="h-4 w-4 sm:mr-2" />
             <span className="hidden sm:inline">Edit Profile</span>
           </Button>

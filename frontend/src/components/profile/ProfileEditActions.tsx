@@ -19,7 +19,11 @@ export function ProfileEditActions({ isSaving, error, onSave, onCancel }: Profil
         </div>
       )}
       <div className="flex gap-3">
-        <Button onClick={onSave} disabled={isSaving} className="h-9 px-4">
+        <Button
+          onClick={onSave}
+          disabled={isSaving}
+          className="h-9 px-4 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-800 hover:shadow-lg"
+        >
           <Check className="h-4 w-4 sm:mr-2" />
           {isSaving ? (
             <span className="hidden sm:inline">Saving...</span>
@@ -27,7 +31,12 @@ export function ProfileEditActions({ isSaving, error, onSave, onCancel }: Profil
             <span className="hidden sm:inline">Save Changes</span>
           )}
         </Button>
-        <Button variant="outline" onClick={onCancel} disabled={isSaving} className="h-9 px-4">
+        <Button
+          variant="outline"
+          onClick={onCancel}
+          disabled={isSaving}
+          className="h-9 px-4 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-200 hover:shadow-lg"
+        >
           <X className="h-4 w-4 sm:mr-2" />
           <span className="hidden sm:inline">Cancel</span>
         </Button>
