@@ -21,7 +21,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
   const [category, setCategory] = useState<string>(habit.category);
   const [targetValue, setTargetValue] = useState<number>(habit.targetValue);
   const [targetUnit, setTargetUnit] = useState<string>(habit.targetUnit);
-  const [notes, setNotes] = useState<string>(habit.notes);
+  const [notes, setNotes] = useState<string>(habit.notes ?? '');
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -35,7 +35,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
     setCategory(habit.category);
     setTargetValue(habit.targetValue);
     setTargetUnit(habit.targetUnit);
-    setNotes(habit.notes);
+    setNotes(habit.notes ?? '');
     setSubmitted(false);
     setError(null);
   };

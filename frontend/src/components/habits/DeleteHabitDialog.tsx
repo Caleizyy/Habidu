@@ -1,5 +1,5 @@
 import { Button } from '@/components/ui/Button';
-import { TrashIcon } from 'lucide-react';
+import { TrashIcon, X } from 'lucide-react';
 import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/Dialog';
 import { useState } from 'react';
 import { useDeleteHabitMutation } from '@/hooks/useDeleteHabitMutation';
@@ -46,11 +46,14 @@ export function DeleteHabitDialog({ id }: Readonly<DeleteHabitDialogProps>) {
             {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
               <Button
-                className="h-10 w-30 bg-gray-200 text-black"
+                className="flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-red-200 px-4 py-2 text-black transition-all duration-200 hover:-translate-y-1 hover:bg-red-400 hover:shadow-lg disabled:pointer-events-none disabled:bg-red-300 disabled:opacity-50"
                 onClick={handleSubmit}
                 disabled={deleteHabitMutation.isPending}
               >
-                {deleteHabitMutation.isPending ? 'Deleting...' : 'Confirm delete'}
+                <X className="size-5" />
+                <span className="text-lg font-medium">
+                  {deleteHabitMutation.isPending ? 'Deleting...' : 'Confirm delete'}
+                </span>
               </Button>
             )}
           </div>
