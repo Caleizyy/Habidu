@@ -5,6 +5,7 @@ export * from './ProfilePage';
 export * from './FriendsPage';
 export * from './RequestsPage';
 export * from './GroupsPage';
+export * from './GroupDetailPage';
 export * from './AboutPage';
 export * from './SignInPage';
 export * from './NotFoundPage';

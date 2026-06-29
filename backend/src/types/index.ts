@@ -91,18 +91,47 @@ export interface User {
   email: string;
   avatar?: string;
 }
+
+export enum GroupRequestStatus {
+  Pending = 'pending',
+  Accepted = 'accepted',
+  Rejected = 'rejected',
+}
+
+export interface CreateGroupBody {
+  name: string;
+  owner: Types.ObjectId;
+  members: Types.ObjectId[];
+}
+
+export interface CreateGroupRequestData {
+  group: Types.ObjectId;
+  inviter: Types.ObjectId;
+  invitee: Types.ObjectId;
+  status: GroupRequestStatus;
+}
+
 export interface PopulatedUser {
   _id: Types.ObjectId;
+  sub: string;
   firstName: string;
   lastName: string;
   email: string;
   avatar?: string;
 }
 
+export interface PopulatedGroup {
+  _id: Types.ObjectId;
+  name: string;
+  owner: PopulatedUser;
+  members: PopulatedUser[];
+}
+
 export enum NotificationReadStatus {
   Read = 'read',
   Unread = 'unread',
 }
+
 export interface Notification {
   actorRef: Types.ObjectId;
   recipientId: Types.ObjectId;
