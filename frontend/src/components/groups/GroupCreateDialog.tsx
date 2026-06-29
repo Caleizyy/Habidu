@@ -1,0 +1,92 @@
+import { useState } from 'react';
+import { PlusIcon } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Dialog, DialogContent, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { createGroup } from '@/api/group';
+import { errorMessage } from '@/utils/errorMessage';
+import { Group } from '@/types/group';
+
+interface Props {
+  onCreated: (group: Group) => void;
+}
+
+export function GroupCreateDialog({ onCreated }: Props) {
+  const [open, setOpen] = useState(false);
+  const [groupName, setGroupName] = useState('');
+  const [nameError, setNameError] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+
+  function handleOpenChange(nextOpen: boolean) {
+    setOpen(nextOpen);
+    if (!nextOpen) {
+      setGroupName('');
+      setNameError('');
+    }
+  }
+
+  function handleNameChange(e: React.ChangeEvent<HTMLInputElement>) {
+    setGroupName(e.target.value);
+    if (nameError) setNameError('');
+  }
+
+  async function handleCreate() {
+    const name = groupName.trim();
+    if (!name) {
+      setNameError('Group name is required.');
+      return;
+    }
+    setSubmitting(true);
+    try {
+      const group = await createGroup(name);
+      handleOpenChange(false);
+      onCreated(group);
+    } catch (err) {
+      setNameError(errorMessage(err, 'Failed to create group.'));
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={handleOpenChange}>
+      <DialogTrigger asChild>
+        <Button>
+          <PlusIcon />
+          Create group
+        </Button>
+      </DialogTrigger>
+      <DialogContent>
+        <DialogHeader>
+          <DialogTitle>Create group</DialogTitle>
+        </DialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleCreate();
+          }}
+          className="flex flex-col gap-4"
+        >
+          <div className="flex flex-col gap-1.5">
+            <Label htmlFor="group-name">Group name</Label>
+            <Input
+              id="group-name"
+              placeholder="My awesome group"
+              value={groupName}
+              onChange={handleNameChange}
+              maxLength={60}
+              aria-invalid={!!nameError}
+            />
+            {nameError && <p className="text-destructive text-sm">{nameError}</p>}
+          </div>
+          <DialogFooter>
+            <Button type="submit" disabled={submitting}>
+              {submitting ? 'Creating…' : 'Create'}
+            </Button>
+          </DialogFooter>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
