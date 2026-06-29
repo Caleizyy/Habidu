@@ -1,8 +1,8 @@
 import { Session } from '../models/session';
 import { CreateSessionBody } from '../types';
 
-export function create(data: CreateSessionBody) {
-  return Session.create(data);
+export function upsert(data: CreateSessionBody) {
+  return Session.updateOne({ sub: data.sub }, { $set: data }, { upsert: true });
 }
 
 export function getSessionById(id: string) {
@@ -17,4 +17,8 @@ export async function updateSession(id: string, expiryDate: Date) {
     },
     { new: true }
   );
+}
+
+export function deleteBySessionId(id: string) {
+  return Session.deleteOne({ sessionId: id });
 }

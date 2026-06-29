@@ -24,15 +24,15 @@ import NotificationDropdown from '@/components/navbar/components/NotificationDro
 
 const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarProps) => {
   const navigate = useNavigate();
-  const { user, isAuthenticated, refreshUser, logout } = useAuth();
+  const { user, isAuthenticated, logout } = useAuth();
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
     navigate(ROUTES.PROFILE);
   };
 
-  const handleLogout = () => {
-    logout();
+  const handleLogout = async () => {
+    await logout();
     navigate(ROUTES.HOME);
   };
 
@@ -84,9 +84,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarP
                   </DropdownMenuContent>
                 </DropdownMenu>
               </>
-            ) : (
-              <></>
-            )}
+            ) : null}
           </div>
         </nav>
 
@@ -98,7 +96,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarP
               <img src={logo.src} className="max-h-8 dark:invert" alt={logo.alt} />
             </Link>
             <div className="flex items-center gap-2">
-              {isAuthenticated && <NotificationDropdown></NotificationDropdown>}
+              {isAuthenticated && <NotificationDropdown />}
               <Sheet>
                 <SheetTrigger asChild>
                   <Button variant="outline" size="icon">
