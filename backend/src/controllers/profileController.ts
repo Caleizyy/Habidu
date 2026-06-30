@@ -3,18 +3,15 @@ import { Types } from 'mongoose';
 import * as userService from '../services/userService';
 import { User, IUser } from '../models/user';
 
-function serializeProfile(user: IUser) {
-  return {
+export const getOwnProfile = (req: Request, res: Response) => {
+  const user = res.locals.user as IUser;
+  return res.json({
     sub: user.sub,
     email: user.email,
     name: `${user.firstName} ${user.lastName}`.trim(),
     avatar: user.avatar,
-    bio: user.bio || '',
-  };
-}
-
-export const getOwnProfile = (req: Request, res: Response) => {
-  return res.json(serializeProfile(res.locals.user as IUser));
+    bio: user.bio ?? '',
+  });
 };
 
 export const getProfile = async (req: Request<{ userId: string }>, res: Response) => {
@@ -27,7 +24,11 @@ export const getProfile = async (req: Request<{ userId: string }>, res: Response
 
     const user = await userService.getUserById(userId);
     if (!user) return res.status(404).json({ message: 'User not found' });
-    return res.json(serializeProfile(user));
+    return res.json({
+      name: `${user.firstName} ${user.lastName}`.trim(),
+      avatar: user.avatar,
+      bio: user.bio ?? '',
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Server error' });
@@ -40,10 +41,6 @@ export const updateProfile = async (req: Request, res: Response) => {
 
     if (!name || typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({ message: 'Name is required' });
-    }
-
-    if (bio && typeof bio !== 'string') {
-      return res.status(400).json({ message: 'Bio must be a string' });
     }
 
     const [firstName, ...rest] = name.trim().split(' ');
@@ -65,7 +62,13 @@ export const updateProfile = async (req: Request, res: Response) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    return res.json(serializeProfile(updated));
+    return res.json({
+      sub: updated.sub,
+      email: updated.email,
+      name: `${updated.firstName} ${updated.lastName}`.trim(),
+      avatar: updated.avatar,
+      bio: updated.bio ?? '',
+    });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ message: 'Server error' });
