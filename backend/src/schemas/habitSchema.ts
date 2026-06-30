@@ -23,6 +23,10 @@ export const createHabitSchema = z.object({
   targetValue: z.number().positive('Target value must be a positive number'),
   targetUnit: z.string().min(1, 'Target unit is required').max(20, 'Target unit must be 20 characters or less'),
   notes: z.string().max(500, 'Notes must be 500 characters or less').optional(),
+  groupId: z
+    .string()
+    .regex(/^[0-9a-f]{24}$/, 'Group ID must be a valid MongoDB ObjectId')
+    .optional(),
   startDate: z
     .string()
     .regex(/^\d{4}-\d{2}-\d{2}$/, 'Start date must be in YYYY-MM-DD format')
@@ -59,6 +63,10 @@ export const updateHabitSchema = z.object({
     .max(20, 'Target unit must be 20 characters or less')
     .optional(),
   notes: z.string().max(500, 'Notes must be 500 characters or less').optional(),
+  groupId: z
+    .string()
+    .regex(/^[0-9a-f]{24}$/, 'Group ID must be a valid MongoDB ObjectId')
+    .optional(),
   isActive: z.boolean().optional(),
 });
 

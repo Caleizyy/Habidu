@@ -1,4 +1,4 @@
-import { Schema, model, Document } from 'mongoose';
+import { Schema, model, Document, Types } from 'mongoose';
 
 import { HabitCategory, HabitDifficulty, HabitFrequency } from '../types';
 
@@ -11,6 +11,7 @@ export interface IHabit extends Document {
   targetUnit: string;
   notes?: string;
   createdBy: string;
+  groupId?: Types.ObjectId;
 }
 
 const HabitSchema = new Schema<IHabit>(
@@ -23,6 +24,7 @@ const HabitSchema = new Schema<IHabit>(
     targetUnit: { type: String, required: true },
     notes: { type: String },
     createdBy: { type: String, required: true },
+    groupId: { type: Schema.Types.ObjectId, ref: 'Group' },
   },
 
   { timestamps: true }
