@@ -7,6 +7,7 @@ import {
   HomePage,
   HabitsPage,
   TrackingHabitsPage,
+  GroupActivityPage,
   ProfilePage,
   FriendsPage,
   RequestsPage,
@@ -30,6 +31,7 @@ function App() {
             <Route path={ROUTES.HOME} element={<HomePage />} />
             <Route path={ROUTES.HABITS} element={<HabitsPage />} />
             <Route path={ROUTES.TRACKING} element={<TrackingHabitsPage />} />
+            <Route path={ROUTES.GROUP_ACTIVITY} element={<GroupActivityPage />} />
             <Route path={ROUTES.ABOUT} element={<AboutPage />} />
             <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
             <Route path={ROUTES.FRIENDS} element={<FriendsPage />} />
