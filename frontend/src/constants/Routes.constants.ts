@@ -3,7 +3,7 @@ export const ROUTES = {
   HABITS: '/habits',
   TRACKING: '/tracking',
   ABOUT: '/about',
-  PROFILE: '/profile',
+  PROFILE: '/profile/:userId?',
   FRIENDS: '/friends',
   REQUESTS: '/requests',
   GROUPS: '/groups',

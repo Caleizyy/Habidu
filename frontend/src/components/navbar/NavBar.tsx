@@ -1,5 +1,5 @@
 import { Menu, UserIcon, LogOutIcon } from 'lucide-react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, generatePath } from 'react-router-dom';
 import kittenImage from '../../assets/kitten.jpg';
 import { DEFAULT_LOGO, DEFAULT_MENU } from '../../constants/NavBar.constants';
 import { useAuth } from '@/context/AuthContext';
@@ -28,7 +28,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarP
 
   const handleAvatarClick = () => {
     // TODO: Fetch user profile data when auth is implemented
-    navigate(ROUTES.PROFILE);
+    navigate(generatePath(ROUTES.PROFILE));
   };
 
   const handleLogout = async () => {
@@ -122,7 +122,7 @@ const NavBar = ({ logo = DEFAULT_LOGO, menu = DEFAULT_MENU, className }: NavbarP
                       {isAuthenticated && (
                         <>
                           <Button asChild>
-                            <Link to={ROUTES.PROFILE}>Profile</Link>
+                            <Link to={generatePath(ROUTES.PROFILE)}>Profile</Link>
                           </Button>
                           <Button variant="outline" onClick={handleLogout}>
                             Log out

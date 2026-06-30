@@ -2,6 +2,8 @@ import { Card } from '@/components/ui/Card';
 import { AvatarFallback, Avatar, AvatarImage } from '../ui/Avatar';
 import kittenImage from '../../assets/kitten.jpg';
 import { useState } from 'react';
+import { Link, generatePath } from 'react-router-dom';
+import { ROUTES } from '@/constants/Routes.constants';
 import { FriendRequest } from '@/types';
 import { friendRequestsApi } from '@/api/friendRequests';
 import { X, Check } from 'lucide-react';
@@ -57,10 +59,12 @@ export default function AcceptRequestCardItem({
     <div className="flex h-[15vh]">
       <Card className="h-full w-full">
         <div className="flex h-full w-full items-center">
-          <Avatar className="ml-6 h-[8vh] w-[8vh]">
-            <AvatarImage src={request.requesterId?.avatar || kittenImage} alt="Avatar" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Link to={generatePath(ROUTES.PROFILE, { userId: request.requesterId?._id })} className="ml-6 shrink-0">
+            <Avatar className="h-[8vh] w-[8vh] cursor-pointer transition-opacity hover:opacity-80">
+              <AvatarImage src={request.requesterId?.avatar || kittenImage} alt="Avatar" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </Link>
           <div className="mx-6 flex w-[40vh] min-w-0 flex-col gap-2 py-2">
             <Card className="flex items-center justify-center bg-gray-300 p-1">
               <p className="truncate text-lg">

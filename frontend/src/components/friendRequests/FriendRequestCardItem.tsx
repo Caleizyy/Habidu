@@ -3,6 +3,8 @@ import { User } from '@/types';
 import { AvatarFallback, Avatar, AvatarImage } from '../ui/Avatar';
 import kittenImage from '../../assets/kitten.jpg';
 import { useState } from 'react';
+import { Link, generatePath } from 'react-router-dom';
+import { ROUTES } from '@/constants/Routes.constants';
 import { friendsApi } from '@/api/friends';
 import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
@@ -31,10 +33,12 @@ export default function FriendRequestItemCard({ friend }: { friend: User }) {
     <div className="flex h-[15vh]">
       <Card className="h-full w-full">
         <div className="flex h-full w-full items-center">
-          <Avatar className="ml-6 h-[8vh] w-[8vh]">
-            <AvatarImage src={friend?.avatar || kittenImage} alt="Avatar" />
-            <AvatarFallback>CN</AvatarFallback>
-          </Avatar>
+          <Link to={generatePath(ROUTES.PROFILE, { userId: friend._id })} className="ml-6 shrink-0">
+            <Avatar className="h-[8vh] w-[8vh] cursor-pointer transition-opacity hover:opacity-80">
+              <AvatarImage src={friend.avatar || kittenImage} alt="Avatar" />
+              <AvatarFallback>CN</AvatarFallback>
+            </Avatar>
+          </Link>
           <div className="mx-6 flex w-[40vh] min-w-0 flex-col gap-2 py-2">
             <Card className="flex items-center justify-center bg-gray-300 p-1">
               <p className="truncate text-lg">
