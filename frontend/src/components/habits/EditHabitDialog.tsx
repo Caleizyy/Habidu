@@ -12,7 +12,7 @@ import { Habit } from '@/types/habit';
 import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 import { useQuery } from '@tanstack/react-query';
-import { fetchGroups } from '@/api/group';
+import { fetchGroups, fetchGroupHabit } from '@/api/group';
 import { useAuth } from '@/context/AuthContext';
 import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 
@@ -43,6 +43,16 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
   });
 
   const ownedGroups = groups.filter((g) => g.owner === user?.sub);
+
+  const groupHabitQueries = useQuery({
+    queryKey: ['groupHabitsExistence', ownedGroups.map((g) => g._id)],
+    queryFn: () =>
+      Promise.all(ownedGroups.map((g) => fetchGroupHabit(g._id).then((r) => ({ groupId: g._id, hasHabit: !!r })))),
+    enabled: open && ownedGroups.length > 0,
+  });
+
+  const occupiedGroupIds = new Set((groupHabitQueries.data ?? []).filter((r) => r.hasHabit).map((r) => r.groupId));
+  const availableGroups = ownedGroups.filter((g) => !occupiedGroupIds.has(g._id) || g._id === habit.groupId);
 
   const resetForm = () => {
     setName(habit.name);
@@ -170,7 +180,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
             onChange={(e) => setNotes(e.target.value)}
           />
         </Field>
-        {ownedGroups.length > 0 && (
+        {availableGroups.length > 0 && (
           <div className="mt-4">
             <FieldLabel>Group</FieldLabel>
             <Select
@@ -187,7 +197,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
               <SelectContent>
                 <SelectGroup>
                   <SelectItem value="none">None (personal habit)</SelectItem>
-                  {ownedGroups.map((group) => (
+                  {availableGroups.map((group) => (
                     <SelectItem key={group._id} value={group._id}>
                       {group.name}
                     </SelectItem>

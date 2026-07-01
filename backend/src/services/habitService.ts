@@ -13,6 +13,10 @@ export async function create(data: CreateHabitBody) {
     if (group.owner.sub !== data.createdBy) {
       throw new Error('Only the group owner can create habits for the group');
     }
+    const existing = await habitRepository.findByGroupId(data.groupId);
+    if (existing) {
+      throw new Error('This group already has a habit');
+    }
   }
   return habitRepository.create(data);
 }
@@ -25,7 +29,13 @@ export function findById(filter: HabitByIdFilter) {
   return habitRepository.findById(filter);
 }
 
-export function updateById(id: string, filter: UpdateHabitBody) {
+export async function updateById(id: string, filter: UpdateHabitBody) {
+  if (filter.groupId) {
+    const existing = await habitRepository.findByGroupId(filter.groupId);
+    if (existing && existing._id.toString() !== id) {
+      throw new Error('This group already has a habit');
+    }
+  }
   return habitRepository.updateById(id, filter);
 }
 
