@@ -4,6 +4,7 @@ import { Habit } from '@/types/habit';
 import HabitItemCard from './HabitItemCard';
 import { Dispatch, SetStateAction, useState } from 'react';
 import { Group } from '@/types/group';
+import suitcase from '@/assets/suitcase.png';
 
 interface HabitCardProps {
   habits: Habit[];
@@ -25,7 +26,21 @@ export default function HabitsCard({ habits, groups = [] }: Readonly<HabitCardPr
           onChange={(e) => setSearchTerm(e.target.value)}
         />
       </div>
-      <div className="mt-4 flex min-h-0 flex-1 flex-col gap-4 overflow-y-auto px-6 py-1">
+      {habits.length === 0 && (
+        <div className="text-center">
+          <img src={suitcase} className="mx-auto flex size-30"></img>
+          <p className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">No habits yet..</p>
+        </div>
+      )}
+      {habits.length > 0 && filtered.length === 0 && (
+        <div className="text-center">
+          <img src={suitcase} className="mx-auto flex size-30"></img>
+          <p className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">
+            No habits with that name..
+          </p>
+        </div>
+      )}
+      <div className="mt-4 grid min-h-0 flex-1 grid-cols-1 gap-4 overflow-y-auto px-6 py-1 md:grid-cols-2">
         {filtered.map((habit) => {
           const group = groups.find((g) => g._id === habit.groupId);
           return <HabitItemCard key={habit._id} habit={habit} groupName={group?.name} />;

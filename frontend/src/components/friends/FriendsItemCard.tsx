@@ -50,15 +50,13 @@ export default function FriendsItemCard({ friend, onFriendRemoved }: { friend: F
           <Card
             className={
               clicked
-                ? 'pointer-events-none mr-6 ml-auto flex w-[30vh] items-center justify-center rounded-lg bg-red-300 p-1 opacity-50 transition-all duration-200'
-                : 'mr-6 ml-auto flex w-[30vh] cursor-pointer items-center justify-center rounded-lg bg-red-200 px-4 py-2 transition-all duration-200 hover:-translate-y-1 hover:bg-red-400 hover:shadow-lg'
+                ? 'pointer-events-none mr-6 ml-auto flex h-10 w-10 items-center justify-center bg-red-200 p-1 opacity-50 transition-all duration-200 min-[800px]:h-auto min-[800px]:w-[30vh]'
+                : 'mr-6 ml-auto flex h-10 w-10 cursor-pointer items-center justify-center bg-red-200 p-1 transition-all duration-200 hover:-translate-y-1 hover:bg-red-400 hover:shadow-lg min-[800px]:h-auto min-[800px]:w-[30vh]'
             }
             onClick={handleClick}
           >
-            <div className="flex items-center gap-2">
-              <X />
-              <p className="truncate text-lg font-medium">{requestText}</p>
-            </div>
+            <X className="h-5 w-5 min-[800px]:hidden" />
+            <p className="hidden truncate text-lg min-[800px]:block">{requestText}</p>
           </Card>
         </div>
       </Card>

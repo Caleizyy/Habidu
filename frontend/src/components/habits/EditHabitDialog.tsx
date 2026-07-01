@@ -92,8 +92,9 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
       }}
     >
       <DialogTrigger asChild onClick={() => setOpen(true)}>
-        <Button className="flex h-[5vh] w-[6vw] flex-row bg-white">
+        <Button className="flex h-auto flex-row bg-white transition-all duration-200 hover:-translate-y-1">
           <EditIcon className="size-8 bg-white text-black" />
+          <span className="ml-2 font-medium text-black">Edit</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -194,7 +195,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
             {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
               <Button
-                className="h-10 w-30 bg-gray-200 text-black"
+                className="h-10 w-30 bg-gray-200 text-black transition-all duration-200 hover:-translate-y-1 hover:bg-gray-300"
                 onClick={handleSubmit}
                 disabled={updateHabitMutation.isPending}
               >

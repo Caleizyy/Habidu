@@ -4,6 +4,7 @@ import { User } from '@/types';
 import FriendRequestItemCard from './FriendRequestCardItem';
 import { friendsApi } from '@/api/friends';
 import { useCallback, useRef, useState } from 'react';
+import empty from '@/assets/empty.png';
 
 export default function FriendRequestCard() {
   const [friendRequests, setFriendRequests] = useState<User[]>([]);
@@ -72,7 +73,10 @@ export default function FriendRequestCard() {
             <FriendRequestItemCard key={friendRequest.sub} friend={friendRequest} />
           ))
         ) : (
-          <p className="flex justify-center truncate text-sm text-gray-500">{defaultText}</p>
+          <div>
+            <img src={empty} className="mx-auto flex size-30"></img>
+            <p className="mt-4 flex justify-center truncate text-sm text-gray-500">{defaultText}</p>
+          </div>
         )}
       </div>
     </Card>

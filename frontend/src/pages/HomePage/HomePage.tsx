@@ -3,6 +3,7 @@ import { useHomePageData } from './hooks/useHomePageData';
 import { StreaksCard } from './components/StreaksCard';
 import { ProgressCard } from './components/ProgressCard';
 import { FriendCountCard } from './components/FriendCountCard';
+import leaf from '@/assets/leaf.png';
 
 export function HomePage() {
   const { habits, sectionStreaks, stats, loading, error, friendCount } = useHomePageData();
@@ -39,7 +40,8 @@ export function HomePage() {
         <div className="grid gap-8 lg:grid-cols-3">
           <div className="lg:col-span-2">
             <div className="flex items-center justify-center py-12">
-              <div className="text-center">
+              <div className="item-center text-center">
+                <img src={leaf} className="flex size-30"></img>
                 <p className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">No habits yet..</p>
               </div>
             </div>

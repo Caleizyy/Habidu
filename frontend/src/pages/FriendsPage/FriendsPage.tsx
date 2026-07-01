@@ -22,8 +22,8 @@ export function FriendsPage() {
 
   return (
     <PageLayout title="Friends">
-      <div className="flex h-screen flex-1 flex-col">
-        <div className="mt-12 mr-12 ml-12 flex min-w-0 gap-8">
+      <div className="flex min-h-screen flex-col">
+        <div className="mx-12 mt-12 flex min-w-0 flex-col gap-8 md:flex-row">
           {isLoading && <p className="flex justify-center truncate text-sm">Loading...</p>}
           {error && <p className="text-red-500">{error}</p>}
           {!isLoading && !error && <FriendsCard friends={friends} onFriendRemoved={handleFriendRemoved} />}

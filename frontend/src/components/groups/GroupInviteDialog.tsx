@@ -62,7 +62,7 @@ export function GroupInviteDialog({ group }: Props) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="flex flex-row bg-gray-800 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-700">
           <UserPlusIcon />
           Invite
         </Button>

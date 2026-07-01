@@ -62,40 +62,40 @@ export default function AcceptRequestCardItem({
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
           <div className="mx-6 flex w-[40vh] min-w-0 flex-col gap-2 py-2">
-            <Card className="flex items-center justify-center bg-gray-300 p-1">
+            <Card className="flex items-center justify-center bg-blue-300 p-1">
               <p className="truncate text-lg">
                 {request.requesterId?.firstName} {request.requesterId?.lastName}
               </p>
             </Card>
-            <Card className="flex items-center justify-center bg-gray-100 p-1">
+            <Card className="flex items-center justify-center bg-blue-200 p-1">
               <p className="truncate text-lg">{request.requesterId?.email}</p>
             </Card>
           </div>
-          <div className="mx-6 flex w-[40vh] min-w-0 flex-col gap-2 py-2">
+          <div className="ml-auto flex shrink-0 flex-col gap-2 py-2">
             <Card
               className={
                 clicked
-                  ? 'pointer-events-none flex items-center justify-center rounded-lg bg-green-300 p-1 opacity-50 transition-all duration-200'
-                  : 'flex cursor-pointer items-center justify-center rounded-lg bg-green-200 px-4 py-2 transition-all duration-200 hover:-translate-y-1 hover:bg-green-400 hover:shadow-lg'
+                  ? 'pointer-events-none mr-6 ml-auto flex h-10 w-10 items-center justify-center bg-green-100 p-1 opacity-50 transition-all duration-200 min-[800px]:h-auto min-[800px]:w-[30vh]'
+                  : 'mr-6 ml-auto flex h-10 w-10 cursor-pointer items-center justify-center bg-green-100 p-1 transition-all duration-200 hover:-translate-y-1 hover:bg-green-300 hover:shadow-lg min-[800px]:h-auto min-[800px]:w-[30vh]'
               }
               onClick={handleAccept}
             >
               <div className="flex items-center gap-2">
-                <Check />
-                <p className="truncate text-lg font-medium">{requestAcceptText}</p>
+                <Check className="h-5 w-5" />
+                <p className="hidden truncate text-lg min-[800px]:block">{requestAcceptText}</p>
               </div>
             </Card>
             <Card
               className={
                 clicked
-                  ? 'pointer-events-none flex items-center justify-center rounded-lg bg-red-300 p-1 opacity-50 transition-all duration-200'
-                  : 'flex cursor-pointer items-center justify-center rounded-lg bg-red-200 px-4 py-2 transition-all duration-200 hover:-translate-y-1 hover:bg-red-400 hover:shadow-lg'
+                  ? 'pointer-events-none mr-6 ml-auto flex h-10 w-10 items-center justify-center bg-red-100 p-1 opacity-50 transition-all duration-200 min-[800px]:h-auto min-[800px]:w-[30vh]'
+                  : 'mr-6 ml-auto flex h-10 w-10 cursor-pointer items-center justify-center bg-red-100 p-1 transition-all duration-200 hover:-translate-y-1 hover:bg-red-300 hover:shadow-lg min-[800px]:h-auto min-[800px]:w-[30vh]'
               }
               onClick={handleDeny}
             >
               <div className="flex items-center gap-2">
-                <X />
-                <p className="truncate text-lg font-medium">{requestDenyText}</p>
+                <X className="h-5 w-5" />
+                <p className="hidden truncate text-lg min-[800px]:block">{requestDenyText}</p>
               </div>
             </Card>
           </div>

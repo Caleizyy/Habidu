@@ -91,7 +91,7 @@ export function AddHabitDialog() {
       }}
     >
       <DialogTrigger asChild onClick={() => setOpen(true)}>
-        <Button className="flex h-[5vh] w-[6vw] flex-row bg-gray-200">
+        <Button className="flex h-[5vh] w-[6vw] flex-row bg-gray-200 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-300">
           <PlusIcon className="size-8 text-black" />
         </Button>
       </DialogTrigger>
@@ -210,7 +210,7 @@ export function AddHabitDialog() {
             {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
               <Button
-                className="h-10 w-30 bg-gray-200 text-black"
+                className="h-10 w-30 bg-gray-200 text-black transition-all duration-200 hover:-translate-y-1 hover:bg-gray-300"
                 onClick={handleSubmit}
                 disabled={createHabitMutation.isPending}
               >

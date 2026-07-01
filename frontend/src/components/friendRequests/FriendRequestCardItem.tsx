@@ -6,6 +6,7 @@ import { useState } from 'react';
 import { friendsApi } from '@/api/friends';
 import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
+import { UserPlus } from 'lucide-react';
 
 export default function FriendRequestItemCard({ friend }: { friend: User }) {
   const [requestText, setRequestText] = useState('Send friend request');
@@ -48,12 +49,13 @@ export default function FriendRequestItemCard({ friend }: { friend: User }) {
           <Card
             className={
               clicked
-                ? 'pointer-events-none mr-6 ml-auto flex w-[30vh] items-center justify-center bg-gray-100 p-1 opacity-50'
-                : 'mr-6 ml-auto flex w-[30vh] cursor-pointer items-center justify-center bg-gray-100 p-1'
+                ? 'pointer-events-none mr-6 ml-auto flex h-10 w-10 items-center justify-center bg-gray-100 p-1 opacity-50 transition-all duration-200 min-[800px]:h-auto min-[800px]:w-[30vh]'
+                : 'mr-6 ml-auto flex h-10 w-10 cursor-pointer items-center justify-center bg-gray-100 p-1 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-300 hover:shadow-lg min-[800px]:h-auto min-[800px]:w-[30vh]'
             }
             onClick={handleClick}
           >
-            <p className="truncate text-lg">{requestText}</p>
+            <UserPlus className="h-5 w-5 min-[800px]:hidden" />
+            <p className="hidden truncate text-lg min-[800px]:block">{requestText}</p>
           </Card>
         </div>
       </Card>

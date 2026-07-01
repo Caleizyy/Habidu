@@ -36,8 +36,8 @@ export function RequestsPage() {
 
   return (
     <PageLayout title="Requests">
-      <div className="flex h-screen flex-1 flex-col">
-        <div className="mt-12 mr-12 ml-12 flex min-w-0 gap-8">
+      <div className="flex min-h-screen flex-1 flex-col">
+        <div className="mx-12 mt-12 flex min-w-0 flex-col gap-8 md:flex-row">
           {isFriendsLoading && <p className="flex justify-center truncate text-sm">Loading...</p>}
           {friendsError && <p className="text-red-500">{friendsError}</p>}
           {!isFriendsLoading && !friendsError && (

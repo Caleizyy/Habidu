@@ -54,48 +54,48 @@ export default function AcceptGroupRequestCardItem({
   }
 
   return (
-    <div className="flex w-full flex-col overflow-hidden md:flex-row">
+    <div className="flex h-[15vh]">
       <Card className="h-full w-full">
-        <div className="flex h-full w-full flex-col items-center md:flex-row">
-          <Avatar className="ml-6 h-12 w-12">
+        <div className="flex h-full w-full items-center">
+          <Avatar className="ml-6 h-[8vh] w-[8vh]">
             <AvatarImage src={group.inviter.avatar || kittenImage} alt="Avatar" />
             <AvatarFallback>CN</AvatarFallback>
           </Avatar>
-          <div className="mx-6 flex w-full min-w-0 flex-col gap-2 py-2 md:w-[40%]">
-            <Card className="flex h-auto w-full items-center justify-center bg-gray-300 p-1">
+          <div className="mx-6 flex w-[40vh] min-w-0 flex-col gap-2 py-2">
+            <Card className="flex items-center justify-center bg-blue-300 p-1">
               <p className="truncate text-lg">
                 {group.inviter.firstName} {group.inviter.lastName}
               </p>
             </Card>
-            <Card className="flex hidden h-auto w-full items-center justify-center bg-gray-100 p-1 md:flex">
-              <p className="truncate text-lg">{group.inviter.email}</p>
+            <Card className="flex items-center justify-center bg-blue-200 p-1">
+              <p className="truncate text-lg">{group.group.name}</p>
             </Card>
           </div>
-          <div className="mx-6 flex w-full min-w-0 flex-col gap-2 py-2 md:w-[40%]">
+          <div className="ml-auto flex shrink-0 flex-col gap-2 py-2">
             <Card
               className={
                 clicked
-                  ? 'pointer-events-none flex w-full items-center justify-center rounded-lg bg-green-300 p-1 opacity-50 transition-all duration-200'
-                  : 'flex w-full cursor-pointer items-center justify-center rounded-lg bg-green-200 px-4 py-2 transition-all duration-200 hover:-translate-y-1 hover:bg-green-400 hover:shadow-lg'
+                  ? 'pointer-events-none mr-6 ml-auto flex h-10 w-10 items-center justify-center bg-green-100 p-1 opacity-50 transition-all duration-200 min-[800px]:h-auto min-[800px]:w-[30vh]'
+                  : 'mr-6 ml-auto flex h-10 w-10 cursor-pointer items-center justify-center bg-green-100 p-1 transition-all duration-200 hover:-translate-y-1 hover:bg-green-300 hover:shadow-lg min-[800px]:h-auto min-[800px]:w-[30vh]'
               }
               onClick={handleAccept}
             >
               <div className="flex items-center gap-2">
                 <Check />
-                <p className="hidden truncate text-lg font-medium md:inline">{requestAcceptText}</p>
+                <p className="hidden truncate text-lg font-medium min-[800px]:block">{requestAcceptText}</p>
               </div>
             </Card>
             <Card
               className={
                 clicked
-                  ? 'pointer-events-none flex w-full items-center justify-center rounded-lg bg-red-300 p-1 opacity-50 transition-all duration-200'
-                  : 'flex w-full cursor-pointer items-center justify-center rounded-lg bg-red-200 px-4 py-2 transition-all duration-200 hover:-translate-y-1 hover:bg-red-400 hover:shadow-lg'
+                  ? 'pointer-events-none mr-6 ml-auto flex h-10 w-10 items-center justify-center bg-red-100 p-1 opacity-50 transition-all duration-200 min-[800px]:h-auto min-[800px]:w-[30vh]'
+                  : 'mr-6 ml-auto flex h-10 w-10 cursor-pointer items-center justify-center bg-red-100 p-1 transition-all duration-200 hover:-translate-y-1 hover:bg-red-300 hover:shadow-lg min-[800px]:h-auto min-[800px]:w-[30vh]'
               }
               onClick={handleDeny}
             >
               <div className="flex items-center gap-2">
                 <X />
-                <p className="hidden truncate text-lg font-medium md:inline">{requestDenyText}</p>
+                <p className="hidden truncate text-lg font-medium min-[800px]:block">{requestDenyText}</p>
               </div>
             </Card>
           </div>
