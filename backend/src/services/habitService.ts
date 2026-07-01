@@ -10,7 +10,7 @@ export async function create(data: CreateHabitBody) {
     if (!group) {
       throw new Error('Group not found');
     }
-    if (group.owner._id.toString() !== data.createdBy) {
+    if (group.owner.sub !== data.createdBy) {
       throw new Error('Only the group owner can create habits for the group');
     }
   }

@@ -117,6 +117,7 @@ export async function createHabit(habit: {
   targetValue: number;
   targetUnit: string;
   notes?: string;
+  groupId?: string;
 }) {
   const response = await fetch(`${API_BASE_URL}/habits`, {
     method: 'POST',

@@ -10,6 +10,7 @@ interface CreateHabitInput {
   targetValue: number;
   targetUnit: string;
   notes?: string;
+  groupId?: string;
 }
 
 export function useCreateHabitMutation() {
