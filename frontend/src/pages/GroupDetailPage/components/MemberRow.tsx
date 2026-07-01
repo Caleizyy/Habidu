@@ -52,6 +52,7 @@ export function MemberRow({ member, total, color, targetUnit, editProps }: Props
             size="sm"
             onClick={editProps.onSave}
             disabled={!editProps.isDirty || editProps.isSaving}
+            className="h-9 px-4 transition-all duration-200 hover:-translate-y-1 hover:shadow-lg"
           >
             {editProps.isSaving ? '...' : 'Save'}
           </Button>
