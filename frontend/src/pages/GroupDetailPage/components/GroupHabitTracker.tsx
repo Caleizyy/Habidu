@@ -3,6 +3,7 @@ import { HabitHeader } from './HabitHeader';
 import { StackedProgressBar } from './StackedProgressBar';
 import { MemberRow } from './MemberRow';
 import { useGroupHabitTracker } from '../hooks/useGroupHabitTracker';
+import leaf from '@/assets/leaf.png';
 
 interface Props {
   group: Group;
@@ -28,9 +29,15 @@ export function GroupHabitTracker({ group }: Props) {
 
   if (!habit) {
     return (
-      <p className="text-sm text-neutral-500 italic">
-        No group goal set yet. The owner can create a habit and assign it to this group from the Habits page.
-      </p>
+      <div className="flex items-center justify-center py-12">
+        <div className="item-center text-center">
+          <img src={leaf} className="mx-auto mb-4 size-30" alt="No group goal" />
+          <p className="mb-2 text-lg font-semibold text-neutral-900 dark:text-neutral-100">No group goal yet..</p>
+          <p className="text-sm text-neutral-500 dark:text-neutral-400">
+            The owner can create a habit and assign it to this group from the Habits page.
+          </p>
+        </div>
+      </div>
     );
   }
 
