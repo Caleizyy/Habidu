@@ -4,6 +4,7 @@ export interface IHabitLog extends Document {
   habitId: Types.ObjectId;
   date: Date;
   value: number;
+  userId?: string;
 }
 
 const HabitLogSchema = new Schema<IHabitLog>(
@@ -22,8 +23,16 @@ const HabitLogSchema = new Schema<IHabitLog>(
       required: true,
       min: 0,
     },
+    userId: { type: String },
   },
   { timestamps: true }
 );
 
 export const HabitLog = model<IHabitLog>('HabitLog', HabitLogSchema);
+
+HabitLog.collection
+  .createIndex(
+    { habitId: 1, userId: 1, date: 1 },
+    { unique: true, partialFilterExpression: { userId: { $type: 'string' } }, background: true }
+  )
+  .catch(() => {});

@@ -15,5 +15,7 @@ router.post('/:id/invite', validateBody(inviteMemberSchema), groupController.inv
 router.post('/:id/accept', groupController.acceptInvite);
 router.post('/:id/decline', groupController.declineInvite);
 router.post('/:id/leave', groupController.leaveGroup);
+router.get('/:id/habit', groupController.getGroupHabit);
+router.post('/:id/log', groupController.logGroupHabit);
 
 export default router;

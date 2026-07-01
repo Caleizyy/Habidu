@@ -53,3 +53,19 @@ export async function upsert(habitId: string, date: string, value: number) {
     { upsert: true, returnDocument: 'after' }
   );
 }
+
+export async function upsertForGroup(habitId: string, date: string, value: number, userId: string) {
+  const dateObj = new Date(date);
+  return HabitLog.findOneAndUpdate(
+    {
+      habitId,
+      userId,
+      date: {
+        $gte: dateObj,
+        $lt: new Date(dateObj.getTime() + 24 * 60 * 60 * 1000),
+      },
+    },
+    { value, date: dateObj, userId },
+    { upsert: true, returnDocument: 'after' }
+  );
+}

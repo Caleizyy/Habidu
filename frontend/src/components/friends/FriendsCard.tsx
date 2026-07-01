@@ -1,6 +1,8 @@
 import { Card } from '@/components/ui/Card';
 import FriendsItemCard from './FriendsItemCard';
 import { Friend } from '@/types';
+import friendsEmpty from '@/assets/multiple-users-silhouette.png';
+
 interface FriendsCardProps {
   friends: Friend[];
   onFriendRemoved: () => void;
@@ -16,6 +18,12 @@ export default function FriendsCard({ friends, onFriendRemoved }: FriendsCardPro
         {friends.map((friend) => (
           <FriendsItemCard key={friend._id} friend={friend} onFriendRemoved={onFriendRemoved} />
         ))}
+        {friends.length === 0 && (
+          <div className="text-center">
+            <img src={friendsEmpty} className="mx-auto flex size-30"></img>
+            <p className="mb-4 text-lg font-semibold text-neutral-900 dark:text-neutral-100">No friends yet..</p>
+          </div>
+        )}
       </div>
     </Card>
   );

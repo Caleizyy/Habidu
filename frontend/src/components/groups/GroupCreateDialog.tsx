@@ -52,7 +52,7 @@ export function GroupCreateDialog({ onCreated }: Props) {
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
       <DialogTrigger asChild>
-        <Button>
+        <Button className="flex flex-row bg-gray-800 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-700">
           <PlusIcon />
           Create group
         </Button>
@@ -81,7 +81,7 @@ export function GroupCreateDialog({ onCreated }: Props) {
             {nameError && <p className="text-destructive text-sm">{nameError}</p>}
           </div>
           <DialogFooter>
-            <Button type="submit" disabled={submitting}>
+            <Button type="submit" disabled={submitting} className="transition-all duration-200 hover:-translate-y-1">
               {submitting ? 'Creating…' : 'Create'}
             </Button>
           </DialogFooter>

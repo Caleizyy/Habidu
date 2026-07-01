@@ -17,6 +17,7 @@ import { WeeklyHabitsSection } from './sections/WeeklyHabitsSection';
 import { MonthlyHabitsSection } from './sections/MonthlyHabitsSection';
 import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
+import leaf from '@/assets/leaf.png';
 
 export function TrackingHabitsPage(): React.ReactNode {
   // Calculate dynamic date values
@@ -111,7 +112,8 @@ export function TrackingHabitsPage(): React.ReactNode {
       <PageLayout title="Tracking Habits">
         <div className="flex items-center justify-center py-12">
           <div className="text-center">
-            <p className="text-neutral-600 dark:text-neutral-400">No habits found. Create your first habit.</p>
+            <img src={leaf} className="mx-auto size-30" />
+            <p className="font-medium">No habits found. Create your first habit.</p>
           </div>
         </div>
       </PageLayout>

@@ -15,6 +15,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
 
   // Query habits
   const habitsQuery = useHabitsQuery();
+  const personalHabits = React.useMemo(() => (habitsQuery.data ?? []).filter((h) => !h.groupId), [habitsQuery.data]);
 
   // Calculate date range: last 1 year from today
   const dateRange = React.useMemo(() => {
@@ -28,7 +29,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
 
   // Query logs for each habit
   const logsQuery = useAllHabitLogsQuery({
-    habitIds: habitsQuery.data?.map((h) => h._id) ?? [],
+    habitIds: personalHabits.map((h) => h._id),
     startDate: dateRange.startDate,
     endDate: dateRange.endDate,
     enabled: !!habitsQuery.data,
@@ -181,13 +182,13 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
 
   // Streaks computed so that they match the values the user currently sees.
   const displayedLogs = React.useMemo(
-    () => buildDisplayedLogs(habitsQuery.data ?? [], logs, draftManager.drafts, draftManager.deletedLogIds),
-    [habitsQuery.data, logs, draftManager.drafts, draftManager.deletedLogIds]
+    () => buildDisplayedLogs(personalHabits, logs, draftManager.drafts, draftManager.deletedLogIds),
+    [personalHabits, logs, draftManager.drafts, draftManager.deletedLogIds]
   );
 
   // Calculate streaks for all habits when logs or drafts change
   const habitsWithStreaks = React.useMemo(() => {
-    return (habitsQuery.data ?? []).map((habit) => {
+    return personalHabits.map((habit) => {
       const habitLogs = displayedLogs[habit._id] ?? [];
       const streaks = calculateStreaks(habit, habitLogs);
       return {
@@ -196,7 +197,7 @@ export function useHabitLogs(WEEKLY_ROW_LABELS: Array<{ weekKey: string; label: 
         personalBest: streaks.personalBest,
       };
     });
-  }, [habitsQuery.data, displayedLogs]);
+  }, [personalHabits, displayedLogs]);
 
   // Calculate section streaks (only increase if ALL habits in section are complete)
   const sectionStreaks = React.useMemo(() => {

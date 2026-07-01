@@ -11,12 +11,17 @@ import { useUpdateHabitMutation } from '@/hooks/useUpdateHabitMutation';
 import { Habit } from '@/types/habit';
 import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
+import { useQuery } from '@tanstack/react-query';
+import { fetchGroups, fetchGroupHabit } from '@/api/group';
+import { useAuth } from '@/context/AuthContext';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 
 interface EditHabitDialogProps {
   habit: Habit;
 }
 
 export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
+  const { user } = useAuth();
   const [name, setName] = useState<string>(habit.name);
   const [frequency, setFrequency] = useState<string>(habit.frequency);
   const [difficulty, setDifficulty] = useState<string>(habit.difficulty);
@@ -24,11 +29,30 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
   const [targetValue, setTargetValue] = useState<number>(habit.targetValue);
   const [targetUnit, setTargetUnit] = useState<string>(habit.targetUnit);
   const [notes, setNotes] = useState<string>(habit.notes ?? '');
+  const [selectedGroupId, setSelectedGroupId] = useState<string>(habit.groupId ?? '');
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const updateHabitMutation = useUpdateHabitMutation();
+
+  const { data: groups = [] } = useQuery({
+    queryKey: ['groups'],
+    queryFn: fetchGroups,
+    enabled: open,
+  });
+
+  const ownedGroups = groups.filter((g) => g.owner === user?.sub);
+
+  const groupHabitQueries = useQuery({
+    queryKey: ['groupHabitsExistence', ownedGroups.map((g) => g._id)],
+    queryFn: () =>
+      Promise.all(ownedGroups.map((g) => fetchGroupHabit(g._id).then((r) => ({ groupId: g._id, hasHabit: !!r })))),
+    enabled: open && ownedGroups.length > 0,
+  });
+
+  const occupiedGroupIds = new Set((groupHabitQueries.data ?? []).filter((r) => r.hasHabit).map((r) => r.groupId));
+  const availableGroups = ownedGroups.filter((g) => !occupiedGroupIds.has(g._id) || g._id === habit.groupId);
 
   const resetForm = () => {
     setName(habit.name);
@@ -38,6 +62,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
     setTargetValue(habit.targetValue);
     setTargetUnit(habit.targetUnit);
     setNotes(habit.notes ?? '');
+    setSelectedGroupId(habit.groupId ?? '');
     setSubmitted(false);
     setError(null);
   };
@@ -57,6 +82,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
         targetValue: targetValue,
         targetUnit: targetUnit,
         notes: notes,
+        groupId: selectedGroupId || null,
       });
       resetForm();
       setOpen(false);
@@ -76,8 +102,9 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
       }}
     >
       <DialogTrigger asChild onClick={() => setOpen(true)}>
-        <Button className="flex h-[5vh] w-[6vw] flex-row bg-white">
+        <Button className="flex h-auto flex-row bg-white transition-all duration-200 hover:-translate-y-1">
           <EditIcon className="size-8 bg-white text-black" />
+          <span className="ml-2 font-medium text-black">Edit</span>
         </Button>
       </DialogTrigger>
       <DialogContent>
@@ -96,7 +123,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
         <div>
           <HabitSelect
             label={frequencyOptions[0].label}
-            choices={frequencyOptions[0].choices}
+            choices={selectedGroupId ? ['Weekly'] : frequencyOptions[0].choices}
             value={frequency}
             onValueChange={(value) => setFrequency(value)}
           />
@@ -153,12 +180,39 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
             onChange={(e) => setNotes(e.target.value)}
           />
         </Field>
+        {availableGroups.length > 0 && (
+          <div className="mt-4">
+            <FieldLabel>Group</FieldLabel>
+            <Select
+              value={selectedGroupId}
+              onValueChange={(val) => {
+                const newGroupId = val === 'none' ? '' : val;
+                setSelectedGroupId(newGroupId);
+                if (newGroupId) setFrequency('Weekly');
+              }}
+            >
+              <SelectTrigger className="mt-1 w-full">
+                <SelectValue placeholder="None (personal habit)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="none">None (personal habit)</SelectItem>
+                  {availableGroups.map((group) => (
+                    <SelectItem key={group._id} value={group._id}>
+                      {group.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <DialogFooter>
           <div className="flex w-full justify-center">
             {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
               <Button
-                className="h-10 w-30 bg-gray-200 text-black"
+                className="h-10 w-30 bg-gray-200 text-black transition-all duration-200 hover:-translate-y-1 hover:bg-gray-300"
                 onClick={handleSubmit}
                 disabled={updateHabitMutation.isPending}
               >

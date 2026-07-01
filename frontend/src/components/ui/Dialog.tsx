@@ -101,7 +101,12 @@ function DialogFooter({
       {children}
       {showCloseButton && (
         <DialogPrimitive.Close asChild>
-          <Button variant="outline">Close</Button>
+          <Button
+            variant="outline"
+            className="flex flex-row bg-gray-100 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-200"
+          >
+            Close
+          </Button>
         </DialogPrimitive.Close>
       )}
     </div>

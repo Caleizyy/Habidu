@@ -10,8 +10,13 @@ import { useState } from 'react';
 import { useCreateHabitMutation } from '@/hooks/useCreateHabitMutation';
 import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
+import { useQuery } from '@tanstack/react-query';
+import { fetchGroups, fetchGroupHabit } from '@/api/group';
+import { useAuth } from '@/context/AuthContext';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 
 export function AddHabitDialog() {
+  const { user } = useAuth();
   const [name, setName] = useState('');
   const [frequency, setFrequency] = useState('');
   const [difficulty, setDifficulty] = useState('');
@@ -22,8 +27,28 @@ export function AddHabitDialog() {
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [isGroupHabit, setIsGroupHabit] = useState(false);
+  const [selectedGroupId, setSelectedGroupId] = useState('');
 
   const createHabitMutation = useCreateHabitMutation();
+
+  const { data: groups = [] } = useQuery({
+    queryKey: ['groups'],
+    queryFn: fetchGroups,
+    enabled: open,
+  });
+
+  const ownedGroups = groups.filter((g) => g.owner === user?.sub);
+
+  const groupHabitQueries = useQuery({
+    queryKey: ['groupHabitsExistence', ownedGroups.map((g) => g._id)],
+    queryFn: () =>
+      Promise.all(ownedGroups.map((g) => fetchGroupHabit(g._id).then((r) => ({ groupId: g._id, hasHabit: !!r })))),
+    enabled: open && ownedGroups.length > 0,
+  });
+
+  const occupiedGroupIds = new Set((groupHabitQueries.data ?? []).filter((r) => r.hasHabit).map((r) => r.groupId));
+  const availableGroups = ownedGroups.filter((g) => !occupiedGroupIds.has(g._id));
 
   const resetForm = () => {
     setName('');
@@ -35,11 +60,14 @@ export function AddHabitDialog() {
     setNotes('');
     setSubmitted(false);
     setError(null);
+    setIsGroupHabit(false);
+    setSelectedGroupId('');
   };
 
   async function handleSubmit() {
     setSubmitted(true);
     if (!name || !frequency || !difficulty || !category || !targetValue || !targetUnit) return;
+    if (isGroupHabit && !selectedGroupId) return;
 
     setError(null);
     try {
@@ -51,6 +79,7 @@ export function AddHabitDialog() {
         targetValue: parseFloat(targetValue),
         targetUnit: targetUnit,
         notes: notes,
+        ...(isGroupHabit && selectedGroupId ? { groupId: selectedGroupId } : {}),
       });
       resetForm();
       setOpen(false);
@@ -72,7 +101,7 @@ export function AddHabitDialog() {
       }}
     >
       <DialogTrigger asChild onClick={() => setOpen(true)}>
-        <Button className="flex h-[5vh] w-[6vw] flex-row bg-gray-200">
+        <Button className="flex h-[5vh] w-[6vw] flex-row bg-gray-200 transition-all duration-200 hover:-translate-y-1 hover:bg-gray-300">
           <PlusIcon className="size-8 text-black" />
         </Button>
       </DialogTrigger>
@@ -92,7 +121,7 @@ export function AddHabitDialog() {
         <div>
           <HabitSelect
             label={frequencyOptions[0].label}
-            choices={frequencyOptions[0].choices}
+            choices={isGroupHabit ? ['Weekly'] : frequencyOptions[0].choices}
             value={frequency}
             onValueChange={(value) => setFrequency(value)}
           />
@@ -149,12 +178,50 @@ export function AddHabitDialog() {
             onChange={(e) => setNotes(e.target.value)}
           />
         </Field>
+        {availableGroups.length > 0 && (
+          <div className="mt-4">
+            <label className="flex cursor-pointer items-center gap-2 text-sm font-medium">
+              <input
+                type="checkbox"
+                className="h-4 w-4 rounded border-gray-300"
+                checked={isGroupHabit}
+                onChange={(e) => {
+                  setIsGroupHabit(e.target.checked);
+                  if (e.target.checked) setFrequency('Weekly');
+                  else setSelectedGroupId('');
+                }}
+              />
+              Create as group habit
+            </label>
+            {isGroupHabit && (
+              <div className="mt-2">
+                <Select value={selectedGroupId} onValueChange={setSelectedGroupId}>
+                  <SelectTrigger className="w-full">
+                    <SelectValue placeholder="Select group" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectGroup>
+                      {availableGroups.map((group) => (
+                        <SelectItem key={group._id} value={group._id}>
+                          {group.name}
+                        </SelectItem>
+                      ))}
+                    </SelectGroup>
+                  </SelectContent>
+                </Select>
+                {submitted && isGroupHabit && !selectedGroupId && (
+                  <p className="mt-1 text-sm text-red-500">Please select a group.</p>
+                )}
+              </div>
+            )}
+          </div>
+        )}
         <DialogFooter>
           <div className="flex w-full justify-center">
             {error && <p className="text-sm text-red-500">{error}</p>}
             {!error && (
               <Button
-                className="h-10 w-30 bg-gray-200 text-black"
+                className="h-10 w-30 bg-gray-200 text-black transition-all duration-200 hover:-translate-y-1 hover:bg-gray-300"
                 onClick={handleSubmit}
                 disabled={createHabitMutation.isPending}
               >
