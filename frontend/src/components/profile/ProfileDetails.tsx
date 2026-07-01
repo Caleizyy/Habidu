@@ -5,7 +5,7 @@ import { Separator } from '@/components/ui/Separator';
 import { Mail } from 'lucide-react';
 import { AlertCircle, Loader2 } from 'lucide-react';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
-import { User } from '@/types/index';
+import { Profile } from '@/types/index';
 
 interface ProfileDetailsProps {
   isEditing: boolean;
@@ -15,7 +15,7 @@ interface ProfileDetailsProps {
   email: string;
   bio: string;
   displayName: string;
-  user: User | null;
+  user: Profile | null;
   onDisplayNameChange: (value: string) => void;
   onBioChange: (value: string) => void;
 }

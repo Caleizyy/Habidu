@@ -3,7 +3,11 @@ import { User } from '../models/user';
 import { CreateUserBody } from '../types';
 
 export function getBySub(sub: string) {
-  return User.findOne({ sub: sub });
+  return User.findOne({ sub });
+}
+
+export function getById(id: string) {
+  return User.findById(id);
 }
 
 export function create(data: CreateUserBody) {

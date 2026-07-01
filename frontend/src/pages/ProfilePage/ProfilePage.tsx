@@ -1,4 +1,6 @@
 import { useState, useEffect } from 'react';
+import { useQuery } from '@tanstack/react-query';
+import { useParams } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { profileApi } from '@/api/profile';
 import { ProfileDetails } from '@/components/profile/ProfileDetails';
@@ -10,41 +12,48 @@ import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
 
 export function ProfilePage() {
-  const { user, isAuthenticated, refreshUser } = useAuth();
+  const { userId } = useParams<{ userId?: string }>();
+  const isOwnProfile = !userId;
+
+  const { user: authUser, isAuthenticated, refreshUser } = useAuth();
   const [isEditing, setIsEditing] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
-  const [bio, setBio] = useState(user?.bio ?? '');
-  const [displayName, setDisplayName] = useState(`${user?.firstName} ${user?.lastName}`);
+  const [isLoading, setIsLoading] = useState(isOwnProfile && !authUser);
+  const [bio, setBio] = useState(authUser?.bio ?? '');
+  const [displayName, setDisplayName] = useState(`${authUser?.firstName} ${authUser?.lastName}`);
   const [isSaving, setIsSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
+  const {
+    data: fetchedUser,
+    isLoading: fetchLoading,
+    error: fetchError,
+  } = useQuery({
+    queryKey: ['profile', userId],
+    queryFn: () => profileApi.getProfile(userId!),
+    enabled: !!userId,
+  });
+
   useEffect(() => {
-    if (user) return;
-
-    const loadUserData = async () => {
-      setIsLoading(true);
-      setError(null);
-
-      try {
-        await refreshUser();
-      } catch (err) {
+    if (userId || authUser) return;
+    refreshUser()
+      .catch((err) => {
         setError('Failed to load profile. Please refresh the page.');
         console.error(err);
-      } finally {
-        setIsLoading(false);
-      }
-    };
+      })
+      .finally(() => setIsLoading(false));
+  }, [userId, authUser, refreshUser]);
 
-    loadUserData();
-  }, [user, refreshUser]);
+  if (!isAuthenticated) return null;
 
-  if (!isAuthenticated) {
-    return null;
+  if (isOwnProfile && !authUser) {
+    return <div>{error ?? 'Failed to load profile data'}</div>;
   }
 
+  const user = isOwnProfile ? authUser : fetchedUser;
+
   const handleEdit = () => {
-    setDisplayName(user?.name ?? '');
-    setBio(user?.bio ?? '');
+    setDisplayName(authUser?.name ?? '');
+    setBio(authUser?.bio ?? '');
     setError(null);
     setIsEditing(true);
   };
@@ -70,20 +79,17 @@ export function ProfilePage() {
   };
 
   const handleCancel = () => {
-    setDisplayName(`${user?.firstName} ${user?.lastName}`);
-    setBio(user?.bio ?? '');
+    setDisplayName(`${authUser?.firstName} ${authUser?.lastName}`);
+    setBio(authUser?.bio ?? '');
     setError(null);
     setIsEditing(false);
   };
 
-  if (!user) {
-    setError('Failed to load user');
-    return <div>Failed to load user</div>;
-  }
   return (
     <PageLayout
       title="Profile"
       actions={
+        isOwnProfile &&
         !isEditing && (
           <Button
             variant="outline"
@@ -99,19 +105,19 @@ export function ProfilePage() {
       <div className="flex flex-1 flex-col items-center px-6 py-12">
         <div className="w-full max-w-2xl space-y-6">
           <ProfileDetails
-            isEditing={isEditing}
-            isLoading={isLoading}
-            error={error}
-            name={user.name}
-            email={user.email}
-            bio={bio ?? ''}
-            displayName={displayName}
-            user={user}
+            isEditing={isOwnProfile && isEditing}
+            isLoading={isOwnProfile ? isLoading : fetchLoading}
+            error={isOwnProfile ? error : fetchError ? 'Failed to load profile. Please try again.' : null}
+            name={user?.name ?? ''}
+            email={user?.email ?? ''}
+            bio={isOwnProfile ? bio : (user?.bio ?? '')}
+            displayName={isOwnProfile ? displayName : (user?.name ?? '')}
+            user={user ?? null}
             onDisplayNameChange={setDisplayName}
             onBioChange={setBio}
           />
 
-          {isEditing && (
+          {isOwnProfile && isEditing && (
             <ProfileEditActions isSaving={isSaving} error={error} onSave={handleSave} onCancel={handleCancel} />
           )}
         </div>

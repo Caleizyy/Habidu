@@ -2,6 +2,10 @@ import { Types } from 'mongoose';
 import * as userRepository from '../repositories/userRepository';
 import * as friendRepository from '../repositories/friendRepository';
 
+export async function getUserById(id: string) {
+  return userRepository.getById(id);
+}
+
 export async function searchUsers(email: string, currentUserId: Types.ObjectId) {
   const [friends, pendingFriends] = await Promise.all([
     friendRepository.find(currentUserId),

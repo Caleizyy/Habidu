@@ -1,33 +1,33 @@
 import { Request, Response } from 'express';
-import * as sessionService from '../services/sessionService';
-import { User } from '../models/user';
+import { Types } from 'mongoose';
+import * as userService from '../services/userService';
+import { User, IUser } from '../models/user';
 
-export const getProfile = async (req: Request, res: Response) => {
+export const getOwnProfile = (req: Request, res: Response) => {
+  const user = res.locals.user as IUser;
+  return res.json({
+    sub: user.sub,
+    email: user.email,
+    name: `${user.firstName} ${user.lastName}`.trim(),
+    avatar: user.avatar,
+    bio: user.bio ?? '',
+  });
+};
+
+export const getProfile = async (req: Request<{ userId: string }>, res: Response) => {
   try {
-    const sessionId = req.cookies?.session;
+    const { userId } = req.params;
 
-    if (!sessionId) {
-      return res.status(401).json({ message: 'Unauthorized' });
+    if (!Types.ObjectId.isValid(userId)) {
+      return res.status(400).json({ message: 'Invalid user ID' });
     }
 
-    const session = await sessionService.getSessionById(sessionId);
-
-    if (!session) {
-      return res.status(401).json({ message: 'Invalid session' });
-    }
-
-    const user = await User.findOne({ sub: session.sub });
-
-    if (!user) {
-      return res.status(404).json({ message: 'User not found' });
-    }
-
+    const user = await userService.getUserById(userId);
+    if (!user) return res.status(404).json({ message: 'User not found' });
     return res.json({
-      sub: user.sub,
-      email: user.email,
       name: `${user.firstName} ${user.lastName}`.trim(),
       avatar: user.avatar,
-      bio: user.bio || '',
+      bio: user.bio ?? '',
     });
   } catch (err) {
     console.error(err);
@@ -37,26 +37,10 @@ export const getProfile = async (req: Request, res: Response) => {
 
 export const updateProfile = async (req: Request, res: Response) => {
   try {
-    const sessionId = req.cookies?.session;
-
-    if (!sessionId) {
-      return res.status(401).json({ message: 'Unauthorized' });
-    }
-
-    const session = await sessionService.getSessionById(sessionId);
-
-    if (!session) {
-      return res.status(401).json({ message: 'Invalid session' });
-    }
-
     const { name, bio } = req.body;
 
     if (!name || typeof name !== 'string' || !name.trim()) {
       return res.status(400).json({ message: 'Name is required' });
-    }
-
-    if (bio && typeof bio !== 'string') {
-      return res.status(400).json({ message: 'Bio must be a string' });
     }
 
     const [firstName, ...rest] = name.trim().split(' ');
@@ -72,13 +56,7 @@ export const updateProfile = async (req: Request, res: Response) => {
     updateData.lastName = lastName;
     if (bio !== undefined) updateData.bio = bio;
 
-    const updated = await User.findOneAndUpdate(
-      { sub: session.sub },
-
-      updateData,
-
-      { returnDocument: 'after' }
-    );
+    const updated = await User.findOneAndUpdate({ sub: res.locals.sub }, updateData, { returnDocument: 'after' });
 
     if (!updated) {
       return res.status(404).json({ message: 'User not found' });
@@ -89,7 +67,7 @@ export const updateProfile = async (req: Request, res: Response) => {
       email: updated.email,
       name: `${updated.firstName} ${updated.lastName}`.trim(),
       avatar: updated.avatar,
-      bio: updated.bio,
+      bio: updated.bio ?? '',
     });
   } catch (err) {
     console.error(err);
