@@ -2,6 +2,11 @@ import { Request, Response } from 'express';
 import * as habitService from '../services/habitService';
 import { CreateHabitBody, HabitQueryFilter, UpdateHabitBody } from '../types';
 
+const ERROR_STATUS: Record<string, number> = {
+  'Group not found': 404,
+  'Only the group owner can create habits for the group': 403,
+};
+
 export const find = async (req: Request<object, object, object, HabitQueryFilter>, res: Response) => {
   try {
     const habits = await habitService.find({ ...req.query, createdBy: res.locals.sub });
@@ -18,6 +23,9 @@ export const create = async (req: Request<object, object, CreateHabitBody>, res:
     const newHabit = await habitService.create({ ...req.body, createdBy: res.locals.sub });
     return res.status(201).json(newHabit);
   } catch (error) {
+    const msg = error instanceof Error ? error.message : '';
+    const status = ERROR_STATUS[msg];
+    if (status) return res.status(status).json({ error: msg });
     console.error('Error creating habit:', error);
     return res.status(500).json({ error: 'Failed to create habit' });
   }

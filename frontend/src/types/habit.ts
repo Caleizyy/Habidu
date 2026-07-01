@@ -28,6 +28,7 @@ export interface Habit {
   targetValue: number;
   targetUnit: string;
   notes?: string;
+  groupId?: string;
   currentStreak?: number;
   personalBest?: number;
 }

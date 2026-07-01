@@ -11,6 +11,7 @@ interface UpdateHabitInput {
   targetValue?: number;
   targetUnit?: string;
   notes?: string;
+  groupId?: string | null;
 }
 
 export function useUpdateHabitMutation() {
