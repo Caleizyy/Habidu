@@ -11,6 +11,7 @@ import { errorMessage } from '@/utils/errorMessage';
 import { GroupLeaveDialog } from '@/components/groups/GroupLeaveDialog';
 import { useNavigate } from 'react-router-dom';
 import { ROUTES } from '@/constants';
+import { GroupHabitTracker } from './components/GroupHabitTracker';
 
 export function GroupDetailPage() {
   const navigate = useNavigate();
@@ -51,6 +52,9 @@ export function GroupDetailPage() {
         {error && <p className="text-red-500">{error}</p>}
         {!loading && !error && group && (
           <>
+            <h2 className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">Group Goal</h2>
+            <GroupHabitTracker group={group} />
+
             <h2 className="text-sm font-semibold tracking-wide text-neutral-500 uppercase">Members</h2>
             <ul className="flex flex-col gap-3">
               {group.members.map((member) => {
