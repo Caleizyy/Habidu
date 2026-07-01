@@ -3,7 +3,8 @@ import { getTodayDate, getLast4Weeks } from '@/utils/dateHelpers';
 import { HabitFrequency } from '@/types/habit';
 import { useHabitLogs } from '@/pages/TrackingHabitsPage/hooks/useHabitLogs';
 import { friendsApi } from '@/api/friends';
-import { fetchGroups } from '@/api/group';
+import { fetchGroups, fetchGroupHabit } from '@/api/group';
+import type { GroupProgress } from '../components/GroupProgressCard';
 
 export interface HomePageStats {
   totalDaily: number;
@@ -20,14 +21,31 @@ export function useHomePageData() {
 
   const habitLogsData = useHabitLogs(WEEKLY_ROW_LABELS);
   const [friendCount, setFriendCount] = React.useState(0);
-  const [groupCount, setGroupCount] = React.useState(0);
+  const [groupProgress, setGroupProgress] = React.useState<GroupProgress[]>([]);
 
   React.useEffect(() => {
     friendsApi.getFriends().then((friends) => setFriendCount(friends.length));
   }, []);
 
   React.useEffect(() => {
-    fetchGroups().then((groups) => setGroupCount(groups.length));
+    fetchGroups().then(async (groups) => {
+      const results = await Promise.allSettled(groups.map((g) => fetchGroupHabit(g._id).then((r) => ({ g, r }))));
+      const progress: GroupProgress[] = [];
+      for (const result of results) {
+        if (result.status === 'fulfilled' && result.value.r) {
+          const { g, r } = result.value;
+          const grandTotal = r.logs.reduce((sum, l) => sum + l.value, 0);
+          progress.push({
+            groupId: g._id,
+            groupName: g.name,
+            grandTotal,
+            targetValue: r.habit.targetValue,
+            targetUnit: r.habit.targetUnit,
+          });
+        }
+      }
+      setGroupProgress(progress);
+    });
   }, []);
 
   const stats = React.useMemo(() => {
@@ -63,6 +81,6 @@ export function useHomePageData() {
     loading: habitLogsData.loading,
     error: habitLogsData.error,
     friendCount,
-    groupCount,
+    groupProgress,
   };
 }

@@ -4,10 +4,10 @@ import { StreaksCard } from './components/StreaksCard';
 import { ProgressCard } from './components/ProgressCard';
 import { FriendCountCard } from './components/FriendCountCard';
 import leaf from '@/assets/leaf.png';
-import { GroupCountCard } from './components/GroupCountCard';
+import { GroupProgressCard } from './components/GroupProgressCard';
 
 export function HomePage() {
-  const { habits, sectionStreaks, stats, loading, error, friendCount, groupCount } = useHomePageData();
+  const { habits, sectionStreaks, stats, loading, error, friendCount, groupProgress } = useHomePageData();
 
   if (loading) {
     return (
@@ -51,7 +51,7 @@ export function HomePage() {
             <h2 className="mb-4 text-2xl text-neutral-900 dark:text-neutral-100">Community</h2>
             <FriendCountCard friendCount={friendCount} />
             <div className="mt-4">
-              <GroupCountCard groupCount={groupCount} />
+              <GroupProgressCard groups={groupProgress} />
             </div>
           </div>
         </div>
@@ -97,7 +97,7 @@ export function HomePage() {
           <h2 className="mb-4 text-2xl text-neutral-900 dark:text-neutral-100">Community</h2>
           <FriendCountCard friendCount={friendCount} />
           <div className="mt-4">
-            <GroupCountCard groupCount={groupCount} />
+            <GroupProgressCard groups={groupProgress} />
           </div>
         </div>
       </div>
