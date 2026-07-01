@@ -3,6 +3,7 @@ import { getTodayDate, getLast4Weeks } from '@/utils/dateHelpers';
 import { HabitFrequency } from '@/types/habit';
 import { useHabitLogs } from '@/pages/TrackingHabitsPage/hooks/useHabitLogs';
 import { friendsApi } from '@/api/friends';
+import { fetchGroups } from '@/api/group';
 
 export interface HomePageStats {
   totalDaily: number;
@@ -19,9 +20,14 @@ export function useHomePageData() {
 
   const habitLogsData = useHabitLogs(WEEKLY_ROW_LABELS);
   const [friendCount, setFriendCount] = React.useState(0);
+  const [groupCount, setGroupCount] = React.useState(0);
 
   React.useEffect(() => {
     friendsApi.getFriends().then((friends) => setFriendCount(friends.length));
+  }, []);
+
+  React.useEffect(() => {
+    fetchGroups().then((groups) => setGroupCount(groups.length));
   }, []);
 
   const stats = React.useMemo(() => {
@@ -57,5 +63,6 @@ export function useHomePageData() {
     loading: habitLogsData.loading,
     error: habitLogsData.error,
     friendCount,
+    groupCount,
   };
 }
