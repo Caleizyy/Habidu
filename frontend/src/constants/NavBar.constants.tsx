@@ -112,8 +112,8 @@ export const APP_MENU: MenuItem[] = [
         icon: <SquareCheckBig className="size-5" />,
       },
       {
-        title: 'Tracking Your Habits',
-        description: 'Track Individual habits',
+        title: 'Tracking Habits',
+        description: 'Track your habits',
         url: ROUTES.TRACKING,
         icon: <NotebookTabs className="size-5" />,
       },
