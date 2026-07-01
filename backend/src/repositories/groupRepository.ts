@@ -19,3 +19,11 @@ export async function findById(id: string): Promise<PopulatedGroup | null> {
 export function create(data: CreateGroupBody) {
   return Group.create(data);
 }
+
+export function addMember(groupId: string, userId: Types.ObjectId) {
+  return Group.findByIdAndUpdate(groupId, { $addToSet: { members: userId } });
+}
+
+export function removeMember(groupId: string, userId: Types.ObjectId) {
+  return Group.findByIdAndUpdate(groupId, { $pull: { members: userId } });
+}

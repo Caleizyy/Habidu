@@ -76,3 +76,47 @@ export const inviteMember = async (req: Request<{ id: string }>, res: Response) 
     return res.status(500).json({ error: 'Failed to invite member' });
   }
 };
+
+export const getInvites = async (req: Request, res: Response) => {
+  try {
+    const user = res.locals.user as IUser;
+    const groupRequests = await groupService.getInvites(user);
+    return res.status(200).json(groupRequests);
+  } catch (error) {
+    console.error('Error group invites:', error);
+    return res.status(500).json({ error: 'Failed to fetch group invites' });
+  }
+};
+
+export const acceptInvite = async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const user = res.locals.user as IUser;
+    const accept = await groupService.acceptInvite(req.params.id, user);
+    return res.status(200).json(accept);
+  } catch (error) {
+    console.error('Error accepting group invite: ', error);
+    return res.status(500).json({ error: 'Failed to accept group invite' });
+  }
+};
+
+export const declineInvite = async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const user = res.locals.user as IUser;
+    const decline = await groupService.declineInvite(req.params.id, user);
+    return res.status(200).json(decline);
+  } catch (error) {
+    console.error('Error declining group invite: ', error);
+    return res.status(500).json({ error: 'Failed to decline group invite' });
+  }
+};
+
+export const leaveGroup = async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const user = res.locals.user as IUser;
+    const leave = await groupService.leaveGroup(req.params.id, user);
+    return res.status(200).json(leave);
+  } catch (error) {
+    console.error('Error leaving group: ', error);
+    return res.status(500).json({ error: 'Failed to leave group' });
+  }
+};
