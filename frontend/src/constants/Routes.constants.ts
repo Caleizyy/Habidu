@@ -2,7 +2,6 @@ export const ROUTES = {
   HOME: '/',
   HABITS: '/habits',
   TRACKING: '/tracking',
-  GROUP_ACTIVITY: '/activity',
   ABOUT: '/about',
   PROFILE: '/profile',
   FRIENDS: '/friends',

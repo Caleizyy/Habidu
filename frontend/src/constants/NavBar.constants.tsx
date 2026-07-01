@@ -9,7 +9,6 @@ import {
   Users,
   Handshake,
   NotebookTabs,
-  HeartHandshake,
 } from 'lucide-react';
 import { MenuItem } from '../components/navbar';
 import { ROUTES } from './Routes.constants';
@@ -117,12 +116,6 @@ export const APP_MENU: MenuItem[] = [
         description: 'Track Individual habits',
         url: ROUTES.TRACKING,
         icon: <NotebookTabs className="size-5" />,
-      },
-      {
-        title: 'Group Activity',
-        description: 'Track Group habits',
-        url: ROUTES.GROUP_ACTIVITY,
-        icon: <HeartHandshake className="size-5" />,
       },
     ],
   },
