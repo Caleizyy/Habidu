@@ -111,7 +111,7 @@ export function AddHabitDialog() {
         <div>
           <HabitSelect
             label={frequencyOptions[0].label}
-            choices={frequencyOptions[0].choices}
+            choices={isGroupHabit ? ['Weekly'] : frequencyOptions[0].choices}
             value={frequency}
             onValueChange={(value) => setFrequency(value)}
           />
@@ -177,7 +177,8 @@ export function AddHabitDialog() {
                 checked={isGroupHabit}
                 onChange={(e) => {
                   setIsGroupHabit(e.target.checked);
-                  if (!e.target.checked) setSelectedGroupId('');
+                  if (e.target.checked) setFrequency('Weekly');
+                  else setSelectedGroupId('');
                 }}
               />
               Create as group habit

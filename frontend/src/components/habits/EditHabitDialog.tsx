@@ -113,7 +113,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
         <div>
           <HabitSelect
             label={frequencyOptions[0].label}
-            choices={frequencyOptions[0].choices}
+            choices={selectedGroupId ? ['Weekly'] : frequencyOptions[0].choices}
             value={frequency}
             onValueChange={(value) => setFrequency(value)}
           />
@@ -173,7 +173,14 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
         {ownedGroups.length > 0 && (
           <div className="mt-4">
             <FieldLabel>Group</FieldLabel>
-            <Select value={selectedGroupId} onValueChange={(val) => setSelectedGroupId(val === 'none' ? '' : val)}>
+            <Select
+              value={selectedGroupId}
+              onValueChange={(val) => {
+                const newGroupId = val === 'none' ? '' : val;
+                setSelectedGroupId(newGroupId);
+                if (newGroupId) setFrequency('Weekly');
+              }}
+            >
               <SelectTrigger className="mt-1 w-full">
                 <SelectValue placeholder="None (personal habit)" />
               </SelectTrigger>
