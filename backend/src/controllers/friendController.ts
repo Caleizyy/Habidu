@@ -45,7 +45,6 @@ export const findRequests = async (req: Request, res: Response) => {
 export const acceptRequest = async (req: Request<{ id: string }>, res: Response) => {
   try {
     const user = res.locals.user as IUser;
-    console.log('Accepting request:', req.params.id);
     const accept = await friendService.acceptRequest(new Types.ObjectId(req.params.id), user._id);
     return res.status(200).json(accept);
   } catch (error) {

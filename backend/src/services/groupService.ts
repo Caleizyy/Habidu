@@ -5,6 +5,7 @@ import * as groupRepository from '../repositories/groupRepository';
 import * as groupRequestRepository from '../repositories/groupRequestRepository';
 import * as userRepository from '../repositories/userRepository';
 import * as friendService from './friendService';
+import * as notificationService from './notificationService';
 
 function assertOwner(group: PopulatedGroup, user: IUser) {
   if (!group.owner._id.equals(user._id as Types.ObjectId)) {
@@ -107,4 +108,55 @@ export async function invite(groupId: string, email: string, inviter: IUser) {
     invitee: inviteeId,
     status: GroupRequestStatus.Pending,
   });
+
+  await notificationService.createNotification({
+    recipientId: inviteeId,
+    message: 'You have been invited to a group!',
+    pageRef: '/requests',
+    actorRef: inviter._id as Types.ObjectId,
+  });
+}
+
+export async function getInvites(user: IUser) {
+  return await groupRequestRepository.findPendingByInvitee(user._id as Types.ObjectId);
+}
+
+export async function acceptInvite(groupId: string, user: IUser) {
+  const groupInvite = await groupRequestRepository.findById(groupId);
+  if (!groupInvite) throw new Error('Group request does not exist');
+
+  if (!groupInvite.invitee.equals(user._id)) {
+    throw new Error('Unidentified user attempted to accept group invite request');
+  }
+
+  const updatedRequest = await groupRequestRepository.acceptGroupRequest(groupId);
+  const updatedGroup = await groupRepository.addMember(groupInvite.group.toString(), user._id as Types.ObjectId);
+  await notificationService.createNotification({
+    recipientId: groupInvite.inviter,
+    message: 'Your group invite got accepted!',
+    pageRef: '/requests',
+    actorRef: groupInvite.invitee,
+  });
+  return { updatedRequest, updatedGroup };
+}
+
+export async function declineInvite(groupId: string, user: IUser) {
+  const groupInvite = await groupRequestRepository.findById(groupId);
+  if (!groupInvite) throw new Error('Group request does not exist');
+
+  if (!groupInvite.invitee.equals(user._id)) {
+    throw new Error('Unidentified user attempted to decline group invite request');
+  }
+
+  return groupRequestRepository.declineGroupRequest(groupId);
+}
+
+export async function leaveGroup(groupId: string, user: IUser) {
+  const group = await groupRepository.findById(groupId);
+  if (!group) throw new Error('Group does not exist');
+  if (group.owner._id.equals(user._id as Types.ObjectId)) {
+    throw new Error('The group leader cannot leave the group. Consider deleting instead');
+  }
+
+  return groupRepository.removeMember(groupId, user._id as Types.ObjectId);
 }

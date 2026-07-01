@@ -8,8 +8,12 @@ import { Group } from '@/types/group';
 import { useAuth } from '@/context/AuthContext';
 import { initials } from '@/utils/initials';
 import { errorMessage } from '@/utils/errorMessage';
+import { GroupLeaveDialog } from '@/components/groups/GroupLeaveDialog';
+import { useNavigate } from 'react-router-dom';
+import { ROUTES } from '@/constants';
 
 export function GroupDetailPage() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const { user } = useAuth();
 
@@ -32,7 +36,15 @@ export function GroupDetailPage() {
       title={group?.name ?? 'Group'}
       back="/groups"
       backLabel="Back to groups"
-      actions={isOwner && group ? <GroupInviteDialog group={group} /> : undefined}
+      actions={
+        group ? (
+          isOwner ? (
+            <GroupInviteDialog group={group} />
+          ) : (
+            <GroupLeaveDialog group={group} onLeft={() => navigate(ROUTES.GROUPS)} />
+          )
+        ) : undefined
+      }
     >
       <div className="flex min-h-0 flex-1 flex-col gap-4">
         {loading && <p>Loading...</p>}
