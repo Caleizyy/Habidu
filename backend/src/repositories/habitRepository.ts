@@ -25,6 +25,10 @@ export async function updateById(_id: string, data: UpdateHabitBody) {
   return response.acknowledged;
 }
 
+export async function findByGroupId(groupId: string) {
+  return Habit.findOne({ groupId });
+}
+
 export async function deleteById(_id: string) {
   return Habit.deleteOne({ _id });
 }

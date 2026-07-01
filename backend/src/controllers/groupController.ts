@@ -120,3 +120,35 @@ export const leaveGroup = async (req: Request<{ id: string }>, res: Response) =>
     return res.status(500).json({ error: 'Failed to leave group' });
   }
 };
+
+export const getGroupHabit = async (req: Request<{ id: string }>, res: Response) => {
+  try {
+    const user = res.locals.user as IUser;
+    const result = await groupService.getGroupHabit(req.params.id, user);
+    return res.json(result ?? null);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : '';
+    const status = ERROR_STATUS[msg];
+    if (status) return res.status(status).json({ error: msg });
+    console.error('Error fetching group habit:', error);
+    return res.status(500).json({ error: 'Failed to fetch group habit' });
+  }
+};
+
+export const logGroupHabit = async (
+  req: Request<{ id: string }, object, { date: string; value: number }>,
+  res: Response
+) => {
+  try {
+    const user = res.locals.user as IUser;
+    const { date, value } = req.body;
+    const log = await groupService.logGroupHabit(req.params.id, date, value, user);
+    return res.status(200).json(log);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : '';
+    const status = ERROR_STATUS[msg];
+    if (status) return res.status(status).json({ error: msg });
+    console.error('Error logging group habit:', error);
+    return res.status(500).json({ error: 'Failed to log group habit' });
+  }
+};

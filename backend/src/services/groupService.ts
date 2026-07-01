@@ -6,6 +6,21 @@ import * as groupRequestRepository from '../repositories/groupRequestRepository'
 import * as userRepository from '../repositories/userRepository';
 import * as friendService from './friendService';
 import * as notificationService from './notificationService';
+import { Habit } from '../models/habit';
+import * as habitLogRepository from '../repositories/habitLogRepository';
+
+function getCurrentWeekRange() {
+  const now = new Date();
+  const day = now.getDay();
+  const diffToMonday = day === 0 ? -6 : 1 - day;
+  const monday = new Date(now);
+  monday.setDate(now.getDate() + diffToMonday);
+  monday.setHours(0, 0, 0, 0);
+  const sunday = new Date(monday);
+  sunday.setDate(monday.getDate() + 6);
+  sunday.setHours(23, 59, 59, 999);
+  return { from: monday, to: sunday };
+}
 
 function assertOwner(group: PopulatedGroup, user: IUser) {
   if (!group.owner._id.equals(user._id as Types.ObjectId)) {
@@ -159,4 +174,46 @@ export async function leaveGroup(groupId: string, user: IUser) {
   }
 
   return groupRepository.removeMember(groupId, user._id as Types.ObjectId);
+}
+
+export async function getGroupHabit(groupId: string, requestingUser: IUser) {
+  const group = await groupRepository.findById(groupId);
+  if (!group) return null;
+  const isMember = group.members.some((m) => m._id.equals(requestingUser._id as Types.ObjectId));
+  if (!isMember) throw new Error('Not a group member');
+
+  const habit = await Habit.findOne({ groupId });
+  if (!habit) return null;
+
+  const { from, to } = getCurrentWeekRange();
+  const logs = await habitLogRepository.findByHabitId(habit._id.toString(), from, to);
+
+  return {
+    habit: {
+      _id: habit._id,
+      name: habit.name,
+      targetValue: habit.targetValue,
+      targetUnit: habit.targetUnit,
+      frequency: habit.frequency,
+    },
+    logs: logs.map((l) => ({
+      _id: l._id,
+      userId: (l as { userId?: string }).userId,
+      value: l.value,
+      date: l.date,
+    })),
+  };
+}
+
+export async function logGroupHabit(groupId: string, date: string, value: number, user: IUser) {
+  const group = await groupRepository.findById(groupId);
+  if (!group) throw new Error('Group not found');
+  const userIdStr = user._id.toString();
+  const isMember = group.members.some((m) => m._id.toString() === userIdStr);
+  if (!isMember) throw new Error('Not a group member');
+
+  const habit = await Habit.findOne({ groupId });
+  if (!habit) throw new Error('No group habit found');
+
+  return habitLogRepository.upsertForGroup(habit._id.toString(), date, value, user.sub);
 }
