@@ -163,7 +163,7 @@ export interface UpdateHabitBody {
   notes?: string;
   targetUnit?: string;
   targetValue?: number;
-  groupId?: string;
+  groupId?: string | null;
 }
 
 export interface HabitByIdFilter {

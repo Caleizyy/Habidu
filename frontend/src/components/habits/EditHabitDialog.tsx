@@ -11,12 +11,17 @@ import { useUpdateHabitMutation } from '@/hooks/useUpdateHabitMutation';
 import { Habit } from '@/types/habit';
 import { toast } from 'sonner';
 import { toastSuccess, toastError } from '@/constants/ToastStyles.constants';
+import { useQuery } from '@tanstack/react-query';
+import { fetchGroups } from '@/api/group';
+import { useAuth } from '@/context/AuthContext';
+import { Select, SelectContent, SelectGroup, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select';
 
 interface EditHabitDialogProps {
   habit: Habit;
 }
 
 export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
+  const { user } = useAuth();
   const [name, setName] = useState<string>(habit.name);
   const [frequency, setFrequency] = useState<string>(habit.frequency);
   const [difficulty, setDifficulty] = useState<string>(habit.difficulty);
@@ -24,11 +29,20 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
   const [targetValue, setTargetValue] = useState<number>(habit.targetValue);
   const [targetUnit, setTargetUnit] = useState<string>(habit.targetUnit);
   const [notes, setNotes] = useState<string>(habit.notes ?? '');
+  const [selectedGroupId, setSelectedGroupId] = useState<string>(habit.groupId ?? '');
   const [submitted, setSubmitted] = useState(false);
   const [open, setOpen] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   const updateHabitMutation = useUpdateHabitMutation();
+
+  const { data: groups = [] } = useQuery({
+    queryKey: ['groups'],
+    queryFn: fetchGroups,
+    enabled: open,
+  });
+
+  const ownedGroups = groups.filter((g) => g.owner === user?.sub);
 
   const resetForm = () => {
     setName(habit.name);
@@ -38,6 +52,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
     setTargetValue(habit.targetValue);
     setTargetUnit(habit.targetUnit);
     setNotes(habit.notes ?? '');
+    setSelectedGroupId(habit.groupId ?? '');
     setSubmitted(false);
     setError(null);
   };
@@ -57,6 +72,7 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
         targetValue: targetValue,
         targetUnit: targetUnit,
         notes: notes,
+        groupId: selectedGroupId || null,
       });
       resetForm();
       setOpen(false);
@@ -153,6 +169,26 @@ export function EditHabitDialog({ habit }: Readonly<EditHabitDialogProps>) {
             onChange={(e) => setNotes(e.target.value)}
           />
         </Field>
+        {ownedGroups.length > 0 && (
+          <div className="mt-4">
+            <FieldLabel>Group</FieldLabel>
+            <Select value={selectedGroupId} onValueChange={(val) => setSelectedGroupId(val === 'none' ? '' : val)}>
+              <SelectTrigger className="mt-1 w-full">
+                <SelectValue placeholder="None (personal habit)" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectGroup>
+                  <SelectItem value="none">None (personal habit)</SelectItem>
+                  {ownedGroups.map((group) => (
+                    <SelectItem key={group._id} value={group._id}>
+                      {group.name}
+                    </SelectItem>
+                  ))}
+                </SelectGroup>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
         <DialogFooter>
           <div className="flex w-full justify-center">
             {error && <p className="text-sm text-red-500">{error}</p>}

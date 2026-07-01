@@ -64,8 +64,7 @@ export const updateHabitSchema = z.object({
     .optional(),
   notes: z.string().max(500, 'Notes must be 500 characters or less').optional(),
   groupId: z
-    .string()
-    .regex(/^[0-9a-f]{24}$/, 'Group ID must be a valid MongoDB ObjectId')
+    .union([z.string().regex(/^[0-9a-f]{24}$/, 'Group ID must be a valid MongoDB ObjectId'), z.null()])
     .optional(),
   isActive: z.boolean().optional(),
 });

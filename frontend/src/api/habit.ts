@@ -144,6 +144,7 @@ export async function updateHabit(habit: {
   notes?: string;
   targetValue?: number;
   targetUnit?: string;
+  groupId?: string | null;
 }) {
   const response = await fetch(`${API_BASE_URL}/habits/${habit.id}`, {
     method: 'PATCH',
