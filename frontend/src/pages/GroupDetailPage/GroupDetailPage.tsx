@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { useParams, Link, generatePath } from 'react-router-dom';
-import { ROUTES } from '@/constants/Routes.constants';
 import { PageLayout } from '@/components/layout/PageLayout';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/Avatar';
 import { GroupInviteDialog } from '@/components/groups/GroupInviteDialog';
